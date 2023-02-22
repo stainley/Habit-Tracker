@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "453015779547",
+    "project_id": "habittracker-4608f",
+    "storage_bucket": "habittracker-4608f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453015779547:android:e39b2d9438430d25bc34fe",
+        "android_client_info": {
+          "package_name": "ca.lambton.habittracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "453015779547-0tguspa08orus5und367jpp88nm2m010.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyC_WDd2fReeqnnUCRexhcNrFPuWQwC2w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "453015779547-0tguspa08orus5und367jpp88nm2m010.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
