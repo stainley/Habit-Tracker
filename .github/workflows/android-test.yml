@@ -10,7 +10,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [28, 26]
+        api-level: [29]
         target: [default]
     steps:
       - uses: actions/checkout@v3
@@ -26,9 +26,9 @@ jobs:
       #- name: Build with Gradle
       #  run: ./gradlew build
       - name: Run Espresso Tests
-        uses: reactivecircus/android-emulator-runner@v1 #install and create the emulator
+        uses: ReactiveCircus/android-emulator-runner@v2.27.0
         with:
-          api-level: 28
+          api-level: 29
           target: default
           arch: x86_64
           profile: Nexus 6
