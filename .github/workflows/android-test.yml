@@ -7,8 +7,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level: [28, 26]
+        target: [default]
     steps:
       - uses: actions/checkout@v3
       - name: set up JDK 11
@@ -22,3 +25,11 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+      - name: Run Espresso Tests
+        uses: reactivecircus/android-emulator-runner@v1 #install and create the emulator
+        with:
+          api-level: 28
+          target: default
+          arch: x86_64
+          profile: Nexus 6
+          script: ./gradlew connectDebugAndroidTest -Pcucumber -Ptags="@e2e"
