@@ -53,6 +53,8 @@ dependencies {
 
     implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
 
+    /*implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'*/
+
     // Android Room Database
     annotationProcessor 'androidx.room:room-compiler:2.5.0'
     implementation 'androidx.room:room-common:2.5.0'
