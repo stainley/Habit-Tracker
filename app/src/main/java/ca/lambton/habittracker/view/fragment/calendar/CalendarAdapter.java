@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.view.calendar;
+package ca.lambton.habittracker.view.fragment.calendar;
 
 import android.content.Context;
 import android.view.View;
