@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.view.calendar;
+package ca.lambton.habittracker.view.fragment.calendar;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,20 +21,11 @@ import ca.lambton.habittracker.util.DayData;
 
 public class ProgressCalendarFragment extends Fragment {
 
-    private CalendarDayLayoutBinding binding;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //View view = inflater.inflate(R.layout.calendar_day_layout, container, false);
-        binding = CalendarDayLayoutBinding.inflate(inflater);
+        CalendarDayLayoutBinding binding = CalendarDayLayoutBinding.inflate(inflater);
         View view = binding.getRoot();
 
         GridView calendarGridView = binding.calendarGridView;
@@ -51,7 +42,7 @@ public class ProgressCalendarFragment extends Fragment {
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.CANADA);
         //calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             String dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
             int dayNumber = calendar.getTime().getDate();
             DayData dayData = new DayData(dayOfWeek, dayNumber, i == 0 ? percentage : 0);
