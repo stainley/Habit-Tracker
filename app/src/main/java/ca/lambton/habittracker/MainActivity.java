@@ -1,31 +1,13 @@
 package ca.lambton.habittracker;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.TimeZone;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
-import ca.lambton.habittracker.util.CalendarAdapter;
-import ca.lambton.habittracker.util.CalendarViewPercentage;
-import ca.lambton.habittracker.util.DayData;
-import ca.lambton.habittracker.util.ThisLocalizedWeek;
+import ca.lambton.habittracker.view.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,10 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(this, getWeekdaysWithPercentage(100));
+        Intent homeIntent = new Intent(this, HomeFragment.class);
 
-        GridView gridView = binding.calendarWeek.calendarGridView;
-        gridView.setAdapter(calendarAdapter);
+        startActivity(homeIntent);
+
+        //GridView gridView = binding.calendarWeek.calendarGridView;
+
 
 
         /*CalendarViewPercentage calendarViewPercentage = new CalendarViewPercentage(this);
@@ -116,24 +100,6 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
 
-    }
-
-    private List<DayData> getWeekdaysWithPercentage(int percentage) {
-        List<DayData> dayDataList = new ArrayList<>();
-
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.CANADA);
-        //calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-
-        for (int i = 0; i < 7; i++) {
-            String dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
-            int dayNumber = calendar.getTime().getDate();
-            DayData dayData = new DayData(dayOfWeek, dayNumber, i == 0 ? percentage : 0);
-
-            System.out.println("First Day of Week: " + dayNumber);
-            dayDataList.add(dayData);
-            calendar.add(Calendar.DAY_OF_WEEK, 1);
-        }
-        return dayDataList;
     }
 
 }
