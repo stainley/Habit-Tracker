@@ -2,12 +2,15 @@ plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
     id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.android'
 
 }
 
 android {
     namespace 'ca.lambton.habittracker'
     compileSdk 33
+
+    def e2eProfiles = 'e2e'
 
     defaultConfig {
         applicationId "ca.lambton.habittracker"
@@ -41,19 +44,32 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    /*implementation 'com.github.gastricspark:scrolldatepicker:0.0.1'*/
+    /*implementation 'com.github.thellmund:android-week-view:5.3.2'*/
+    implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
+
+    implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.3'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+
+    // BBD and Cucumber dependencies
+    testImplementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '7.11.1'
+    implementation group: 'io.cucumber', name: 'cucumber-android', version: '4.10.0'
 
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
 
-    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    /*implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'*/
 
     // Android Room Database
     annotationProcessor 'androidx.room:room-compiler:2.5.0'
