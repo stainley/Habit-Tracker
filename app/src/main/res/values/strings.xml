@@ -2,6 +2,8 @@
     <string name="app_name">HabitTracker</string>
     <string name="today">Today</string>
     <string name="eat_healty_feel_healty">Eat Healty Feel Healty</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 
     <string-array name="weeks_days">
         <item>M</item>
@@ -12,4 +14,6 @@
         <item>S</item>
         <item>S</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

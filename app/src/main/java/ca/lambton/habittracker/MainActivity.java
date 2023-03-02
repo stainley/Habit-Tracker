@@ -3,8 +3,22 @@ package ca.lambton.habittracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+import com.google.android.material.navigation.NavigationView;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.view.home.HomeFragment;
@@ -12,19 +26,31 @@ import ca.lambton.habittracker.view.home.HomeFragment;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    //DayScrollDatePicker mPicker;
+    private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(LayoutInflater.from(this));
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.appBarMain.toolbar);
+        //DayScrollDatePicker mPicker;
+        DrawerLayout drawerLayout = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
 
-        Intent homeIntent = new Intent(this, HomeFragment.class);
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_settings)
+                .setOpenableLayout(drawerLayout)
+                .build();
 
-        startActivity(homeIntent);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        /*Intent homeIntent = new Intent(this, HomeFragment.class);
+        startActivity(homeIntent);*/
 
         //GridView gridView = binding.calendarWeek.calendarGridView;
 
@@ -101,5 +127,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.nav_settings) {
+            Toast.makeText(this, "Logout message", Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
+
 
 }
