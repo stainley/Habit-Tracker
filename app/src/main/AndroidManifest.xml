@@ -16,6 +16,9 @@
             android:name=".view.home.HomeFragment"
             android:exported="false" />
         <activity
+            android:name=".view.newhabit.NewHabitFragment"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

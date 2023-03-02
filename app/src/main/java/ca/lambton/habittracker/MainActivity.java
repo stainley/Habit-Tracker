@@ -3,11 +3,14 @@ package ca.lambton.habittracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.view.home.HomeFragment;
+import ca.lambton.habittracker.view.newhabit.NewHabitFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +27,14 @@ public class MainActivity extends AppCompatActivity {
 
         Intent homeIntent = new Intent(this, HomeFragment.class);
 
-        startActivity(homeIntent);
+        binding.addHabitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newHabitIntent = new Intent(MainActivity.this, NewHabitFragment.class);
+
+                startActivity(newHabitIntent);
+            }
+        });
 
         //GridView gridView = binding.calendarWeek.calendarGridView;
 
