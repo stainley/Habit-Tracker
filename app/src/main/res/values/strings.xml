@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">HabitTracker</string>
+    <string name="today">Today</string>
+    <string name="eat_healty_feel_healty">Eat Healty Feel Healty</string>
+
+    <string-array name="weeks_days">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
 </resources>
