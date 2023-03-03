@@ -8,12 +8,13 @@
         android:id="@+id/img_pointer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/group_indicatorxml"
+        android:src="@drawable/group_indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_detailed_progress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

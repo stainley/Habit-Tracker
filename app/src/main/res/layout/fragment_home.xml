@@ -19,55 +19,85 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/dayQuoteLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/muli_extrabold"
-        android:text="Quote of the day"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/greeting_message_label" />
 
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/quoteDayFragmentView"
-        android:name="ca.lambton.habittracker.view.fragment.quote.QuoteFragment"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dayQuoteLbl"
-        tools:layout="@layout/fragment_day_quote" />
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/greeting_message_label">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/homeCalendarView"
-        android:name="ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment"
-        android:layout_width="match_parent"
-        android:layout_height="164dp"
-        android:layout_marginTop="16dp"
-        android:minHeight="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/quoteDayFragmentView"
-        tools:layout="@layout/calendar_day_layout" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/homeProgressView"
-        android:name="ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeCalendarView"
-        tools:layout="@layout/fragment_daily_habit_progress" />
+
+            <TextView
+                android:id="@+id/dayQuoteLbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:fontFamily="@font/muli_extrabold"
+                android:text="Quote of the day"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/quoteDayFragmentView"
+                android:name="ca.lambton.habittracker.view.fragment.quote.QuoteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dayQuoteLbl"
+                tools:layout="@layout/fragment_day_quote" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/homeCalendarView"
+                android:name="ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                android:layout_marginTop="16dp"
+                android:minHeight="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/quoteDayFragmentView"
+                tools:layout="@layout/calendar_day_layout" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/homeProgressView"
+                android:name="ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeCalendarView"
+                tools:layout="@layout/fragment_daily_habit_progress" />
+
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/summarizedProgressView"
+                android:name="ca.lambton.habittracker.view.fragment.progress.SummarizedProgressFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/homeProgressView"
+                tools:layout="@layout/fragment_today_progress" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
