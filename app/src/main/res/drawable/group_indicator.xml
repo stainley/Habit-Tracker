@@ -5,19 +5,19 @@
     android:viewportHeight="147">
     <group>
         <path
+            android:pathData="M21 29l15.52-12H80.5"
+            android:strokeWidth="4"
             android:strokeColor="#FFFF9865"
-            android:strokeWidth="2"
-            android:strokeLineCap="round"
-            android:pathData="M21 29l15.52-12H80.5"/>
+            android:strokeLineCap="round" />
         <path
+            android:pathData="M21 110l15.52 12H80.5"
+            android:strokeWidth="4"
             android:strokeColor="#FFFF9865"
-            android:strokeWidth="2"
-            android:strokeLineCap="round"
-            android:pathData="M21 110l15.52 12H80.5"/>
+            android:strokeLineCap="round" />
         <path
+            android:pathData="M21 67.25h58.64"
+            android:strokeWidth="4"
             android:strokeColor="#FFFF9865"
-            android:strokeWidth="2"
-            android:strokeLineCap="round"
-            android:pathData="M21 67.25h58.64"/>
+            android:strokeLineCap="round" />
     </group>
 </vector>
