@@ -28,4 +28,5 @@
     <string name="or">Or</string>
     <string name="email_icon">email icon</string>
     <string name="password_icon">password icon</string>
+    <string name="today_s_progress">Today\'s progress</string>
 </resources>

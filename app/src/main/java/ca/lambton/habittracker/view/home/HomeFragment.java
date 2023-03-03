@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentHomeBinding;
 import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
+import ca.lambton.habittracker.view.fragment.progress.SummarizedProgressFragment;
 import ca.lambton.habittracker.view.fragment.quote.QuoteFragment;
 
 public class HomeFragment extends Fragment {
@@ -31,6 +32,10 @@ public class HomeFragment extends Fragment {
 
         Fragment quoteDayFragment = new QuoteFragment();
         supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
+
+
+        Fragment summarizedProgress = new SummarizedProgressFragment();
+        supportFragmentManager.beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
         return root;
     }
