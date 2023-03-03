@@ -3,4 +3,15 @@
     <string name="today">Today</string>
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
+    <string name="don_t_have_an_account">Don\'t have an account? Click here to Sign up</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="twitter_button">twitter button</string>
+    <string name="facebook_button">facebook button</string>
+    <string name="google_button">google button</string>
+    <string name="or">Or</string>
+    <string name="email_icon">email icon</string>
+    <string name="password_icon">password icon</string>
 </resources>
