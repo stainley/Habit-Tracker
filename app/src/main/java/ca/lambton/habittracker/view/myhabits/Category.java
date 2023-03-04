@@ -1,12 +1,12 @@
 package ca.lambton.habittracker.view.myhabits;
 
-public class Categories {
+public class Category {
     private String name;
     private int duration;
     private String interval;
     private int iconId;
 
-    public Categories(String name, int duration, String interval, int iconId) {
+    public Category(String name, int duration, String interval, int iconId) {
         this.name = name;
         this.duration = duration;
         this.interval = interval;

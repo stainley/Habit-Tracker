@@ -43,6 +43,10 @@
         <item name="cardBackgroundColor">@color/material_dynamic_primary100</item>
     </style>
 
+    <style name="CategoryListCustomTextColor" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/neutral_grey</item>
+    </style>
+
     <style name="Theme.NavDrawere.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.NavDrawere.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
