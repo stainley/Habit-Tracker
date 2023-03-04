@@ -27,7 +27,7 @@ public class HomeFragment extends Fragment {
         FragmentManager supportFragmentManager = getParentFragmentManager();
 
         Fragment calendarFragment = new ProgressCalendarFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.homeCalendarView, calendarFragment).commit();
+        supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
 
 
         Fragment quoteDayFragment = new QuoteFragment();
