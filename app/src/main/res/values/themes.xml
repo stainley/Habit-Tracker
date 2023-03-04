@@ -37,6 +37,10 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="MaterialCardView.NoColour" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/material_dynamic_primary100</item>
+    </style>
+
     <style name="Theme.NavDrawere.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.NavDrawere.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
