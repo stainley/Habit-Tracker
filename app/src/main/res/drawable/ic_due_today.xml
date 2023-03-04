@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp"
+    android:height="26dp"
+    android:viewportWidth="30"
+    android:viewportHeight="26">
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#DD5001"
+        android:strokeWidth="2.44444"
+        android:strokeLineCap="round"
+        android:pathData="M 11.9445 3.38898 L 27.8334 3.38898" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#DD5001"
+        android:strokeWidth="2.44444"
+        android:strokeLineCap="round"
+        android:pathData="M 11.9445 13.1667 L 27.8334 13.1667" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#DD5001"
+        android:strokeWidth="2.44444"
+        android:strokeLineCap="round"
+        android:pathData="M 11.9445 22.9445 L 27.8334 22.9445" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#DD5001"
+        android:strokeWidth="3.66667"
+        android:pathData="M 2.166678 0.333374 L 5.833348 0.333374 Q 7.055568 0.333374 7.055568 1.555594 L 7.055568 5.222264 Q 7.055568 6.444484 5.833348 6.444484 L 2.166678 6.444484 Q 0.944458 6.444484 0.944458 5.222264 L 0.944458 1.555594 Q 0.944458 0.333374 2.166678 0.333374 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#DD5001"
+        android:strokeWidth="3.66667"
+        android:pathData="M 2.166678 9.5 L 5.833348 9.5 Q 7.055568 9.5 7.055568 10.72222 L 7.055568 14.38889 Q 7.055568 15.61111 5.833348 15.61111 L 2.166678 15.61111 Q 0.944458 15.61111 0.944458 14.38889 L 0.944458 10.72222 Q 0.944458 9.5 2.166678 9.5 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#DD5001"
+        android:strokeWidth="3.66667"
+        android:pathData="M 2.166678 19.8889 L 5.833348 19.8889 Q 7.055568 19.8889 7.055568 21.11112 L 7.055568 24.77779 Q 7.055568 26.00001 5.833348 26.00001 L 2.166678 26.00001 Q 0.944458 26.00001 0.944458 24.77779 L 0.944458 21.11112 Q 0.944458 19.8889 2.166678 19.8889 Z" />
+</vector>
