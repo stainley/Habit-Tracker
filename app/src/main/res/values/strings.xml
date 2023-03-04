@@ -31,4 +31,5 @@
     <string name="today_s_progress">Today\'s progress</string>
     <string name="more_of_what_you_like_msg">More of what you like</string>
     <string name="popular_habits">Popular habits</string>
+    <string name="habit_categories">Habit Categories</string>
 </resources>

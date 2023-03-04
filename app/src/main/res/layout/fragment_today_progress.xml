@@ -34,7 +34,7 @@
             android:id="@+id/percentage_num_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/muli_extrabold"
+            android:fontFamily="@font/mulish_bold"
             android:textColor="#DD5001"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="@id/total_daily_progressbar"

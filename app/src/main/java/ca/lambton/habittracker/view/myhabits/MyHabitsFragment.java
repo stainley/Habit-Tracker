@@ -80,6 +80,22 @@ public class MyHabitsFragment extends Fragment {
         MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList);
         myHabitsGridButton.setAdapter(adapter);
 
+        ArrayList<Categories> categories = new ArrayList<Categories>();
+        categories.add(new Categories("Short Duration", 2, "5 - 10 mins", R.drawable.short_duration));
+        categories.add(new Categories("Long Duration", 3, "20 mins - 1 hour", R.drawable.long_duration));
+        categories.add(new Categories("Hobbies", 3, "30 mins", R.drawable.hobbies));
+        categories.add(new Categories("Outdoor Activities", 3, "20 mins - 1 hour", R.drawable.outdoor_activities));
+        categories.add(new Categories("Quit Bad Habits", 2, "20 mins - 1 hour", R.drawable.quit_bad_habits));
+        categories.add(new Categories("Food Habits", 2, "20 mins - 1 hour", R.drawable.food_habits));
+        categories.add(new Categories("Socialize", 2, "20 mins - 1 hour", R.drawable.socialize));
+        categories.add(new Categories("Relaxation", 3, "20 mins - 1 hour", R.drawable.relaxation));
+        categories.add(new Categories("Physical Health", 3, "20 mins - 1 hour", R.drawable.physical_health));
+        categories.add(new Categories("Mental Health", 3, "20 mins - 1 hour", R.drawable.mental_health));
+        categories.add(new Categories("Daily", 0, "20 mins - 1 hour", R.drawable.daily));
+        categories.add(new Categories("Weekly", 0, "20 mins - 1 hour", R.drawable.weekly));
+        categories.add(new Categories("Monthly", 0, "20 mins - 1 hour", R.drawable.monthly));
+        categories.add(new Categories("Self Care", 2, "10 - 30 mins", R.drawable.self_care));
+
         return view;
     }
 }
