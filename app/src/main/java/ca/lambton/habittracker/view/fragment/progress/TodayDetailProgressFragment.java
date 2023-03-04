@@ -2,7 +2,6 @@ package ca.lambton.habittracker.view.fragment.progress;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,12 +35,12 @@ public class TodayDetailProgressFragment extends Fragment {
         List<DailyProgressData> progressDataList = new ArrayList<>();
         // TODO: Dummy data. pass the value the percentage integer base on the image
 
-        progressDataList.add(new DailyProgressData(requireContext(), "Do Yoga", getProgressIcon(0)));
+        progressDataList.add(new DailyProgressData(requireContext(), "Do Yoga", getProgressIcon(53)));
         progressDataList.add(new DailyProgressData(requireContext(), "Enjoy Outdoors", getProgressIcon(18)));
-        progressDataList.add(new DailyProgressData(requireContext(), "Meditation", getProgressIcon(35)));
+        progressDataList.add(new DailyProgressData(requireContext(), "Meditation", getProgressIcon(100)));
         progressDataList.add(new DailyProgressData(requireContext(), "Drink Water", getProgressIcon(78)));
         progressDataList.add(new DailyProgressData(requireContext(), "Exercise", null));
-        progressDataList.add(new DailyProgressData(requireContext(), "Study", getProgressIcon(65)));
+        progressDataList.add(new DailyProgressData(requireContext(), "Study", getProgressIcon(100)));
 
         TodayDetailProgressAdapter progressAdapter = new TodayDetailProgressAdapter(progressDataList);
 
@@ -57,11 +56,13 @@ public class TodayDetailProgressFragment extends Fragment {
 
         if (percentage == 0) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_0);
-        } else if (percentage > 0 && percentage <= 25) {
+        } else if (percentage > 0 && percentage <= 49) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_25);
-        } else if (percentage > 25 && percentage <= 75) {
+        } else if (percentage >= 50 && percentage <= 74) {
+            icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_50);
+        } else if (percentage > 75 && percentage <= 99) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_75);
-        } else if (percentage > 75 && percentage <= 100) {
+        } else if (percentage >= 100) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_100);
         }
 
