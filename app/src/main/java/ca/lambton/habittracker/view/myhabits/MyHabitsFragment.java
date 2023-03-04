@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.activity.result.ActivityResult;
@@ -93,7 +94,7 @@ public class MyHabitsFragment extends Fragment {
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Completed habits", R.drawable.ic_completed_habits));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Habit history", R.drawable.ic_habit_history));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Challenges & Leaderboard", R.drawable.ic_challenges_leaderboard));
-        MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList);
+        MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
         ArrayList<Category> categories = new ArrayList<Category>();
@@ -161,6 +162,17 @@ public class MyHabitsFragment extends Fragment {
             @Override
             public void onRowClicked(int position) {
 
+            }
+        };
+    }
+
+    @NonNull
+    private MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback getCallbackMyHabitsGridButton(List<MyHabitsGridButton> myHabitsGridButton) {
+        return new MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback() {
+
+            @Override
+            public void onRowClicked(int position) {
+                System.out.println("MyHabitsGridButtonAdapter Clicked on " + position);
             }
         };
     }
