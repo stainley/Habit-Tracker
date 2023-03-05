@@ -23,10 +23,10 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater);
         View view = binding.getRoot();
 
-        Fragment collectionCardCategoryFragment = new CollectionCardCategoryFragment();
+        /*Fragment collectionCardCategoryFragment = new CollectionCardCategoryFragment();
         FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
 
-        fragmentTransaction.replace(R.id.stack_view, collectionCardCategoryFragment).commit();
+        fragmentTransaction.replace(R.id.stack_view, collectionCardCategoryFragment).commit();*/
 
         return view;
     }

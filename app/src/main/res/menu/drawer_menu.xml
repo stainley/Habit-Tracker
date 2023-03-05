@@ -18,6 +18,10 @@
                 android:title="My Habits" />
 
             <item
+                android:id="@+id/nav_defined_habit"
+                android:title="Habits" />
+
+            <item
                 android:id="@+id/nav_community"
                 android:icon="@drawable/ic_community"
                 android:title="Community" />
