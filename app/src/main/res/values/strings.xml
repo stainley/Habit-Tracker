@@ -32,5 +32,9 @@
     <string name="more_of_what_you_like_msg">More of what you like</string>
     <string name="popular_habits">Popular habits</string>
     <string name="habit_categories">Habit Categories</string>
+    <string name="habits">Habits</string>
+    <string name="days">Days</string>
+    <string name="duration">Duration</string>
+    <string name="frequency">Frequency</string>
     <string name="search">Search</string>
 </resources>
