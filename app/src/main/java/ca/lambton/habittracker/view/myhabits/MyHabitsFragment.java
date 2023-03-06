@@ -1,19 +1,32 @@
 package ca.lambton.habittracker.view.myhabits;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.search.SearchBar;
+import com.google.android.material.search.SearchView;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import ca.lambton.habittracker.R;
 
@@ -26,6 +39,9 @@ public class MyHabitsFragment extends Fragment {
     private GridView myHabitsGridButton;
 
     private CategoryRecycleAdapter categoryListAdapter;
+    RecyclerView categorySearchRecyclerView;
+    private SearchBar searchBarCategory;
+    private SearchView searchView;
 
     public MyHabitsFragment() {
         // Required empty public constructor
@@ -50,6 +66,7 @@ public class MyHabitsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -58,8 +75,17 @@ public class MyHabitsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_my_habits, container, false);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.categoryList);
-        myHabitsGridButton = (GridView) view.findViewById(R.id.myHabitsGridView);
+        categorySearchRecyclerView = (RecyclerView) view.findViewById(R.id.categoryListFiltered);
+        searchBarCategory = (SearchBar) view.findViewById(R.id.searchCategoryBar);
+        searchView = (SearchView) view.findViewById(R.id.searchView);
+        searchView.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
 
+        searchView.setOnMenuItemClickListener(item -> {
+            displaySpeechRecognizer();
+            return true;
+        });
+
+        myHabitsGridButton = (GridView) view.findViewById(R.id.myHabitsGridView);
         ArrayList<MyHabitsGridButton> myHabitsGridButtonModelArrayList = new ArrayList<MyHabitsGridButton>();
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Create new habit", R.drawable.ic_new_habit));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Due for today", R.drawable.ic_due_today));
@@ -67,7 +93,6 @@ public class MyHabitsFragment extends Fragment {
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Completed habits", R.drawable.ic_completed_habits));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Habit history", R.drawable.ic_habit_history));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Challenges & Leaderboard", R.drawable.ic_challenges_leaderboard));
-
         MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList);
         myHabitsGridButton.setAdapter(adapter);
 
@@ -92,6 +117,41 @@ public class MyHabitsFragment extends Fragment {
         recyclerView.setAdapter(categoryListAdapter);
 
         return view;
+    }
+
+    ActivityResultLauncher<Intent> textToSpeakLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    List<String> results = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spokenText = results.get(0);
+                    searchView.getEditText().setText(spokenText);
+                }
+    });
+
+
+    private void displaySpeechRecognizer() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        textToSpeakLauncher.launch(intent);
+    }
+
+    private Supplier<TextWatcher> getTextWatcherSupplier() {
+
+        return () -> new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                categorySearchRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
     }
 
     @NonNull
