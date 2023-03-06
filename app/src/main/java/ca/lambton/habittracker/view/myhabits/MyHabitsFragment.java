@@ -10,15 +10,13 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -172,7 +170,12 @@ public class MyHabitsFragment extends Fragment {
 
             @Override
             public void onRowClicked(int position) {
-                System.out.println("MyHabitsGridButtonAdapter Clicked on " + position);
+                switch (position) {
+                    case 0:
+                        Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
+
+                        break;
+                }
             }
         };
     }

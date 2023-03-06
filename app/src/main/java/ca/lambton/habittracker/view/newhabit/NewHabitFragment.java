@@ -2,27 +2,37 @@ package ca.lambton.habittracker.view.newhabit;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.Fragment;
 
-import ca.lambton.habittracker.databinding.FragmentNewHabitBinding;
+import ca.lambton.habittracker.R;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
-public class NewHabitFragment extends FragmentActivity {
+public class NewHabitFragment extends Fragment {
+
+    public NewHabitFragment() {
+    }
+
+    public static NewHabitFragment newInstance(String param1, String param2) {
+        NewHabitFragment fragment = new NewHabitFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ca.lambton.habittracker.databinding.FragmentNewHabitBinding binding = FragmentNewHabitBinding.inflate(LayoutInflater.from(this));
-        setContentView(binding.getRoot());
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_new_habit, container, false);
 
-        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        return view;
+
     }
 }
