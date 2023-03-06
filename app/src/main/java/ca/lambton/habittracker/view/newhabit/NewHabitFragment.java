@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import ca.lambton.habittracker.R;
@@ -42,8 +43,9 @@ public class NewHabitFragment extends Fragment {
     }
 
     // Navigate to explore pre-defined categories
-    // FIXME:  when navigate show navigate back button to preview screen
     private void exploreCategories(View view) {
-        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(R.id.nav_defined_habit);
+
+        NavDirections navDirections = NewHabitFragmentDirections.actionNewHabitFragmentToNavDefinedHabit();
+        Navigation.findNavController(view).navigate(navDirections);
     }
 }

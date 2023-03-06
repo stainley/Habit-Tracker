@@ -34,5 +34,10 @@
         android:id="@+id/newHabitFragment"
         android:name="ca.lambton.habittracker.view.newhabit.NewHabitFragment"
         android:label="fragment_new_habit"
-        tools:layout="@layout/fragment_new_habit" />
+        tools:layout="@layout/fragment_new_habit">
+        <action
+            android:id="@+id/action_newHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/newHabitFragment" />
+    </fragment>
 </navigation>
