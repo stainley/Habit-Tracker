@@ -12,33 +12,33 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/mulish_bold"
-        tools:text="Food Habits"
         android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Food Habits" />
 
     <TextView
         android:id="@+id/duration_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Duration"
+        android:text="@string/duration"
         app:layout_constraintStart_toStartOf="@id/food_habit_title"
         app:layout_constraintTop_toBottomOf="@id/food_habit_title" />
 
 
     <TextView
-        android:id="@+id/duration_label_message"
+        android:id="@+id/time_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:text="10 - 30 mins"
         app:layout_constraintBottom_toBottomOf="@id/duration_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.10"
         app:layout_constraintStart_toEndOf="@id/duration_label"
-        app:layout_constraintTop_toTopOf="@id/duration_label" />
+        app:layout_constraintTop_toTopOf="@id/duration_label"
+        tools:text="10 - 30 mins" />
 
 
     <TextView
@@ -46,7 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Frequency"
+        android:text="@string/frequency"
         app:layout_constraintStart_toStartOf="@id/food_habit_title"
         app:layout_constraintTop_toBottomOf="@id/duration_label" />
 
@@ -54,9 +54,9 @@
         android:id="@+id/frequency_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Daily/ Weekly/ Monthly"
+        tools:text="Daily/ Weekly/ Monthly"
         app:layout_constraintBottom_toBottomOf="@id/frequency_label"
-        app:layout_constraintStart_toStartOf="@id/duration_label_message"
+        app:layout_constraintStart_toStartOf="@id/time_duration"
         app:layout_constraintTop_toTopOf="@id/frequency_label" />
 
     <TextView
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Days"
+        android:text="@string/days"
         app:layout_constraintStart_toStartOf="@id/frequency_label"
         app:layout_constraintTop_toBottomOf="@id/frequency_label" />
 
@@ -72,19 +72,24 @@
         android:id="@+id/day_duration_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="45 - 70"
         app:layout_constraintBottom_toBottomOf="@id/days_label"
         app:layout_constraintStart_toStartOf="@id/frequency_message"
-        app:layout_constraintTop_toTopOf="@id/days_label" />
-    <!--
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/collection_custom_habit_rv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/days_label">
+        app:layout_constraintTop_toTopOf="@id/days_label"
+        tools:text="45 - 70" />
 
-        </androidx.recyclerview.widget.RecyclerView>-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/collection_custom_habit_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:foregroundGravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/days_label"
+        app:layout_constraintVertical_bias="0.75">
+
+    </androidx.recyclerview.widget.RecyclerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -59,6 +57,7 @@ public class DefinedHabitFragment extends Fragment {
 
         List<HabitDetail> habitDetails = new ArrayList<>();
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.running_img), "Running", CategoryType.RUNNING));
+        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.foods_habit), "Food", CategoryType.FOOD));
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.exercise), "Exercise", CategoryType.EXERCISE));
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.yoga), "Yoga", CategoryType.YOGA));
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.stretching), "Stretching", CategoryType.STRETCHING));

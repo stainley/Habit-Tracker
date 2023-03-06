@@ -77,7 +77,7 @@ public class MyHabitsFragment extends Fragment {
         categories.add(new Category("Hobbies", 3, "30 mins", R.drawable.hobbies));
         categories.add(new Category("Outdoor Activities", 3, "20 mins - 1 hour", R.drawable.outdoor_activities));
         categories.add(new Category("Quit Bad Habits", 2, "20 mins - 1 hour", R.drawable.quit_bad_habits));
-        categories.add(new Category("Food Habits", 2, "20 mins - 1 hour", R.drawable.food_habits));
+        categories.add(new Category("Food Habits", 2, "20 mins - 1 hour", R.drawable.foods_habit));
         categories.add(new Category("Socialize", 2, "20 mins - 1 hour", R.drawable.socialize));
         categories.add(new Category("Relaxation", 3, "20 mins - 1 hour", R.drawable.relaxation));
         categories.add(new Category("Physical Health", 3, "20 mins - 1 hour", R.drawable.physical_health));
