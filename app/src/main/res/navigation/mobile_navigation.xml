@@ -25,4 +25,8 @@
         android:name="ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment"
         android:label="Habits"
         tools:layout="@layout/fragment_defined_habits" />
+    <fragment
+        android:id="@+id/nav_habit_detail"
+        android:name="ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment"
+        android:label="HabitDetailFragment" />
 </navigation>

@@ -10,17 +10,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Arrays;
 import java.util.List;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentCategoryHabitDescriptionBinding;
 import ca.lambton.habittracker.util.CategoryType;
+import ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment;
 
 public class HabitCategoryDescriptionFragment extends Fragment {
 
@@ -84,6 +88,12 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                     categoryButtonRVAdapter = new CategoryButtonRVAdapter(foodButtons, (view1, position) -> view1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            switch (position) {
+                                case 0:
+
+                                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(R.id.nav_habit_detail);
+                                    break;
+                            }
                             Toast.makeText(requireContext(), "Button pressed: " + foodButtons.get(position), Toast.LENGTH_SHORT).show();
                         }
                     }));
