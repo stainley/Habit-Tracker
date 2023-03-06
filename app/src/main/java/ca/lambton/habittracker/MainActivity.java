@@ -26,12 +26,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        //DayScrollDatePicker mPicker;
         DrawerLayout drawerLayout = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_settings, R.id.nav_my_habits)
+                R.id.nav_home, R.id.nav_settings, R.id.nav_my_habits, R.id.nav_first_habit_Fragment)
                 .setOpenableLayout(drawerLayout)
                 .build();
 
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
     }
-
 
     @Override
     public boolean onSupportNavigateUp() {

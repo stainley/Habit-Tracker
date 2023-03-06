@@ -41,7 +41,7 @@
         <menu>
 
             <item
-                android:id="@+id/nav_settings"
+                android:id="@+id/nav_first_habit_Fragment"
                 android:icon="@drawable/ic_settings"
                 android:title="Settings" />
             <item

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentSettingsBinding;
 import ca.lambton.habittracker.view.fragment.habit.CollectionCardCategoryFragment;
+import ca.lambton.habittracker.view.fragment.habit.first.FirstHabitFragment;
 
 public class SettingsFragment extends Fragment {
 
@@ -28,6 +29,8 @@ public class SettingsFragment extends Fragment {
 
         fragmentTransaction.replace(R.id.stack_view, collectionCardCategoryFragment).commit();*/
 
+
+        Fragment firstHabit = new FirstHabitFragment();
         return view;
     }
 }
