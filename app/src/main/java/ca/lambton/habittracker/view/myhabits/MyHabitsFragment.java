@@ -12,12 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -93,7 +92,7 @@ public class MyHabitsFragment extends Fragment {
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Completed habits", R.drawable.ic_completed_habits));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Habit history", R.drawable.ic_habit_history));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Challenges & Leaderboard", R.drawable.ic_challenges_leaderboard));
-        MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList);
+        MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
         ArrayList<Category> categories = new ArrayList<Category>();
@@ -161,6 +160,22 @@ public class MyHabitsFragment extends Fragment {
             @Override
             public void onRowClicked(int position) {
 
+            }
+        };
+    }
+
+    @NonNull
+    private MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback getCallbackMyHabitsGridButton(List<MyHabitsGridButton> myHabitsGridButton) {
+        return new MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback() {
+
+            @Override
+            public void onRowClicked(int position) {
+                switch (position) {
+                    case 0:
+                        Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
+
+                        break;
+                }
             }
         };
     }

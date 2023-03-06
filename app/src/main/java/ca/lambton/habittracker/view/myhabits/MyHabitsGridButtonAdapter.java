@@ -9,14 +9,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+
+import com.google.android.material.card.MaterialCardView;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import ca.lambton.habittracker.R;
 
 public class MyHabitsGridButtonAdapter extends ArrayAdapter<MyHabitsGridButton> {
+    private OnMyHabitsGridButtonCallback onMyHabitsGridButtonCallback;
 
-    public MyHabitsGridButtonAdapter(@NonNull Context context, ArrayList<MyHabitsGridButton> myHabitsGridButtonModelArrayList) {
+    public MyHabitsGridButtonAdapter(@NonNull Context context, ArrayList<MyHabitsGridButton> myHabitsGridButtonModelArrayList,
+                                     MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback onCallback) {
         super(context, 0, myHabitsGridButtonModelArrayList);
+
+        this.onMyHabitsGridButtonCallback = onCallback;
     }
 
     @NonNull
@@ -30,11 +39,20 @@ public class MyHabitsGridButtonAdapter extends ArrayAdapter<MyHabitsGridButton> 
         }
 
         MyHabitsGridButton myHabitsGridButtonModel = getItem(position);
-        TextView courseTV = listitemView.findViewById(R.id.myHabitButtonLabel);
-        ImageView courseIV = listitemView.findViewById(R.id.myHabitButtonIcon);
+        TextView myHabitButtonLabel = listitemView.findViewById(R.id.myHabitButtonLabel);
+        ImageView myHabitButtonIcon = listitemView.findViewById(R.id.myHabitButtonIcon);
+        MaterialCardView myHabitButtonCard = listitemView.findViewById(R.id.myHabitButtonCard);
 
-        courseTV.setText(myHabitsGridButtonModel.getButtonLabel());
-        courseIV.setImageResource(myHabitsGridButtonModel.getIconId());
+        myHabitButtonLabel.setText(myHabitsGridButtonModel.getButtonLabel());
+        myHabitButtonIcon.setImageResource(myHabitsGridButtonModel.getIconId());
+        myHabitButtonCard.setOnClickListener(view -> {
+            onMyHabitsGridButtonCallback.onRowClicked(position);
+        });
+
         return listitemView;
+    }
+
+    public interface OnMyHabitsGridButtonCallback {
+        void onRowClicked(int position);
     }
 }
