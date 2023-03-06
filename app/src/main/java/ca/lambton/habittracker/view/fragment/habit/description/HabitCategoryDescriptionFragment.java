@@ -10,17 +10,21 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Arrays;
 import java.util.List;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentCategoryHabitDescriptionBinding;
 import ca.lambton.habittracker.util.CategoryType;
+import ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment;
 
 public class HabitCategoryDescriptionFragment extends Fragment {
 
@@ -79,12 +83,25 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                     habitFoodTitleText.setText("Food");
                     habitTimeDurationText.setText("10 - 30 mins");
                     habitFrequencyTex.setText("Daily");
-                    habitDurationHabitText.setText("0 days");
+                    habitDurationHabitText.setText("45 - 70");
                     List<String> foodButtons = Arrays.asList("Drink fruit juice", "Eat Raisins", "Add Veggies");
                     categoryButtonRVAdapter = new CategoryButtonRVAdapter(foodButtons, (view1, position) -> view1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(requireContext(), "Button pressed: " + foodButtons.get(position), Toast.LENGTH_SHORT).show();
+                            switch (position) {
+                                case 0:
+
+                                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(R.id.nav_habit_detail);
+                                    break;
+                                case 2:
+                                    // TODO: Invoke second button. Pass the info.
+                                    break;
+                                case 3:
+                                    // TODO: invoke third button
+                                    break;
+                                default:
+                                    // TODO: Invalid option
+                            }
                         }
                     }));
                     collectionCustomHabitRv.setAdapter(categoryButtonRVAdapter);

@@ -54,4 +54,10 @@
     <style name="Custom.CardView.Outlined" parent="Widget.Material3.CardView.Outlined">
         <item name="strokeColor">@color/md_theme_light_primary</item>
     </style>
+
+    <style name="circleImageView" parent="MaterialAlertDialog.Material3">
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerSizeBottomLeft">18%</item>
+        <item name="cornerSizeBottomRight">18%</item>
+    </style>
 </resources>
