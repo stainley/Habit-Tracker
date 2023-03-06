@@ -6,13 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-
-import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -50,11 +45,6 @@ public class PredifinedHabitAdapter extends RecyclerView.Adapter<PredifinedHabit
         public HabitViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.category_habit_image);
-        }
-
-
-        public void bind() {
-
         }
     }
 }
