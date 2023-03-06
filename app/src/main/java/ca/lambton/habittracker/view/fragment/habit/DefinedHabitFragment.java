@@ -28,34 +28,18 @@ import ca.lambton.habittracker.view.fragment.habit.description.HabitCategoryDesc
 
 public class DefinedHabitFragment extends Fragment {
     private static final String TAG = DefinedHabitFragment.class.getName();
-
+    private final List<HabitDetail> habitDetails = new ArrayList<>();
     FragmentDefinedHabitsBinding binding;
+    private ViewPager2 habitsPager;
 
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        binding = FragmentDefinedHabitsBinding.inflate(inflater, container, false);
+        binding = FragmentDefinedHabitsBinding.inflate(LayoutInflater.from(requireContext()));
+        habitsPager = binding.habitsPager;
+        configureAnimationPager();
 
-
-        ViewPager2 habitsPager = binding.habitsPager;
-        habitsPager.setOffscreenPageLimit(1);
-
-        float nextItemVisiblePx = getResources().getDimension(R.dimen.viewpager_next_item_visible);
-        float currentItemHorizontalMarginPx = getResources().getDimension(R.dimen.viewpager_current_item_horizontal_margin);
-        float pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx;
-
-        ViewPager2.PageTransformer pageTransformer = (page, position) -> {
-            page.setTranslationX(-pageTranslationX * position);
-            page.setScaleY(1 - (0.25f * Math.abs(position)));
-            page.setAlpha(0.25f + (1 - Math.abs(position)));
-        };
-
-        habitsPager.setPageTransformer(pageTransformer);
-        habitsPager.addItemDecoration(new HorizontalMarginItemDecoration(requireContext(), R.dimen.viewpager_current_item_horizontal_margin));
-
-        List<HabitDetail> habitDetails = new ArrayList<>();
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.running_img), "Running", CategoryType.RUNNING));
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.foods_habit), "Food", CategoryType.FOOD));
         habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.exercise), "Exercise", CategoryType.EXERCISE));
@@ -65,6 +49,25 @@ public class DefinedHabitFragment extends Fragment {
 
         PredifinedHabitAdapter predifinedHabitAdapter = new PredifinedHabitAdapter(habitDetails);
         habitsPager.setAdapter(predifinedHabitAdapter);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(habitDetails.get(0).getCategoryType());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("category", CategoryType.RUNNING);
+        FragmentManager parentFragmentManager = getParentFragmentManager();
+
+        parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).commit();
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         habitsPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -92,14 +95,22 @@ public class DefinedHabitFragment extends Fragment {
         });
 
 
-        HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(habitDetails.get(0).getCategoryType());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("category", CategoryType.RUNNING);
-        FragmentManager parentFragmentManager = getParentFragmentManager();
+    }
 
-        parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).commit();
+    private void configureAnimationPager() {
+        habitsPager.setOffscreenPageLimit(1);
+        float nextItemVisiblePx = getResources().getDimension(R.dimen.viewpager_next_item_visible);
+        float currentItemHorizontalMarginPx = getResources().getDimension(R.dimen.viewpager_current_item_horizontal_margin);
+        float pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx;
 
-        return binding.getRoot();
+        ViewPager2.PageTransformer pageTransformer = (page, position) -> {
+            page.setTranslationX(-pageTranslationX * position);
+            page.setScaleY(1 - (0.25f * Math.abs(position)));
+            page.setAlpha(0.25f + (1 - Math.abs(position)));
+        };
+
+        habitsPager.setPageTransformer(pageTransformer);
+        habitsPager.addItemDecoration(new HorizontalMarginItemDecoration(requireContext(), R.dimen.viewpager_current_item_horizontal_margin));
     }
 
     public static final class HabitDetail {
