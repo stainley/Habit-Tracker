@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:trackColor="@color/card_background_color"
+            app:trackColor="@color/card_background_light_color"
             app:trackCornerRadius="8dp"
             app:trackThickness="16dp" />
 

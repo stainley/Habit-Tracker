@@ -83,7 +83,7 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                     habitFoodTitleText.setText("Food");
                     habitTimeDurationText.setText("10 - 30 mins");
                     habitFrequencyTex.setText("Daily");
-                    habitDurationHabitText.setText("0 days");
+                    habitDurationHabitText.setText("45 - 70");
                     List<String> foodButtons = Arrays.asList("Drink fruit juice", "Eat Raisins", "Add Veggies");
                     categoryButtonRVAdapter = new CategoryButtonRVAdapter(foodButtons, (view1, position) -> view1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -93,8 +93,15 @@ public class HabitCategoryDescriptionFragment extends Fragment {
 
                                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(R.id.nav_habit_detail);
                                     break;
+                                case 2:
+                                    // TODO: Invoke second button. Pass the info.
+                                    break;
+                                case 3:
+                                    // TODO: invoke third button
+                                    break;
+                                default:
+                                    // TODO: Invalid option
                             }
-                            Toast.makeText(requireContext(), "Button pressed: " + foodButtons.get(position), Toast.LENGTH_SHORT).show();
                         }
                     }));
                     collectionCustomHabitRv.setAdapter(categoryButtonRVAdapter);

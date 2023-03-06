@@ -23,7 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/mulish_semi_bold"
         android:text="@string/duration"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/food_habit_title"
         app:layout_constraintTop_toBottomOf="@id/food_habit_title" />
 
@@ -33,6 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:fontFamily="@font/mulish_regular"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/duration_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.10"
@@ -46,7 +50,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/mulish_semi_bold"
         android:text="@string/frequency"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/food_habit_title"
         app:layout_constraintTop_toBottomOf="@id/duration_label" />
 
@@ -54,17 +60,20 @@
         android:id="@+id/frequency_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Daily/ Weekly/ Monthly"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/frequency_label"
         app:layout_constraintStart_toStartOf="@id/time_duration"
-        app:layout_constraintTop_toTopOf="@id/frequency_label" />
+        app:layout_constraintTop_toTopOf="@id/frequency_label"
+        tools:text="Daily/ Weekly/ Monthly" />
 
     <TextView
         android:id="@+id/days_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:fontFamily="@font/mulish_semi_bold"
         android:text="@string/days"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@id/frequency_label"
         app:layout_constraintTop_toBottomOf="@id/frequency_label" />
 
@@ -72,6 +81,8 @@
         android:id="@+id/day_duration_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/mulish_regular"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/days_label"
         app:layout_constraintStart_toStartOf="@id/frequency_message"
         app:layout_constraintTop_toTopOf="@id/days_label"
