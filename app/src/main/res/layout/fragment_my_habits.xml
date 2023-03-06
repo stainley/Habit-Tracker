@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.myhabits.MyHabitsFragment">
+    tools:context=".view.myhabits.MyHabitsFragment"
+    android:id="@+id/fragment_my_habits">
 
     <com.google.android.material.search.SearchBar
         android:id="@+id/searchCategoryBar"
