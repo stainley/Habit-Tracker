@@ -79,6 +79,7 @@ public class MyHabitsFragment extends Fragment {
         searchView = (SearchView) view.findViewById(R.id.searchView);
         searchView.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
 
+        searchView.inflateMenu(R.menu.search_bar_menu);
         searchView.setOnMenuItemClickListener(item -> {
             displaySpeechRecognizer();
             return true;
