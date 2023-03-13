@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +27,12 @@ import com.google.android.material.search.SearchView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.category.model.Category;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,11 +41,14 @@ import ca.lambton.habittracker.R;
  */
 public class MyHabitsFragment extends Fragment {
     private GridView myHabitsGridButton;
-
+    private CategoryViewModel categoryViewModel;
     private CategoryRecycleAdapter categoryListAdapter;
     RecyclerView categorySearchRecyclerView;
     private SearchBar searchBarCategory;
     private SearchView searchView;
+
+    private final List<Category> categories = new ArrayList<>();
+    private List<Category> categoriesFiltered = new ArrayList<>();
 
     public MyHabitsFragment() {
         // Required empty public constructor
@@ -96,23 +104,14 @@ public class MyHabitsFragment extends Fragment {
         MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
-        ArrayList<Category> categories = new ArrayList<Category>();
-        categories.add(new Category("Short Duration", 2, "5 - 10 mins", R.drawable.short_duration));
-        categories.add(new Category("Long Duration", 3, "20 mins - 1 hour", R.drawable.long_duration));
-        categories.add(new Category("Hobbies", 3, "30 mins", R.drawable.hobbies));
-        categories.add(new Category("Outdoor Activities", 3, "20 mins - 1 hour", R.drawable.outdoor_activities));
-        categories.add(new Category("Quit Bad Habits", 2, "20 mins - 1 hour", R.drawable.quit_bad_habits));
-        categories.add(new Category("Food Habits", 2, "20 mins - 1 hour", R.drawable.foods_habit));
-        categories.add(new Category("Socialize", 2, "20 mins - 1 hour", R.drawable.socialize));
-        categories.add(new Category("Relaxation", 3, "20 mins - 1 hour", R.drawable.relaxation));
-        categories.add(new Category("Physical Health", 3, "20 mins - 1 hour", R.drawable.physical_health));
-        categories.add(new Category("Mental Health", 3, "20 mins - 1 hour", R.drawable.mental_health));
-        categories.add(new Category("Daily", 0, "20 mins - 1 hour", R.drawable.daily));
-        categories.add(new Category("Weekly", 0, "20 mins - 1 hour", R.drawable.weekly));
-        categories.add(new Category("Monthly", 0, "20 mins - 1 hour", R.drawable.monthly));
-        categories.add(new Category("Self Care", 2, "10 - 30 mins", R.drawable.self_care));
+        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
+        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), result -> {
+            this.categories.clear();
+            this.categories.addAll(result);
+            categoryListAdapter.notifyDataSetChanged();
+        });
 
-        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories));
+        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories), this.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         recyclerView.setAdapter(categoryListAdapter);
 
@@ -129,7 +128,6 @@ public class MyHabitsFragment extends Fragment {
                 }
     });
 
-
     private void displaySpeechRecognizer() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -145,17 +143,26 @@ public class MyHabitsFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                categorySearchRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                categoriesFiltered.clear();
+                categorySearchRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+
+                categoriesFiltered = categories.stream().filter(category -> {
+                    if (s.length() == 0) return false;
+                    return category.getName().toLowerCase().contains(s.toString().toLowerCase());
+                }).collect(Collectors.toList());
+
+                categoryListAdapter = new CategoryRecycleAdapter(categoriesFiltered, getOnCallbackCategory(categoriesFiltered), getContext());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                categorySearchRecyclerView.setAdapter(categoryListAdapter);
             }
         };
     }
 
     @NonNull
-    private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<Category> categories) {
+    private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<ca.lambton.habittracker.category.model.Category> categories) {
         return new CategoryRecycleAdapter.OnCategoryCallback() {
 
             @Override
