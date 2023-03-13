@@ -22,9 +22,9 @@ public class Category implements Serializable {
 
     private String interval;
 
-    private long createdDate;
+    private Date createdDate;
 
-    private long updatedDate;
+    private Date updatedDate;
 
     private Boolean isDefault;
 
@@ -33,7 +33,7 @@ public class Category implements Serializable {
     public Category() {}
 
     @Ignore
-    public Category(String name, String imageName, int Duration, String interval, long createdDate, long updatedDate, Boolean isDefault, int userId) {
+    public Category(String name, String imageName, int Duration, String interval, Date createdDate, Date updatedDate, Boolean isDefault, int userId) {
         this.name = name;
         this.imageName = imageName;
         this.duration = Duration;
@@ -84,19 +84,19 @@ public class Category implements Serializable {
         this.interval = interval;
     }
 
-    public long getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(long createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
-    public long getUpdatedDate() {
+    public Date getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(long updatedDate) {
+    public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
     }
 
