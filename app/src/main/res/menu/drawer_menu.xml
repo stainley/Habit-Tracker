@@ -15,10 +15,12 @@
 
             <item
                 android:id="@+id/nav_my_habits"
+                android:icon="@drawable/ic_my_habit"
                 android:title="My Habits" />
 
             <item
                 android:id="@+id/nav_defined_habit"
+                android:icon="@drawable/ic_habit"
                 android:title="Habits" />
 
             <item

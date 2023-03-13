@@ -4,30 +4,46 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import ca.lambton.habittracker.databinding.FragmentDayQuoteBinding;
 
 public class QuoteFragment extends Fragment {
 
+    FragmentDayQuoteBinding binding;
+    private QuoteViewModel quoteViewModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        FragmentDayQuoteBinding binding = FragmentDayQuoteBinding.inflate(inflater);
+        binding = FragmentDayQuoteBinding.inflate(inflater);
 
         CardView quoteDayCard = binding.quoteDayCard;
         quoteDayCard.setOnClickListener(this::changeCardQuote);
+        quoteViewModel = new ViewModelProvider(requireActivity(), new QuoteViewModelFactory(requireActivity().getApplication())).get(QuoteViewModel.class);
 
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        int randomQuote = (int) (Math.random() * 36);
+        quoteViewModel.getQuote(randomQuote).observe(requireActivity(), quote -> {
+            if (quote != null)
+                binding.quoteDayMessageText.setText(quote.getDescription());
+        });
+
+
+    }
+
     private void changeCardQuote(View view) {
-        Toast.makeText(getContext(), "Show a new card message on double tap", Toast.LENGTH_LONG).show();
+
     }
 }
