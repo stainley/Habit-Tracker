@@ -38,4 +38,7 @@ public interface CategoryDao extends AbstractDao<Category> {
 
     @Query("SELECT * FROM CATEGORY_TBL WHERE name = :name")
     LiveData<Category> fetchByName(String name);
+
+    @Insert
+    void insertAll(Category categories[]);
 }
