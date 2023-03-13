@@ -16,7 +16,7 @@ public class QuoteViewModel extends ViewModel {
         this.repository = new QuoteRepository(application);
     }
 
-    LiveData<Quote> getQuote() {
-        return null;
+    LiveData<Quote> getQuote(long id) {
+        return this.repository.getQuoteById(id);
     }
 }

@@ -2,11 +2,12 @@ package ca.lambton.habittracker.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "QUOTE")
+@Entity(tableName = "QUOTE_TBL")
 public class Quote implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -15,8 +16,8 @@ public class Quote implements Serializable {
     @ColumnInfo(name = "DESCRIPTION")
     private String description;
 
-    public Quote(long id, String description) {
-        this.id = id;
+
+    public Quote(String description) {
         this.description = description;
     }
 
@@ -28,4 +29,11 @@ public class Quote implements Serializable {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
