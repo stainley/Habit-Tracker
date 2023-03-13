@@ -19,6 +19,7 @@ package ca.lambton.habittracker.view.myhabits;
 //
 //package ca.app.assasins.taskappsassassinsandroid.category.view.adpter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -37,17 +38,23 @@ import java.util.List;
 import ca.lambton.habittracker.R;
 
 //import ca.app.assasins.taskappsassassinsandroid.R;
-//import ca.app.assasins.taskappsassassinsandroid.category.model.Category;
+import ca.lambton.habittracker.category.model.Category;
 
 public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder> {
 
     private final OnCategoryCallback onCategoryCallback;
     private final List<Category> categories;
-
+    private Context context;
 
     public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback) {
         this.categories = categories;
         this.onCategoryCallback = onCallback;
+    }
+
+    public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback, Context context) {
+        this.categories = categories;
+        this.onCategoryCallback = onCallback;
+        this.context = context;
     }
 
     @NonNull
@@ -76,7 +83,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 break;
         }
 
-        holder.categoryImage.setImageResource(categories.get(position).getIconId());
+        holder.categoryImage.setImageResource(context.getResources().getIdentifier(categories.get(position).getImageName(), "drawable", context.getPackageName()));
         holder.categoryName.setText(categories.get(position).getName());
         holder.categoryInterval.setText(categories.get(position).getInterval());
         holder.categoryCard.setOnClickListener(view -> {
