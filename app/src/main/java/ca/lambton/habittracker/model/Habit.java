@@ -3,12 +3,13 @@ package ca.lambton.habittracker.model;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 
 @Entity(tableName = "HABIT_TBL")
 public class Habit implements Serializable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "ID")
     private long id;
     @ColumnInfo(name = "NAME")
@@ -25,6 +26,8 @@ public class Habit implements Serializable {
     private String duration;
     @ColumnInfo(name = "FREQUENCY")
     private String frequency;
+    @ColumnInfo(name = "IMAGE")
+    private String imagePath;
 
     public long getId() {
         return id;
@@ -88,5 +91,13 @@ public class Habit implements Serializable {
 
     public void setFrequency(String frequency) {
         this.frequency = frequency;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

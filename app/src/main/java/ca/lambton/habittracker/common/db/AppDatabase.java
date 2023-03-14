@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,9 +96,11 @@ public abstract class AppDatabase extends RoomDatabase {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split("\n");
 
-                dataList.add(new Quote(parts[0]));
+                Arrays.stream(parts).forEach(q -> dataList.add(new Quote(q.substring(1, q.length() - 1))));
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();

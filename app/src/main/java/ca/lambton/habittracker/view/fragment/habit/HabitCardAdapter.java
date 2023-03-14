@@ -31,7 +31,7 @@ public class HabitCardAdapter extends RecyclerView.Adapter<HabitCardAdapter.Habi
     @Override
     public void onBindViewHolder(@NonNull HabitCardViewHolder holder, int position) {
         holder.habitName.setText(habitCards.get(position).getHabitName());
-        holder.habitPicture.setImageDrawable(habitCards.get(position).getHabitPicture());
+        holder.habitPicture.setImageResource(habitCards.get(position).getDrawableInt());
     }
 
     @Override

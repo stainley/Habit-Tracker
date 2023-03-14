@@ -37,14 +37,15 @@ public class FirstHabitFragment extends Fragment {
         binding = FragmentFirstHabitBinding.inflate(LayoutInflater.from(requireContext()));
         habitsPager = binding.habitsPager;
         configureAnimationPager();
-
+        // TODO: Load habit category from Database
+        /*
         habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.running_img), "Running", CategoryType.RUNNING));
         habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.foods_habit), "Food", CategoryType.FOOD));
         habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.exercise), "Exercise", CategoryType.EXERCISE));
         habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.yoga), "Yoga", CategoryType.YOGA));
         habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.stretching), "Stretching", CategoryType.STRETCHING));
         habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.reading_book), "Reading book", CategoryType.READING));
-
+    */
         PredifinedHabitAdapter predifinedHabitAdapter = new PredifinedHabitAdapter(habitDetails);
         habitsPager.setAdapter(predifinedHabitAdapter);
     }
