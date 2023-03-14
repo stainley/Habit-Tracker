@@ -42,4 +42,5 @@
     <string name="emailID">Email ID</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="dontHaveAccount">Dont have An Account</string>
+    <string name="term">By registering, you agree to our Term and Conditions</string>
 </resources>
