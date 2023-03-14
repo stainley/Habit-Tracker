@@ -120,4 +120,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/password_login_text" />
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/remember_ckb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirm_password_text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="0dp"
+        android:text="@string/remember_me"
+        app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
+        app:layout_constraintStart_toEndOf="@id/remember_ckb"
+        app:layout_constraintTop_toTopOf="@id/remember_ckb" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/forgot_password"
+        app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/remember_ckb" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
