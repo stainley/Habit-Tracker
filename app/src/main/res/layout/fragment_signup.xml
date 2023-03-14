@@ -30,4 +30,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_background"/>
 
+    <LinearLayout
+        android:id="@+id/login_icons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/login_label">
+
+        <ImageButton
+            android:id="@+id/login_twitter"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/twitter"
+            android:contentDescription="@string/twitter_button" />
+
+
+        <ImageButton
+            android:id="@+id/login_facebook"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/facebook"
+            android:contentDescription="@string/facebook_button" />
+
+        <ImageButton
+            android:id="@+id/login_google"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/mail"
+            android:contentDescription="@string/google_button" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
