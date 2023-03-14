@@ -25,12 +25,15 @@ import ca.lambton.habittracker.common.dao.PictureDao;
 import ca.lambton.habittracker.common.helper.Converters;
 import ca.lambton.habittracker.common.model.Picture;
 import ca.lambton.habittracker.habit.dao.QuoteDao;
+import ca.lambton.habittracker.habit.dao.HabitDao;
+import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.model.Quote;
 
 @Database(entities = {
         Category.class,
         Picture.class,
-        Quote.class
+        Quote.class,
+        Habit.class
 }, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -76,6 +79,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract CategoryDao categoryDao();
 
     public abstract PictureDao pictureDao();
+
+    public abstract HabitDao habitDao();
 
     public abstract QuoteDao quoteDao();
 
