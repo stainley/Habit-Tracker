@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.signup">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:id="@+id/image_background"
         android:layout_width="221dp"
