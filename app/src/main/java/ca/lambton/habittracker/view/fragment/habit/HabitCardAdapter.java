@@ -9,15 +9,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ca.lambton.habittracker.R;
 
 public class HabitCardAdapter extends RecyclerView.Adapter<HabitCardAdapter.HabitCardViewHolder> {
 
-    private final List<HabitCardFragment.HabitCard> habitCards;
+    private final List<HabitCard> habitCards;
 
-    public HabitCardAdapter(List<HabitCardFragment.HabitCard> habitCards) {
+    public HabitCardAdapter(List<HabitCard> habitCards) {
         this.habitCards = habitCards;
     }
 
@@ -31,7 +33,10 @@ public class HabitCardAdapter extends RecyclerView.Adapter<HabitCardAdapter.Habi
     @Override
     public void onBindViewHolder(@NonNull HabitCardViewHolder holder, int position) {
         holder.habitName.setText(habitCards.get(position).getHabitName());
-        holder.habitPicture.setImageResource(habitCards.get(position).getDrawableInt());
+        int drawable = habitCards.get(position).getHabitPicture();
+        if (drawable > 0) {
+            Picasso.get().load(drawable).into(holder.habitPicture);
+        }
     }
 
     @Override

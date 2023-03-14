@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.DimenRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -19,16 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentFirstHabitBinding;
-import ca.lambton.habittracker.util.CategoryType;
 import ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment;
+import ca.lambton.habittracker.view.fragment.habit.HabitCard;
 import ca.lambton.habittracker.view.fragment.habit.PredifinedHabitAdapter;
 
 public class FirstHabitFragment extends Fragment {
 
     FragmentFirstHabitBinding binding;
     private ViewPager2 habitsPager;
-    private final List<DefinedHabitFragment.HabitDetail> habitDetails = new ArrayList<>();
+
+    private CategoryViewModel categoryViewModel;
+    private final List<HabitCard> habitDetails = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,16 +41,17 @@ public class FirstHabitFragment extends Fragment {
         binding = FragmentFirstHabitBinding.inflate(LayoutInflater.from(requireContext()));
         habitsPager = binding.habitsPager;
         configureAnimationPager();
-        // TODO: Load habit category from Database
-        /*
-        habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.running_img), "Running", CategoryType.RUNNING));
-        habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.foods_habit), "Food", CategoryType.FOOD));
-        habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.exercise), "Exercise", CategoryType.EXERCISE));
-        habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.yoga), "Yoga", CategoryType.YOGA));
-        habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.stretching), "Stretching", CategoryType.STRETCHING));
-        habitDetails.add(new DefinedHabitFragment.HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.reading_book), "Reading book", CategoryType.READING));
-    */
         PredifinedHabitAdapter predifinedHabitAdapter = new PredifinedHabitAdapter(habitDetails);
+
+        categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
+        categoryViewModel.getAllCategories().observe(requireActivity(), categories -> {
+            categories.forEach(category -> {
+                habitDetails.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", requireContext().getPackageName())));
+            });
+
+            predifinedHabitAdapter.notifyItemChanged(0, categories.size());
+        });
+
         habitsPager.setAdapter(predifinedHabitAdapter);
     }
 
@@ -58,7 +63,7 @@ public class FirstHabitFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                binding.categoryName.setText(habitDetails.get(position).getLabel());
+                binding.categoryName.setText(habitDetails.get(position).getHabitName());
             }
         });
 
