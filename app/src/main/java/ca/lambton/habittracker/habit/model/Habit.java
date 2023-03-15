@@ -26,6 +26,10 @@ public class Habit implements Serializable {
     private String duration;
     @ColumnInfo(name = "FREQUENCY")
     private String frequency;
+    @ColumnInfo(name = "TIME")
+    private String time;
+    @ColumnInfo(name = "CATEGORY_ID")
+    private long categoryId;
     @ColumnInfo(name = "IMAGE")
     private String imagePath;
 
@@ -99,5 +103,21 @@ public class Habit implements Serializable {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }
