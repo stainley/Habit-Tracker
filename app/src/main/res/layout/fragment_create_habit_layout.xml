@@ -92,7 +92,7 @@
                         android:inputType="number" />
 
                     <RadioGroup
-                        android:id="@+id/radioGroup"
+                        android:id="@+id/durationUnitRadioGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="60"
@@ -170,7 +170,7 @@
                         android:inputType="number" />
 
                     <RadioGroup
-                        android:id="@+id/frequencyUnits"
+                        android:id="@+id/frequencyUnitRadioGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="60"
