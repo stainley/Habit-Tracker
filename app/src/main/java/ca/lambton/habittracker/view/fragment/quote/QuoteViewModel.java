@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import ca.lambton.habittracker.habit.repository.QuoteRepository;
-import ca.lambton.habittracker.model.Quote;
+import ca.lambton.habittracker.habit.model.Quote;
 
 public class QuoteViewModel extends ViewModel {
 

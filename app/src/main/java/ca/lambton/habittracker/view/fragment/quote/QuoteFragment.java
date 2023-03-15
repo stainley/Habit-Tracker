@@ -40,7 +40,6 @@ public class QuoteFragment extends Fragment {
                 binding.quoteDayMessageText.setText(quote.getDescription());
         });
 
-
     }
 
     private void changeCardQuote(View view) {

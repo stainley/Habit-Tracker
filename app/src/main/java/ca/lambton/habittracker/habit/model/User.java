@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.model;
+package ca.lambton.habittracker.habit.model;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

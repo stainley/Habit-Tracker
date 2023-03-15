@@ -5,31 +5,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.navigation.NavigationView;
-
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.databinding.FragmentCategoryHabitDescriptionBinding;
-import ca.lambton.habittracker.util.CategoryType;
-import ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment;
+import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragmentDirections;
 
 public class HabitCategoryDescriptionFragment extends Fragment {
 
     FragmentCategoryHabitDescriptionBinding binding;
-    private CategoryType categoryType;
     private TextView habitFoodTitleText;
     private TextView habitDurationHabitText;
     private TextView habitTimeDurationText;
@@ -39,10 +38,10 @@ public class HabitCategoryDescriptionFragment extends Fragment {
     public HabitCategoryDescriptionFragment() {
     }
 
-    public static HabitCategoryDescriptionFragment newInstance(CategoryType categoryType) {
+    public static HabitCategoryDescriptionFragment newInstance(Category category) {
         HabitCategoryDescriptionFragment fragment = new HabitCategoryDescriptionFragment();
         Bundle args = new Bundle();
-        args.putSerializable("category", categoryType);
+        args.putSerializable("category", category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,67 +67,28 @@ public class HabitCategoryDescriptionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
-            categoryType = (CategoryType) getArguments().getSerializable("category");
-            CategoryButtonRVAdapter categoryButtonRVAdapter;
+            Category category = (Category) getArguments().getSerializable("category");
+
+            habitFoodTitleText.setText(category.getName());
+            habitDurationHabitText.setText(String.valueOf(category.getDuration()));
+            habitTimeDurationText.setText(String.valueOf(category.getInterval()));
+            // TODO: add field to the database
+            habitFrequencyTex.setText("NO VALUE");
 
             // TODO: obtain value from the Database to populate the fields
-            switch (categoryType) {
-                case RUNNING:
-                    habitFoodTitleText.setText("Running");
-                    habitDurationHabitText.setText("10 days");
-                    habitFrequencyTex.setText("Weekly");
-                    habitTimeDurationText.setText("0 day");
-                    break;
-                case FOOD:
-                    habitFoodTitleText.setText("Food");
-                    habitTimeDurationText.setText("10 - 30 mins");
-                    habitFrequencyTex.setText("Daily");
-                    habitDurationHabitText.setText("45 - 70");
-                    List<String> foodButtons = Arrays.asList("Drink fruit juice", "Eat Raisins", "Add Veggies");
-                    categoryButtonRVAdapter = new CategoryButtonRVAdapter(foodButtons, (view1, position) -> view1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            switch (position) {
-                                case 0:
+            HabitViewModel habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+            habitViewModel.getAllHabitByCategory(category.getId()).observe(requireActivity(), habits -> {
+                if (habits.size() > 0) {
+                    List<String> habitsTitle = habits.stream().map(Habit::getName).collect(Collectors.toList());
 
-                                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(R.id.nav_habit_detail);
-                                    break;
-                                case 2:
-                                    // TODO: Invoke second button. Pass the info.
-                                    break;
-                                case 3:
-                                    // TODO: invoke third button
-                                    break;
-                                default:
-                                    // TODO: Invalid option
-                            }
-                        }
+                    CategoryButtonRVAdapter categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
+
+                        NavDirections navDirections = DefinedHabitFragmentDirections.actionNavDefinedHabitToNavHabitDetail().setHabit(habits.get(position));
+                        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
                     }));
                     collectionCustomHabitRv.setAdapter(categoryButtonRVAdapter);
-                    break;
-                case YOGA:
-                    habitFoodTitleText.setText("Yoga");
-                    habitFrequencyTex.setText("Weekly/Monthly");
-                    habitDurationHabitText.setText("0 days");
-                    habitTimeDurationText.setText("0 day");
-                    break;
-                case EXERCISE:
-                    habitFoodTitleText.setText("Exercise");
-                    habitFrequencyTex.setText("Daily/Weekly");
-                    habitDurationHabitText.setText("0 days");
-                    habitTimeDurationText.setText("0 day");
-                    break;
-                case READING:
-                    habitFoodTitleText.setText("Reading");
-                    habitFrequencyTex.setText("Daily");
-                    habitDurationHabitText.setText("0 days");
-                    break;
-                case STRETCHING:
-                    habitFoodTitleText.setText("Streching");
-                    habitFrequencyTex.setText("Weekly/Monthly");
-                    habitDurationHabitText.setText("0 days");
-                    break;
-            }
+                }
+            });
         }
     }
 }

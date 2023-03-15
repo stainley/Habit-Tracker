@@ -30,7 +30,7 @@ public class ProgressCalendarFragment extends Fragment {
 
         GridView calendarGridView = binding.calendarGridView;
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(100));
+        CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(86));
         calendarGridView.setAdapter(calendarAdapter);
 
         return view;

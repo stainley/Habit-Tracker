@@ -24,12 +24,26 @@
         android:id="@+id/nav_defined_habit"
         android:name="ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment"
         android:label="Habits"
-        tools:layout="@layout/fragment_defined_habits" />
+        tools:layout="@layout/fragment_defined_habits" >
+        <action
+            android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
+            app:destination="@id/nav_habit_detail" />
+    </fragment>
     <fragment
         android:id="@+id/nav_habit_detail"
         android:name="ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment"
         android:label="HabitDetailFragment"
-        tools:layout="@layout/fragment_habit_detail" />
+        tools:layout="@layout/fragment_habit_detail">
+        <argument
+            android:name="habitId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <argument
+            android:name="habit"
+            app:argType="ca.lambton.habittracker.habit.model.Habit"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
     <fragment
         android:id="@+id/newHabitFragment"
         android:name="ca.lambton.habittracker.view.newhabit.NewHabitFragment"
