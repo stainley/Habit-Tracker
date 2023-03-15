@@ -7,13 +7,13 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import ca.lambton.habittracker.model.Habit;
+import ca.lambton.habittracker.habit.model.Habit;
 
 @Dao
 public abstract class HabitDao {
 
     @Insert
-    public abstract void create(Habit habit);
+    public abstract void insertHabit(Habit... habit);
 
     @Query("SELECT * FROM HABIT_TBL WHERE CATEGORY_ID = :category")
     public abstract LiveData<List<Habit>> getAllHabitsByCategory(long category);

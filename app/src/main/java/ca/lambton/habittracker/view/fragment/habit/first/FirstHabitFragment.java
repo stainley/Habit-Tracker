@@ -22,7 +22,6 @@ import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentFirstHabitBinding;
-import ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment;
 import ca.lambton.habittracker.view.fragment.habit.HabitCard;
 import ca.lambton.habittracker.view.fragment.habit.PredifinedHabitAdapter;
 

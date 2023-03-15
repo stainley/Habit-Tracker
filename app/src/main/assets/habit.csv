@@ -1,5 +1,3 @@
-NAME,DESCRIPTION,CREATION_DATE,PREDEFINED,USER_ID, DURATION,FREQUENCY,TIME,CATEGORY, IMAGE
-
-Drink Fruit Juice,"Adding a vegetable/ fruit juice daily has been shown to increase blood levels of antioxidants, vitamins, and minerals, plus it can help lower blood levels of homocysteine", 1678745550716,true,0, 10 mins a day, Daily,45, 6,drink_juice
-Eat Raisins,"Raisins are naturally sweet and high in sugar and calories, but they’re beneficial to our health when eaten in moderation.", 1678745550716,true,0, 10 mins a day, Daily,45, 6,foods_habit
-Add Veggies,"Including vegetables in your meals is extremely important. Veggies are rich in nutrients and antioxidants, which boost your health and help fight off disease.", 1678745550716,true,0, 10 mins a day, Daily,30, 6,foods_habit
+Drink Fruit Juice|Adding a vegetable/ fruit juice daily has been shown to increase blood levels of antioxidants, vitamins, and minerals, plus it can help lower blood levels of homocysteine|1678745550716|true|0|10 mins a day|Daily|45|6|drink_juice
+Eat Raisins|Raisins are naturally sweet and high in sugar and calories, but they’re beneficial to our health when eaten in moderation.|1678745550716|true|0| 10 mins a day|Daily|45|6|foods_habit
+Add Veggies|Including vegetables in your meals is extremely important. Veggies are rich in nutrients and antioxidants, which boost your health and help fight off disease.|1678745550716|true|0|10 mins a day|Daily|30|6|foods_habit

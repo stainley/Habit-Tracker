@@ -27,10 +27,15 @@ import ca.lambton.habittracker.common.helper.Converters;
 import ca.lambton.habittracker.common.model.Picture;
 import ca.lambton.habittracker.habit.dao.HabitDao;
 import ca.lambton.habittracker.habit.dao.QuoteDao;
-import ca.lambton.habittracker.model.Habit;
-import ca.lambton.habittracker.model.Quote;
+import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.Quote;
 
-@Database(entities = {Category.class, Picture.class, Quote.class, Habit.class}, version = 1, exportSchema = false)
+@Database(entities = {
+        Category.class,
+        Picture.class,
+        Quote.class,
+        Habit.class
+}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -90,7 +95,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public void insertHabit(Context context) {
         List<Habit> habits = readHabitFromFile(context);
         HabitDao habitDao = getInstance(context).habitDao();
-        databaseWriterExecutor.execute(() -> habits.forEach(habitDao::create));
+        databaseWriterExecutor.execute(() -> habits.forEach(habitDao::insertHabit));
     }
 
 
@@ -118,11 +123,11 @@ public abstract class AppDatabase extends RoomDatabase {
         List<Habit> dataList = new ArrayList<>();
         AssetManager assetManager = context.getAssets();
         try {
-            InputStream inputStream = assetManager.open("quote.csv");
+            InputStream inputStream = assetManager.open("habit.csv");
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split("\\|");
 
                 Habit habit = new Habit();
                 habit.setName(parts[0]);
@@ -135,6 +140,8 @@ public abstract class AppDatabase extends RoomDatabase {
                 habit.setTime(parts[7]);
                 habit.setCategoryId(Long.parseLong(parts[8]));
                 habit.setImagePath(parts[9]);
+
+                dataList.add(habit);
             }
         } catch (IOException e) {
             e.printStackTrace();
