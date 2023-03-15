@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/newHabitFragment"
         android:name="ca.lambton.habittracker.view.newhabit.NewHabitFragment"
-        android:label="fragment_new_habit"
+        android:label="Enter Habit"
         tools:layout="@layout/fragment_new_habit">
         <action
             android:id="@+id/action_newHabitFragment_to_nav_defined_habit"
@@ -59,4 +59,10 @@
         android:name="ca.lambton.habittracker.view.fragment.habit.first.FirstHabitFragment"
         android:label="First Habit"
         tools:layout="@layout/fragment_first_habit" />
+    <fragment
+        android:id="@+id/createHabitFragment"
+        android:name="ca.lambton.habittracker.view.newhabit.CreateHabitFragment"
+        android:label="Create Habit"
+        tools:layout="@layout/fragment_new_habit">
+    </fragment>
 </navigation>

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.LoginFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.SignupFragment">
 
     <ImageView
         android:id="@+id/image_background"
-        android:layout_width="264dp"
-        android:layout_height="304dp"
+        android:layout_width="221dp"
+        android:layout_height="250dp"
         android:src="@drawable/welcome_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/app_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -20,13 +21,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/mulish_bold"
-        android:text="@string/login"
+        android:fontFamily="@values/mulish_bold"
+        android:text="@string/signup"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_background" />
+        app:layout_constraintTop_toBottomOf="@id/image_background"/>
 
     <LinearLayout
         android:id="@+id/login_icons"
@@ -63,7 +64,6 @@
             android:contentDescription="@string/google_button" />
     </LinearLayout>
 
-
     <TextView
         android:id="@+id/or_label"
         android:layout_width="wrap_content"
@@ -76,6 +76,17 @@
 
     <ImageView
         android:id="@+id/img_at"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:contentDescription="@string/email_icon"
+        android:src="@drawable/arroba"
+        app:layout_constraintBottom_toBottomOf="@id/email_login_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/email_login_text" />
+
+    <ImageView
+        android:id="@+id/image_at"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -108,14 +119,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/password_login_text" />
 
-
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/remember_ckb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password_login_text" />
+        app:layout_constraintTop_toBottomOf="@id/confirm_password_text" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -135,9 +145,7 @@
         android:text="@string/forgot_password"
         app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintTop_toTopOf="@id/remember_ckb" />
-
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/password_login_text"
@@ -152,6 +160,19 @@
         app:layout_constraintStart_toEndOf="@id/img_at"
         app:layout_constraintTop_toBottomOf="@id/email_login_text" />
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/confirm_password_text"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/confirmPassword"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/image_at"
+        app:layout_constraintTop_toBottomOf="@+id/password_login_text"
+        />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_btn"
@@ -159,7 +180,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:background="@drawable/login_button"
-        android:text="@string/login"
+        android:text="@string/signup"
         app:layout_constraintBottom_toTopOf="@id/signup_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -172,6 +193,29 @@
         android:layout_marginBottom="32dp"
         android:text="@string/don_t_have_an_account"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/term_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/term_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="@string/term"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/Confirm_lock_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:contentDescription="@string/password_icon"
+        android:src="@drawable/lock"
+        app:layout_constraintBottom_toBottomOf="@id/confirm_password_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/confirm_password_text" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
