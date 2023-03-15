@@ -22,4 +22,24 @@ public class HabitViewModel extends ViewModel {
     public LiveData<List<Habit>> getAllHabitByCategory(long categoryId) {
         return repository.getAllHabitByCategory(categoryId);
     }
+
+    public LiveData<Habit> getHabitById(long id) {
+        return repository.getHabitById(id);
+    }
+
+    public void saveHabit(@NonNull Habit habit) {
+        repository.save(habit);
+    }
+
+    public void updateHabit(@NonNull Habit habit) {
+        repository.update(habit);
+    }
+
+    public void deleteHabit(@NonNull Habit habit) {
+        repository.delete(habit);
+    }
+
+    public LiveData<Habit> getHabitByName(String name) {
+        return repository.getHabitByName(name);
+    }
 }

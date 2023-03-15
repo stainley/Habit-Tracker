@@ -22,4 +22,24 @@ public class HabitRepository {
     public LiveData<List<Habit>> getAllHabitByCategory(long category) {
         return habitDao.getAllHabitsByCategory(category);
     }
+
+    public LiveData<Habit> getHabitById(long id) {
+        return habitDao.fetchById(id);
+    }
+
+    public LiveData<Habit> getHabitByName(String name) {
+        return habitDao.fetchByName(name);
+    }
+
+    public void save(Habit habit) {
+        habitDao.insertHabit(habit);
+    }
+
+    public void update(Habit habit) {
+        habitDao.update(habit);
+    }
+
+    public void delete(Habit habit) {
+        habitDao.delete(habit);
+    }
 }
