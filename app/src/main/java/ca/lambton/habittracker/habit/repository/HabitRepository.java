@@ -32,14 +32,14 @@ public class HabitRepository {
     }
 
     public void save(Habit habit) {
-        habitDao.insertHabit(habit);
+        AppDatabase.databaseWriterExecutor.execute(() -> habitDao.insertHabit(habit));
     }
 
     public void update(Habit habit) {
-        habitDao.update(habit);
+        AppDatabase.databaseWriterExecutor.execute(() -> habitDao.update(habit));
     }
 
     public void delete(Habit habit) {
-        habitDao.delete(habit);
+        AppDatabase.databaseWriterExecutor.execute(() -> habitDao.delete(habit));
     }
 }
