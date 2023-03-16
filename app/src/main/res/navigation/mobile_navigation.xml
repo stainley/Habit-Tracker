@@ -27,7 +27,8 @@
         tools:layout="@layout/fragment_defined_habits" >
         <action
             android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
-            app:destination="@id/nav_habit_detail" />
+            app:destination="@id/nav_habit_detail"
+            app:popUpTo="@id/nav_defined_habit" />
     </fragment>
     <fragment
         android:id="@+id/nav_habit_detail"

@@ -25,9 +25,6 @@ import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentDefinedHabitsBinding;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.util.CategoryType;
 import ca.lambton.habittracker.view.fragment.habit.description.HabitCategoryDescriptionFragment;
 
 public class DefinedHabitFragment extends Fragment {
@@ -76,15 +73,6 @@ public class DefinedHabitFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (habitCards.size() > 0) {
-            HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(0));
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("category", CategoryType.RUNNING);
-            FragmentManager parentFragmentManager = getParentFragmentManager();
-
-            parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).commit();
-        }
 
         habitsPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
