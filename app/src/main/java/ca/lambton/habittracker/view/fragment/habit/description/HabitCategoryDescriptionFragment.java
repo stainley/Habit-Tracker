@@ -1,6 +1,7 @@
 package ca.lambton.habittracker.view.fragment.habit.description;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,14 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragmentDirections;
 
 public class HabitCategoryDescriptionFragment extends Fragment {
-
+    private static final String TAG = HabitCategoryDescriptionFragment.class.getSimpleName();
     FragmentCategoryHabitDescriptionBinding binding;
     private TextView habitFoodTitleText;
     private TextView habitDurationHabitText;
     private TextView habitTimeDurationText;
     private TextView habitFrequencyTex;
     private RecyclerView collectionCustomHabitRv;
+    private CategoryButtonRVAdapter categoryButtonRVAdapter;
 
     public HabitCategoryDescriptionFragment() {
     }
@@ -46,11 +48,12 @@ public class HabitCategoryDescriptionFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        binding = FragmentCategoryHabitDescriptionBinding.inflate(inflater);
+        binding = FragmentCategoryHabitDescriptionBinding.inflate(LayoutInflater.from(requireContext()));
+
         collectionCustomHabitRv = binding.collectionCustomHabitRv;
         habitFoodTitleText = binding.foodHabitTitle;
         habitDurationHabitText = binding.dayDurationMessage;
@@ -59,12 +62,12 @@ public class HabitCategoryDescriptionFragment extends Fragment {
 
         collectionCustomHabitRv.setLayoutManager(new GridLayoutManager(requireContext(), 1, RecyclerView.HORIZONTAL, false));
 
-        return binding.getRoot();
     }
 
+    @Nullable
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
 
         if (getArguments() != null) {
             Category category = (Category) getArguments().getSerializable("category");
@@ -72,7 +75,6 @@ public class HabitCategoryDescriptionFragment extends Fragment {
             habitFoodTitleText.setText(category.getName());
             habitDurationHabitText.setText(String.valueOf(category.getDuration()));
             habitTimeDurationText.setText(String.valueOf(category.getInterval()));
-            // TODO: add field to the database
             habitFrequencyTex.setText("NO VALUE");
 
             // TODO: obtain value from the Database to populate the fields
@@ -81,7 +83,7 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                 if (habits.size() > 0) {
                     List<String> habitsTitle = habits.stream().map(Habit::getName).collect(Collectors.toList());
 
-                    CategoryButtonRVAdapter categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
+                    this.categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
 
                         NavDirections navDirections = DefinedHabitFragmentDirections.actionNavDefinedHabitToNavHabitDetail().setHabit(habits.get(position));
                         Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
@@ -90,5 +92,7 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                 }
             });
         }
+
+        return binding.getRoot();
     }
 }
