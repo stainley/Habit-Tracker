@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,6 +24,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -33,10 +37,17 @@ import ca.lambton.habittracker.util.HabitType;
 public class CreateHabitFragment  extends Fragment {
 
     private HabitViewModel habitViewModel;
+    private CategoryViewModel categoryViewModel;
     FragmentCreateHabitLayoutBinding binding;
     int durationUnit = Duration.MINUTES.ordinal();
     int frequencyUnit = Frequency.DAILY.ordinal();
     int habitType = HabitType.PERSONAL.ordinal();
+
+    long categoryId = -1;
+
+    String[] categories = new String[1000];
+
+    ArrayAdapter<String> categoryDropDownAdapter;
 
     public CreateHabitFragment() {
     }
@@ -51,7 +62,12 @@ public class CreateHabitFragment  extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        categoryViewModel = new ViewModelProvider(new ViewModelStore(), new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
+        categoryViewModel.getAllCategories().observe(this, result -> {
+            for (int i = 0; i < result.size(); i++) {
+                this.categories[i] = result.get(i).getName();
+            }
+        });
     }
 
     @Override
@@ -63,6 +79,17 @@ public class CreateHabitFragment  extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_habit_layout, container, false);
         binding = FragmentCreateHabitLayoutBinding.inflate(inflater, container, false);
 
+        categoryDropDownAdapter  = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
+        AutoCompleteTextView autoCompleteTextView = binding.autoCompleteTxt;
+        autoCompleteTextView.setAdapter(categoryDropDownAdapter);
+
+        autoCompleteTextView.setOnItemClickListener((adapterView, view1, position1, id) -> {
+            String category = adapterView.getItemAtPosition(position1).toString();
+
+            categoryViewModel.getCategoryByName(category).observe(getViewLifecycleOwner(), result -> {
+                categoryId = result.getId();
+            });
+        });
 
         EditText editTextStartDate = binding.editTextStartDate;
         editTextStartDate.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +101,9 @@ public class CreateHabitFragment  extends Fragment {
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                // set the selected date to the EditText
-                                editTextStartDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
+                        (view12, year1, monthOfYear, dayOfMonth) -> {
+                            // set the selected date to the EditText
+                            editTextStartDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1);
                         }, year, month, day);
 
                 datePickerDialog.show();
@@ -153,6 +177,7 @@ public class CreateHabitFragment  extends Fragment {
         newHabit.setFrequency(binding.frequencyText.getText().toString());
         newHabit.setFrequencyUnit(frequencyUnit);
         newHabit.setHabitType(habitType);
+        newHabit.setCategoryId(categoryId);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date startDate;
