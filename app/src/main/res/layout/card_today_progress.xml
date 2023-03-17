@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="186dp"
+    android:layout_height="244dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/habit_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Do Yoga"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_indicator"
+            android:layout_width="143dp"
+            android:layout_height="143dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:progress="73"
+            app:indicatorSize="124dp"
+            app:layout_constraintBottom_toTopOf="@id/linear_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/habit_title"
+            app:trackColor="@color/card_background_light_color"
+            app:trackCornerRadius="8dp"
+            app:trackThickness="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mulish_bold"
+            android:text="3/5"
+            android:textColor="@color/md_theme_light_primary"
+            android:textSize="32dp"
+            app:layout_constraintBottom_toBottomOf="@id/progress_indicator"
+            app:layout_constraintEnd_toEndOf="@id/progress_indicator"
+            app:layout_constraintStart_toStartOf="@id/progress_indicator"
+            app:layout_constraintTop_toTopOf="@id/progress_indicator" />
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="114dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/md_theme_light_primary"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/progress_indicator"
+            app:layout_constraintStart_toStartOf="@id/progress_indicator"
+            app:layout_constraintTop_toBottomOf="@id/progress_indicator">
+
+            <ImageButton
+                android:id="@+id/decrease_button"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@color/material_on_surface_stroke"
+                android:onClick="decreaseQuantity"
+                android:src="@drawable/ic_arrow_down"
+                android:text="-" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_vertical_line" />
+
+            <ImageButton
+                android:id="@+id/increase_button"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@color/material_on_surface_stroke"
+                android:onClick="increaseQuantity"
+                android:src="@drawable/ic_arrow_up"
+                android:text="+" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
