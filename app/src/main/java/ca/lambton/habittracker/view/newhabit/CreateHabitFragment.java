@@ -45,7 +45,7 @@ public class CreateHabitFragment  extends Fragment {
 
     long categoryId = -1;
 
-    String[] categories = new String[1000];
+    String[] categories = new String[0];
 
     ArrayAdapter<String> categoryDropDownAdapter;
 
@@ -62,12 +62,6 @@ public class CreateHabitFragment  extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        categoryViewModel = new ViewModelProvider(new ViewModelStore(), new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
-        categoryViewModel.getAllCategories().observe(this, result -> {
-            for (int i = 0; i < result.size(); i++) {
-                this.categories[i] = result.get(i).getName();
-            }
-        });
     }
 
     @Override
@@ -78,18 +72,6 @@ public class CreateHabitFragment  extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_create_habit_layout, container, false);
         binding = FragmentCreateHabitLayoutBinding.inflate(inflater, container, false);
-
-        categoryDropDownAdapter  = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
-        AutoCompleteTextView autoCompleteTextView = binding.autoCompleteTxt;
-        autoCompleteTextView.setAdapter(categoryDropDownAdapter);
-
-        autoCompleteTextView.setOnItemClickListener((adapterView, view1, position1, id) -> {
-            String category = adapterView.getItemAtPosition(position1).toString();
-
-            categoryViewModel.getCategoryByName(category).observe(getViewLifecycleOwner(), result -> {
-                categoryId = result.getId();
-            });
-        });
 
         EditText editTextStartDate = binding.editTextStartDate;
         editTextStartDate.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +145,29 @@ public class CreateHabitFragment  extends Fragment {
                         break;
                 }
             }
+        });
+
+        categoryViewModel = new ViewModelProvider(new ViewModelStore(), new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
+
+        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), result -> {
+            String[] newCategories = new String[categories.length + result.size()];
+
+            for (int i = 0; i < result.size(); i++) {
+                newCategories[i] = result.get(i).getName();
+            }
+            categories = newCategories;
+
+            categoryDropDownAdapter  = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
+            AutoCompleteTextView autoCompleteTextView = binding.autoCompleteTxt;
+            autoCompleteTextView.setAdapter(categoryDropDownAdapter);
+
+            autoCompleteTextView.setOnItemClickListener((adapterView, view1, position1, id) -> {
+                String category = adapterView.getItemAtPosition(position1).toString();
+
+                categoryViewModel.getCategoryByName(category).observe(getViewLifecycleOwner(), result1 -> {
+                    categoryId = result1.getId();
+                });
+            });
         });
 
         return binding.getRoot();
