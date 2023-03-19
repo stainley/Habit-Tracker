@@ -66,4 +66,14 @@
         android:label="Create Habit"
         tools:layout="@layout/fragment_new_habit">
     </fragment>
+    <fragment
+        android:id="@+id/ongoingHabitFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.OngoingHabitsFragment"
+        android:label="Ongoing Habits"
+        tools:layout="@layout/fragment_ongoing_habits">
+        <action
+            android:id="@+id/action_ongoingHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/ongoingHabitFragment" />
+    </fragment>
 </navigation>
