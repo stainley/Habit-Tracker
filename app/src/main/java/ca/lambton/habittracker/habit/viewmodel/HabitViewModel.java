@@ -7,8 +7,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.HabitProgress;
+import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.repository.HabitRepository;
 
 public class HabitViewModel extends ViewModel {
@@ -42,4 +45,31 @@ public class HabitViewModel extends ViewModel {
     public LiveData<Habit> getHabitByName(String name) {
         return repository.getHabitByName(name);
     }
+
+    //FIXME: We need to use the user_id otherwise predefined
+    public LiveData<List<Habit>> fetchAllMyHabits(long userId) {
+        return repository.fetchAllMyHabit(userId);
+    }
+
+    public LiveData<List<HabitProgress>> getProgressByHabitId(long habitId) {
+        return repository.getHabitProgress(habitId);
+    }
+
+    public LiveData<List<HabitProgress>> getAllProgress() {
+        return repository.getHabitProgress();
+    }
+
+    public void increase(Progress progress) {
+        this.repository.increaseHabit(progress);
+    }
+
+    public void decrease(long progressId) {
+        this.repository.decreaseHabit(progressId);
+    }
+
+    public void insertHabitProgress(Habit habit, List<Progress> progressList) {
+        this.repository.insertHabitProgress(habit, progressList);
+    }
+
+
 }

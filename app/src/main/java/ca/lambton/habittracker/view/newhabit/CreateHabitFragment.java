@@ -20,21 +20,24 @@ import androidx.navigation.Navigation;
 import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
 
-public class CreateHabitFragment  extends Fragment {
+public class CreateHabitFragment extends Fragment {
 
     private HabitViewModel habitViewModel;
     private CategoryViewModel categoryViewModel;
@@ -79,7 +82,7 @@ public class CreateHabitFragment  extends Fragment {
         View view = inflater.inflate(R.layout.fragment_create_habit_layout, container, false);
         binding = FragmentCreateHabitLayoutBinding.inflate(inflater, container, false);
 
-        categoryDropDownAdapter  = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
+        categoryDropDownAdapter = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
         AutoCompleteTextView autoCompleteTextView = binding.autoCompleteTxt;
         autoCompleteTextView.setAdapter(categoryDropDownAdapter);
 
@@ -137,7 +140,7 @@ public class CreateHabitFragment  extends Fragment {
         binding.durationUnitRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
+                switch (checkedId) {
                     case R.id.durationUnitMinutes:
                         durationUnit = Duration.MINUTES.ordinal();
                         break;
@@ -151,7 +154,7 @@ public class CreateHabitFragment  extends Fragment {
         binding.frequencyUnitRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
+                switch (checkedId) {
                     case R.id.frequencyUnitDay:
                         frequencyUnit = Frequency.DAILY.ordinal();
                         break;
@@ -194,9 +197,21 @@ public class CreateHabitFragment  extends Fragment {
         newHabit.setEndDate(endDate.getTime());
 
         if (newHabit.getName().isEmpty() || newHabit.getName() == null) {
-            habitViewModel.saveHabit(newHabit);
+            //habitViewModel.saveHabit(newHabit);
+            List<Progress> progressList = new ArrayList<>();
+            Progress progress = new Progress();
+            progress.setCounter(0);
+            progress.setUpdatedDate(new Date().getTime());
+            progressList.add(progress);
+            habitViewModel.insertHabitProgress(newHabit, progressList);
         } else {
-            habitViewModel.saveHabit(newHabit);
+            //habitViewModel.saveHabit(newHabit);
+            List<Progress> progressList = new ArrayList<>();
+            Progress progress = new Progress();
+            progress.setCounter(0);
+            progress.setUpdatedDate(new Date().getTime());
+            progressList.add(progress);
+            habitViewModel.insertHabitProgress(newHabit, progressList);
         }
         //Navigation.findNavController(view).navigate(R.id.action_createHabitFragment_to_habitListFragment);
     }
