@@ -2,8 +2,8 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="186dp"
-    android:layout_height="244dp"
+    android:layout_width="164dp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
     android:layout_marginTop="16dp"
     android:layout_marginEnd="8dp"
@@ -13,7 +13,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/habit_title"
@@ -33,7 +34,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:progress="73"
-            app:indicatorSize="124dp"
+            app:indicatorSize="96dp"
             app:layout_constraintBottom_toTopOf="@id/linear_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,12 +44,13 @@
             app:trackThickness="8dp" />
 
         <TextView
+            android:id="@+id/progress_numeric"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/mulish_bold"
             android:text="3/5"
             android:textColor="@color/md_theme_light_primary"
-            android:textSize="32dp"
+            android:textSize="28dp"
             app:layout_constraintBottom_toBottomOf="@id/progress_indicator"
             app:layout_constraintEnd_toEndOf="@id/progress_indicator"
             app:layout_constraintStart_toStartOf="@id/progress_indicator"
@@ -70,7 +72,6 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:background="@color/material_on_surface_stroke"
-                android:onClick="decreaseQuantity"
                 android:src="@drawable/ic_arrow_down"
                 android:text="-" />
 
@@ -84,7 +85,6 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:background="@color/material_on_surface_stroke"
-                android:onClick="increaseQuantity"
                 android:src="@drawable/ic_arrow_up"
                 android:text="+" />
 
