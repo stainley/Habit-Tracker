@@ -26,6 +26,10 @@ public class HabitViewModel extends ViewModel {
         return repository.getAllHabitByCategory(categoryId);
     }
 
+    public LiveData<List<Habit>> getAllHabit() {
+        return repository.getAllHabit();
+    }
+
     public LiveData<Habit> getHabitById(long id) {
         return repository.getHabitById(id);
     }

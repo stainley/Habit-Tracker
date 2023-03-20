@@ -28,6 +28,10 @@ public class HabitRepository {
         return habitDao.getAllHabitsByCategory(category);
     }
 
+    public LiveData<List<Habit>> getAllHabit() {
+        return habitDao.getAllHabits();
+    }
+
     public LiveData<Habit> getHabitById(long id) {
         return habitDao.fetchById(id);
     }
