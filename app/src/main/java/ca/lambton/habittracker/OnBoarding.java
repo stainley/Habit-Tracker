@@ -6,6 +6,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -173,5 +174,16 @@ public class OnBoarding extends AppCompatActivity {
             container.removeView(view);
         }
 
+    }
+
+    private int getItem(int i) {
+        return viewPager.getCurrentItem() + 1;
+    }
+
+    private void launchHomeScreen() {
+        //Add the login activity or anyother humpy dumpy activity
+        introPref.setIsFirstTimeLaunch(false);
+        startActivity(new Intent(OnBoarding.this, MainActivity.class));
+        finish();
     }
 }
