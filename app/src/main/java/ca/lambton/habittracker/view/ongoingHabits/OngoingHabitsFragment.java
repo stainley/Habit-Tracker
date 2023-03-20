@@ -41,7 +41,7 @@ public class OngoingHabitsFragment extends Fragment {
         binding.allHabitsCard.setOnClickListener(this::allHabitsCardClicked);
         binding.privateHabitsCard.setOnClickListener(this::privateHabitsCardClicked);
         binding.groupHabitsCard.setOnClickListener(this::groupHabitsCardClicked);
-        binding.publicChallengesCard.setOnClickListener(this::publicChallengesCardClicked);
+        //binding.publicChallengesCard.setOnClickListener(this::publicChallengesCardClicked);
 
         return binding.getRoot();
     }
