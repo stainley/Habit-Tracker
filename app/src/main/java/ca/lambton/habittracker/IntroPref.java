@@ -24,5 +24,7 @@ public class IntroPref {
         editor.commit();
     }
 
-
+    public boolean isFirstTimeLaunch() {
+        return preferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
+    }
 }
