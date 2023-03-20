@@ -1,6 +1,7 @@
 package ca.lambton.habittracker;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.graphics.Color;
@@ -133,5 +134,9 @@ public class OnBoarding extends AppCompatActivity {
         if (dots.length > 0) {
             dots[currentPage].setTextColor(activeColors[currentPage]);
         }
+    }
+
+    public class MyViewPagerAdapter extends PagerAdapter {
+
     }
 }
