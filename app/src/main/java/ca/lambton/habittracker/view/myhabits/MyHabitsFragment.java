@@ -174,18 +174,17 @@ public class MyHabitsFragment extends Fragment {
 
     @NonNull
     private MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback getCallbackMyHabitsGridButton(List<MyHabitsGridButton> myHabitsGridButton) {
-        return new MyHabitsGridButtonAdapter.OnMyHabitsGridButtonCallback() {
-
-            @Override
-            public void onRowClicked(int position) {
-                switch (position) {
-                    case 0:
-                        Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
-
-                        break;
-                    case 1:
-                        Navigation.findNavController(requireView()).navigate(R.id.nav_due_today);
-                }
+        return position -> {
+            switch (position) {
+                case 0:
+                    Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
+                    break;
+                case 1:
+                    Navigation.findNavController(requireView()).navigate(R.id.nav_due_today);
+                    break;
+                case 2:
+                    Navigation.findNavController(getView()).navigate(R.id.ongoingHabitFragment);
+                    break;
             }
         };
     }
