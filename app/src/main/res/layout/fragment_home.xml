@@ -114,7 +114,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/what_you_like_label"
-            tools:layout="@layout/fragment_recycle_view_carousel" />
+            tools:layout="@layout/fragment_recycle" />
 
         <TextView
             android:id="@+id/popular_habit_label"
@@ -142,7 +142,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/popular_habit_label"
-            tools:layout="@layout/fragment_recycle_view_carousel" />
+            tools:layout="@layout/fragment_recycle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

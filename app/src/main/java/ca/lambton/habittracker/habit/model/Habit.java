@@ -2,6 +2,7 @@ package ca.lambton.habittracker.habit.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.io.Serializable;
 public class Habit implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "ID")
+    @ColumnInfo(name = "HABIT_ID")
     private long id;
     @ColumnInfo(name = "NAME")
     private String name;
@@ -47,6 +48,8 @@ public class Habit implements Serializable {
 
     @ColumnInfo(name = "END_DATE")
     private long endDate;
+
+    public Habit() {}
 
     public long getId() {
         return id;

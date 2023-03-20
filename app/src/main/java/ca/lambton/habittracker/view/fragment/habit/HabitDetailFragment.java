@@ -31,10 +31,11 @@ public class HabitDetailFragment extends Fragment {
         assert getArguments() != null;
         Habit habit = (Habit) getArguments().getSerializable("habit");
 
-        int drawable = requireContext().getResources().getIdentifier(habit.getImagePath(), "drawable", requireContext().getPackageName());
-
-        if (drawable > 0) {
-            Picasso.get().load(drawable).into(binding.detailImage);
+        if (habit != null && habit.getImagePath() != null) {
+            int drawable = requireContext().getResources().getIdentifier(habit.getImagePath(), "drawable", requireContext().getPackageName());
+            if (drawable > 0) {
+                Picasso.get().load(drawable).into(binding.detailImage);
+            }
         }
 
         binding.frequencyValue.setText(habit.getFrequency());
