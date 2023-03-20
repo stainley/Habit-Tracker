@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 public class IntroPref {
 
+    int PRIVATE_MODE = 0 ;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     Context context;
@@ -17,5 +18,11 @@ public class IntroPref {
         preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = preferences.edit();
     }
+
+    public void setIsFirstTimeLaunch(boolean firstTimeLaunch) {
+        editor.putBoolean(IS_FIRST_TIME_LAUNCH, firstTimeLaunch);
+        editor.commit();
+    }
+
 
 }
