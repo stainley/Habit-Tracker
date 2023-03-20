@@ -47,17 +47,11 @@ public class OnBoarding extends AppCompatActivity {
                     View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
 
-        tvSkip =
+        tvSkip = findViewById(R.id.tvSkip);
 
-                findViewById(R.id.tvSkip);
+        viewPager = findViewById(R.id.viewPager);
 
-        viewPager =
-
-                findViewById(R.id.viewPager);
-
-        layoutDots =
-
-                findViewById(R.id.layoutDots);
+        layoutDots = findViewById(R.id.layoutDots);
 
         layouts = new int[]
 
