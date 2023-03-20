@@ -48,6 +48,8 @@ public class Habit implements Serializable {
     @ColumnInfo(name = "END_DATE")
     private long endDate;
 
+    public Habit() {}
+
     public long getId() {
         return id;
     }

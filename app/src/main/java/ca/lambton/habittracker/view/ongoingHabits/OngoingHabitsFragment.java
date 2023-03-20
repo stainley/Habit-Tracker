@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import ca.lambton.habittracker.R;
-import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.databinding.FragmentOngoingHabitsBinding;
 
 public class OngoingHabitsFragment extends Fragment {

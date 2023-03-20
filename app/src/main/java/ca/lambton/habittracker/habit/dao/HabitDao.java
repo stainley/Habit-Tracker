@@ -26,6 +26,9 @@ public abstract class HabitDao {
     @Query("SELECT * FROM HABIT_TBL WHERE CATEGORY_ID = :category")
     public abstract LiveData<List<Habit>> getAllHabitsByCategory(long category);
 
+    @Query("SELECT * FROM HABIT_TBL")
+    public abstract LiveData<List<Habit>> getAllHabits();
+
     @Query("SELECT * FROM HABIT_TBL WHERE ID = :id")
     public abstract LiveData<Habit> fetchById(Long id);
 
