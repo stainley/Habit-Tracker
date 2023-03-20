@@ -96,4 +96,20 @@ public class OnBoarding extends AppCompatActivity {
             window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
+
+    ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            addBottomDots(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
 }
