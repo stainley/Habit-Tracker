@@ -15,6 +15,7 @@ import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentDueForDayScreenBinding;
 import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
 import ca.lambton.habittracker.view.fragment.progress.TodayDetailProgressFragment;
+import ca.lambton.habittracker.view.fragment.progress.TodayReportFragment;
 
 public class DueTodayFragment extends Fragment {
 
@@ -30,6 +31,10 @@ public class DueTodayFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.progress_view, dueTodayProgress).commit();
 
+
+        Fragment todayGraphReport = new TodayReportFragment();
+        fragmentManager.beginTransaction().replace(R.id.graph_report_container, todayGraphReport).commit();
+        
     }
 
     @Nullable
