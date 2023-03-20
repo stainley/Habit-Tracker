@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentAllHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -61,11 +63,11 @@ public class AllHabitsFragment extends Fragment {
             groupOngoingHabitListAdapter.notifyDataSetChanged();
         });
 
-        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits), this.getContext(), false);
+        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
 
-        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits), this.getContext(), true);
+        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, true), this.getContext(), true);
         groupRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         groupRecyclerView.setAdapter(groupOngoingHabitListAdapter);
 
@@ -73,12 +75,16 @@ public class AllHabitsFragment extends Fragment {
     }
 
     @NonNull
-    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits) {
+    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, Boolean isGroup) {
         return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
 
             @Override
-            public void onRowClicked(int position) {
-
+            public void onRowClicked(int position, boolean isGroup) {
+                if (isGroup) {
+                    Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
+                } else {
+                    Navigation.findNavController(getView()).navigate(R.id.privateHabitDetailFragment);
+                }
             }
         };
     }
