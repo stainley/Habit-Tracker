@@ -8,4 +8,8 @@ public class IntroPref {
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     Context context;
+
+    private static final String PREF_NAME = "xyz";
+    private static final String IS_FIRST_TIME_LAUNCH = "firstTime";
+
 }
