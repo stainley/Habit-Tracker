@@ -50,7 +50,7 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
         holder.habitNameLabel.setText(habits.get(position).getName());
         holder.habitPercentageNumText.setText("73%");
         holder.ongoingHabitCard.setOnClickListener(view -> {
-            onOngoingHabitsCallback.onRowClicked(position);
+            onOngoingHabitsCallback.onRowClicked(position, isGroup);
         });
 
         if (isGroup) {
@@ -85,6 +85,6 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
     }
 
     public interface OnOngoingHabitsCallback {
-        void onRowClicked(int position);
+        void onRowClicked(int position, boolean isGroup);
     }
 }

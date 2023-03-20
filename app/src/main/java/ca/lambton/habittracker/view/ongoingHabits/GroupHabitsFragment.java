@@ -59,7 +59,7 @@ public class GroupHabitsFragment extends Fragment {
             groupOngoingHabitListAdapter.notifyDataSetChanged();
         });
 
-        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits), this.getContext(), true);
+        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, true), this.getContext(), true);
         groupRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         groupRecyclerView.setAdapter(groupOngoingHabitListAdapter);
 
@@ -67,11 +67,11 @@ public class GroupHabitsFragment extends Fragment {
     }
 
     @NonNull
-    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits) {
+    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, Boolean isGroup) {
         return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
 
             @Override
-            public void onRowClicked(int position) {
+            public void onRowClicked(int position, boolean isGroup) {
 
             }
         };

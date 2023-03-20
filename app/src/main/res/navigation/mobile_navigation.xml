@@ -120,4 +120,24 @@
             app:destination="@id/nav_defined_habit"
             app:popUpTo="@id/publicChallengesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/privateHabitDetailFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitDetailFragment"
+        android:label="Private Habit Detail"
+        tools:layout="@layout/fragment_public_challenges">
+        <action
+            android:id="@+id/action_privateHabitDetailFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/privateHabitDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupHabitDetailFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitDetailFragment"
+        android:label="Group Habit Detail"
+        tools:layout="@layout/fragment_public_challenges">
+        <action
+            android:id="@+id/action_groupHabitDetailFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/groupHabitDetailFragment" />
+    </fragment>
 </navigation>
