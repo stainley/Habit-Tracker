@@ -12,4 +12,10 @@ public class IntroPref {
     private static final String PREF_NAME = "xyz";
     private static final String IS_FIRST_TIME_LAUNCH = "firstTime";
 
+    public IntroPref(Context context) {
+        this.context = context;
+        preferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        editor = preferences.edit();
+    }
+
 }
