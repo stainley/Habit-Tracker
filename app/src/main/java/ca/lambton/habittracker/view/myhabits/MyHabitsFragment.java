@@ -126,7 +126,7 @@ public class MyHabitsFragment extends Fragment {
                     String spokenText = results.get(0);
                     searchView.getEditText().setText(spokenText);
                 }
-    });
+            });
 
     private void displaySpeechRecognizer() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -178,6 +178,9 @@ public class MyHabitsFragment extends Fragment {
             switch (position) {
                 case 0:
                     Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
+                    break;
+                case 1:
+                    Navigation.findNavController(requireView()).navigate(R.id.nav_due_today);
                     break;
                 case 2:
                     Navigation.findNavController(getView()).navigate(R.id.ongoingHabitFragment);

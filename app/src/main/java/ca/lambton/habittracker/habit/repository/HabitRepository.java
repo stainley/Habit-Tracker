@@ -8,15 +8,20 @@ import java.util.List;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
 import ca.lambton.habittracker.habit.dao.HabitDao;
+import ca.lambton.habittracker.habit.dao.ProgressDao;
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.HabitProgress;
+import ca.lambton.habittracker.habit.model.Progress;
 
 public class HabitRepository {
 
     private HabitDao habitDao;
+    private ProgressDao progressDao;
 
     public HabitRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         habitDao = db.habitDao();
+        progressDao = db.progressDao();
     }
 
     public LiveData<List<Habit>> getAllHabitByCategory(long category) {
@@ -46,4 +51,30 @@ public class HabitRepository {
     public void delete(Habit habit) {
         AppDatabase.databaseWriterExecutor.execute(() -> habitDao.delete(habit));
     }
+
+    public LiveData<List<HabitProgress>> getHabitProgress(long habitId) {
+        return progressDao.getProgressByHabit(habitId);
+    }
+
+
+    public LiveData<List<HabitProgress>> getHabitProgress() {
+        return progressDao.getAllProgress();
+    }
+
+    public LiveData<List<Habit>> fetchAllMyHabit(long userId) {
+        return habitDao.fetchAllMyHabits(userId);
+    }
+
+    public void increaseHabit(Progress progress) {
+        AppDatabase.databaseWriterExecutor.execute(() -> progressDao.insertProgress(progress));
+    }
+
+    public void decreaseHabit(long progressId) {
+        AppDatabase.databaseWriterExecutor.execute(() -> progressDao.decreaseProgress(progressId));
+    }
+
+    public void insertHabitProgress(Habit habit, List<Progress> progressList) {
+        AppDatabase.databaseWriterExecutor.execute(() -> habitDao.insertProgressHabit(habit, progressList));
+    }
+
 }
