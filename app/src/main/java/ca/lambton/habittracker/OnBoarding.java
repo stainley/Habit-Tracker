@@ -112,4 +112,26 @@ public class OnBoarding extends AppCompatActivity {
         public void onPageScrollStateChanged(int state) {
         }
     };
+
+    private void addBottomDots(int currentPage) {
+        dots = new TextView[layouts.length];
+        int[] activeColors = getResources().getIntArray(R.array.active);
+        layoutDots.removeAllViews();
+
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new TextView(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    getResources().getDimensionPixelSize(R.dimen.dot_size),
+                    getResources().getDimensionPixelSize(R.dimen.dot_width));
+            params.setMargins(2, 0, 8, 0);
+            dots[i].setLayoutParams(params);
+            dots[i].setBackgroundResource(
+                    currentPage == i ? R.drawable.active_rectangle : R.drawable.inactive_rectangle);
+            layoutDots.addView(dots[i]);
+
+        }
+        if (dots.length > 0) {
+            dots[currentPage].setTextColor(activeColors[currentPage]);
+        }
+    }
 }
