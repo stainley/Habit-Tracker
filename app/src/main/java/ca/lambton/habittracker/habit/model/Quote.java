@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.model;
+package ca.lambton.habittracker.habit.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

@@ -38,6 +38,8 @@ public class NewHabitFragment extends Fragment {
         binding = FragmentNewHabitBinding.inflate(inflater, container, false);
 
         binding.categoriesButton.setOnClickListener(this::exploreCategories);
+        binding.nextButton.setOnClickListener(this::createHabit);
+
         return binding.getRoot();
 
     }
@@ -47,5 +49,9 @@ public class NewHabitFragment extends Fragment {
 
         NavDirections navDirections = NewHabitFragmentDirections.actionNewHabitFragmentToNavDefinedHabit();
         Navigation.findNavController(view).navigate(navDirections);
+    }
+
+    private void createHabit(View view) {
+        Navigation.findNavController(getView()).navigate(R.id.createHabitFragment);
     }
 }

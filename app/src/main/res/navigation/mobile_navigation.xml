@@ -24,16 +24,31 @@
         android:id="@+id/nav_defined_habit"
         android:name="ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment"
         android:label="Habits"
-        tools:layout="@layout/fragment_defined_habits" />
+        tools:layout="@layout/fragment_defined_habits">
+        <action
+            android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
+            app:destination="@id/nav_habit_detail"
+            app:popUpTo="@id/nav_defined_habit" />
+    </fragment>
     <fragment
         android:id="@+id/nav_habit_detail"
         android:name="ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment"
         android:label="HabitDetailFragment"
-        tools:layout="@layout/fragment_habit_detail" />
+        tools:layout="@layout/fragment_habit_detail">
+        <argument
+            android:name="habitId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+        <argument
+            android:name="habit"
+            android:defaultValue="@null"
+            app:argType="ca.lambton.habittracker.habit.model.Habit"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/newHabitFragment"
         android:name="ca.lambton.habittracker.view.newhabit.NewHabitFragment"
-        android:label="fragment_new_habit"
+        android:label="Enter Habit"
         tools:layout="@layout/fragment_new_habit">
         <action
             android:id="@+id/action_newHabitFragment_to_nav_defined_habit"
@@ -45,4 +60,84 @@
         android:name="ca.lambton.habittracker.view.fragment.habit.first.FirstHabitFragment"
         android:label="First Habit"
         tools:layout="@layout/fragment_first_habit" />
+    <fragment
+        android:id="@+id/createHabitFragment"
+        android:name="ca.lambton.habittracker.view.newhabit.CreateHabitFragment"
+        android:label="Create Habit"
+        tools:layout="@layout/fragment_new_habit" />
+    <fragment
+        android:id="@+id/nav_due_today"
+        android:name="ca.lambton.habittracker.view.today.DueTodayFragment"
+        android:label="Due for today"
+        tools:layout="@layout/fragment_due_for_day_screen" />
+    <fragment
+        android:id="@+id/ongoingHabitFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.OngoingHabitsFragment"
+        android:label="Ongoing Habits"
+        tools:layout="@layout/fragment_ongoing_habits">
+        <action
+            android:id="@+id/action_ongoingHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/ongoingHabitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allHabitsFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.AllHabitsFragment"
+        android:label="Ongoing - All Habits"
+        tools:layout="@layout/fragment_all_habits">
+        <action
+            android:id="@+id/action_allHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/allHabitsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/privateHabitsFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitsFragment"
+        android:label="Ongoing - Private Habits"
+        tools:layout="@layout/fragment_private_habits">
+        <action
+            android:id="@+id/action_privateHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/privateHabitsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupHabitsFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitsFragment"
+        android:label="Ongoing - Group Habits"
+        tools:layout="@layout/fragment_group_habits">
+        <action
+            android:id="@+id/action_groupHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/groupHabitsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/publicChallengesFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.PublicChallengesFragment"
+        android:label="Ongoing - Public Challenges"
+        tools:layout="@layout/fragment_public_challenges">
+        <action
+            android:id="@+id/action_publicChallengesFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/publicChallengesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/privateHabitDetailFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitDetailFragment"
+        android:label="Private Habit Detail"
+        tools:layout="@layout/fragment_public_challenges">
+        <action
+            android:id="@+id/action_privateHabitDetailFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/privateHabitDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupHabitDetailFragment"
+        android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitDetailFragment"
+        android:label="Group Habit Detail"
+        tools:layout="@layout/fragment_public_challenges">
+        <action
+            android:id="@+id/action_groupHabitDetailFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit"
+            app:popUpTo="@id/groupHabitDetailFragment" />
+    </fragment>
 </navigation>

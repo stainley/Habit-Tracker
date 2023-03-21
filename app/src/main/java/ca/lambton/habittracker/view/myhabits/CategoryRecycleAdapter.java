@@ -1,32 +1,10 @@
 package ca.lambton.habittracker.view.myhabits;
 
-//import android.view.LayoutInflater;
-//import android.view.MenuInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//import android.widget.ImageButton;
-//import android.widget.PopupMenu;
-//import android.widget.TextView;
-//
-//import androidx.annotation.NonNull;
-//import androidx.cardview.widget.CardView;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import java.util.List;
-//
-//public class CategoryRecycleAdapter {
-//}
-//
-//package ca.app.assasins.taskappsassassinsandroid.category.view.adpter;
-
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
-
-//import ca.app.assasins.taskappsassassinsandroid.R;
 import ca.lambton.habittracker.category.model.Category;
 
 public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder> {

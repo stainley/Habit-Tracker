@@ -7,4 +7,7 @@
 
     <dimen name="viewpager_next_item_visible">26dp</dimen>
     <dimen name="viewpager_current_item_horizontal_margin">42dp</dimen>
+
+    <dimen name="dot_size">30dp</dimen>
+    <dimen name="dot_width">5dp</dimen>
 </resources>

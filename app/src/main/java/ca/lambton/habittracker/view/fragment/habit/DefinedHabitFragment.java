@@ -2,7 +2,6 @@ package ca.lambton.habittracker.view.fragment.habit;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +11,9 @@ import android.view.ViewGroup;
 import androidx.annotation.DimenRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -22,15 +21,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.category.model.Category;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentDefinedHabitsBinding;
-import ca.lambton.habittracker.util.CategoryType;
 import ca.lambton.habittracker.view.fragment.habit.description.HabitCategoryDescriptionFragment;
 
 public class DefinedHabitFragment extends Fragment {
     private static final String TAG = DefinedHabitFragment.class.getName();
-    private final List<HabitDetail> habitDetails = new ArrayList<>();
+    private final List<HabitCard> habitCards = new ArrayList<>();
+    private final List<Category> categories = new ArrayList<>();
     FragmentDefinedHabitsBinding binding;
     private ViewPager2 habitsPager;
+    CategoryViewModel categoryViewModel;
+    PredifinedHabitAdapter predifinedHabitAdapter;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,14 +45,20 @@ public class DefinedHabitFragment extends Fragment {
         habitsPager = binding.habitsPager;
         configureAnimationPager();
 
-        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.running_img), "Running", CategoryType.RUNNING));
-        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.foods_habit), "Food", CategoryType.FOOD));
-        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.exercise), "Exercise", CategoryType.EXERCISE));
-        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.yoga), "Yoga", CategoryType.YOGA));
-        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.stretching), "Stretching", CategoryType.STRETCHING));
-        habitDetails.add(new HabitDetail(AppCompatResources.getDrawable(requireContext(), R.drawable.reading_book), "Reading book", CategoryType.READING));
+        categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
 
-        PredifinedHabitAdapter predifinedHabitAdapter = new PredifinedHabitAdapter(habitDetails);
+        predifinedHabitAdapter = new PredifinedHabitAdapter(habitCards);
+
+        //TODO: refactor this code
+        categoryViewModel.getAllCategories().observe(requireActivity(), categories -> {
+            this.categories.addAll(categories);
+
+            categories.forEach(category -> {
+                habitCards.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", requireContext().getPackageName())));
+            });
+            predifinedHabitAdapter.notifyItemChanged(0, categories.size());
+        });
+
         habitsPager.setAdapter(predifinedHabitAdapter);
     }
 
@@ -55,12 +66,6 @@ public class DefinedHabitFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(habitDetails.get(0).getCategoryType());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("category", CategoryType.RUNNING);
-        FragmentManager parentFragmentManager = getParentFragmentManager();
-
-        parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).commit();
 
         return binding.getRoot();
     }
@@ -81,10 +86,9 @@ public class DefinedHabitFragment extends Fragment {
                 super.onPageSelected(position);
 
                 Log.i(TAG, "onPageSelected: " + position);
-                HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(habitDetails.get(position).getCategoryType());
+                HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
                 FragmentManager parentFragmentManager = getParentFragmentManager();
                 parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).commit();
-
             }
 
             @Override
@@ -93,7 +97,6 @@ public class DefinedHabitFragment extends Fragment {
                 Log.i(TAG, "onPageScrollStateChanged: " + state);
             }
         });
-
 
     }
 
@@ -112,31 +115,6 @@ public class DefinedHabitFragment extends Fragment {
         habitsPager.setPageTransformer(pageTransformer);
         habitsPager.addItemDecoration(new HorizontalMarginItemDecoration(requireContext(), R.dimen.viewpager_current_item_horizontal_margin));
     }
-
-    public static final class HabitDetail {
-        private Drawable image;
-        private String label;
-        private CategoryType categoryType;
-
-        public HabitDetail(Drawable image, String label, CategoryType categoryType) {
-            this.image = image;
-            this.label = label;
-            this.categoryType = categoryType;
-        }
-
-        public Drawable getImage() {
-            return image;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-
-        public CategoryType getCategoryType() {
-            return categoryType;
-        }
-    }
-
 
     static class HorizontalMarginItemDecoration extends RecyclerView.ItemDecoration {
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
 import ca.lambton.habittracker.habit.dao.QuoteDao;
-import ca.lambton.habittracker.model.Quote;
+import ca.lambton.habittracker.habit.model.Quote;
 
 public class QuoteRepository {
     private final QuoteDao quoteDao;

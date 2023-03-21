@@ -5,7 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import ca.lambton.habittracker.model.Quote;
+import ca.lambton.habittracker.habit.model.Quote;
 
 @Dao
 public interface QuoteDao {

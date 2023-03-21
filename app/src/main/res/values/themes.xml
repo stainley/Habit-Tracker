@@ -60,4 +60,9 @@
         <item name="cornerSizeBottomLeft">18%</item>
         <item name="cornerSizeBottomRight">18%</item>
     </style>
+
+    <style name="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox</item>
+        <item name="endIconMode">dropdown_menu</item>
+    </style>
 </resources>
