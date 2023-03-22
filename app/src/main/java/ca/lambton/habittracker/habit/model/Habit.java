@@ -27,21 +27,20 @@ public class Habit implements Serializable {
     private String duration;
 
     @ColumnInfo(name = "DURATION_UNIT")
-    private int durationUnit;
+    private String durationUnit;
     @ColumnInfo(name = "FREQUENCY")
     private String frequency;
 
     @ColumnInfo(name = "FREQUENCY_UNIT")
-    private int frequencyUnit;
-    @ColumnInfo(name = "TIME")
-    private String time;
+    private String frequencyUnit;
+
     @ColumnInfo(name = "CATEGORY_ID")
     private long categoryId;
     @ColumnInfo(name = "IMAGE")
     private String imagePath;
 
     @ColumnInfo(name = "HABIT_TYPE")
-    private int habitType;
+    private String habitType;
 
     @ColumnInfo(name = "START_DATE")
     private long startDate;
@@ -49,7 +48,8 @@ public class Habit implements Serializable {
     @ColumnInfo(name = "END_DATE")
     private long endDate;
 
-    public Habit() {}
+    public Habit() {
+    }
 
     public long getId() {
         return id;
@@ -131,35 +131,27 @@ public class Habit implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public int getDurationUnit() {
+    public String getDurationUnit() {
         return durationUnit;
     }
 
-    public void setDurationUnit(int durationUnit) {
+    public void setDurationUnit(String durationUnit) {
         this.durationUnit = durationUnit;
     }
 
-    public int getFrequencyUnit() {
+    public String getFrequencyUnit() {
         return frequencyUnit;
     }
 
-    public void setFrequencyUnit(int frequencyUnit) {
+    public void setFrequencyUnit(String frequencyUnit) {
         this.frequencyUnit = frequencyUnit;
     }
 
-    public int getHabitType() {
+    public String getHabitType() {
         return habitType;
     }
 
-    public void setHabitType(int habitType) {
+    public void setHabitType(String habitType) {
         this.habitType = habitType;
     }
 

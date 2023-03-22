@@ -34,14 +34,14 @@ import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
 
-public class CreateHabitFragment  extends Fragment {
+public class CreateHabitFragment extends Fragment {
 
     private HabitViewModel habitViewModel;
     private CategoryViewModel categoryViewModel;
     FragmentCreateHabitLayoutBinding binding;
-    int durationUnit = Duration.MINUTES.ordinal();
-    int frequencyUnit = Frequency.DAILY.ordinal();
-    int habitType = HabitType.PERSONAL.ordinal();
+    private Duration durationUnit = Duration.MINUTES;
+    private HabitType habitType = HabitType.PERSONAL;
+    private Frequency frequencyUnit = Frequency.DAILY;
 
     long categoryId = -1;
 
@@ -119,13 +119,11 @@ public class CreateHabitFragment  extends Fragment {
         binding.durationUnitRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    case R.id.durationUnitMinutes:
-                        durationUnit = Duration.MINUTES.ordinal();
-                        break;
-                    case R.id.durationUnitHours:
-                        durationUnit = Duration.HOURS.ordinal();
-                        break;
+
+                if (checkedId == R.id.durationUnitMinutes) {
+                    durationUnit = Duration.MINUTES;
+                } else if (checkedId == R.id.durationUnitHours) {
+                    durationUnit = Duration.HOURS;
                 }
             }
         });
@@ -133,16 +131,13 @@ public class CreateHabitFragment  extends Fragment {
         binding.frequencyUnitRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    case R.id.frequencyUnitDay:
-                        frequencyUnit = Frequency.DAILY.ordinal();
-                        break;
-                    case R.id.frequencyUnitWeek:
-                        frequencyUnit = Frequency.WEEKLY.ordinal();
-                        break;
-                    case R.id.frequencyUnitMonth:
-                        frequencyUnit = Frequency.MONTHLY.ordinal();
-                        break;
+
+                if (checkedId == R.id.frequencyUnitDay) {
+                    frequencyUnit = Frequency.DAILY;
+                } else if (checkedId == R.id.frequencyUnitWeek) {
+                    frequencyUnit = Frequency.WEEKLY;
+                } else if (checkedId == R.id.frequencyUnitMonth) {
+                    frequencyUnit = Frequency.MONTHLY;
                 }
             }
         });
@@ -157,7 +152,7 @@ public class CreateHabitFragment  extends Fragment {
             }
             categories = newCategories;
 
-            categoryDropDownAdapter  = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
+            categoryDropDownAdapter = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
             AutoCompleteTextView autoCompleteTextView = binding.autoCompleteTxt;
             autoCompleteTextView.setAdapter(categoryDropDownAdapter);
 
@@ -175,13 +170,16 @@ public class CreateHabitFragment  extends Fragment {
 
     private void createHabit(View view) {
         Habit newHabit = new Habit();
+        // TODO: Add user ID
         newHabit.setName(binding.titleHabit.getText().toString());
         newHabit.setDescription(binding.description.getText().toString());
         newHabit.setDuration(binding.durationText.getText().toString());
-        newHabit.setDurationUnit(durationUnit);
+        newHabit.setDurationUnit(durationUnit.name());
+        newHabit.setCreationDate(new Date().getTime());
         newHabit.setFrequency(binding.frequencyText.getText().toString());
-        newHabit.setFrequencyUnit(frequencyUnit);
-        newHabit.setHabitType(habitType);
+        newHabit.setFrequencyUnit(frequencyUnit.name());
+
+        newHabit.setHabitType(habitType.name());
         newHabit.setCategoryId(categoryId);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
