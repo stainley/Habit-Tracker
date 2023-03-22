@@ -22,6 +22,8 @@ public class Category implements Serializable {
 
     private String interval;
 
+    private String frequencyUnit;
+
     private Date createdDate;
 
     private Date updatedDate;
@@ -30,7 +32,8 @@ public class Category implements Serializable {
 
     private int userId;
 
-    public Category() {}
+    public Category() {
+    }
 
     @Ignore
     public Category(String name, String imageName, int Duration, String interval, Date createdDate, Date updatedDate, Boolean isDefault, int userId) {
@@ -42,6 +45,19 @@ public class Category implements Serializable {
         this.updatedDate = updatedDate;
         this.isDefault = isDefault;
         this.userId = userId;
+    }
+
+    @Ignore
+    public Category(String name, String imageName, int Duration, String interval, String frequencyUnit, Date createdDate, Date updatedDate, Boolean isDefault, int userId) {
+        this.name = name;
+        this.imageName = imageName;
+        this.duration = Duration;
+        this.interval = interval;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
+        this.isDefault = isDefault;
+        this.userId = userId;
+        this.frequencyUnit = frequencyUnit;
     }
 
     public Long getId() {
@@ -84,6 +100,14 @@ public class Category implements Serializable {
         this.interval = interval;
     }
 
+    public String getFrequencyUnit() {
+        return frequencyUnit;
+    }
+
+    public void setFrequencyUnit(String frequencyUnit) {
+        this.frequencyUnit = frequencyUnit;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -116,22 +140,22 @@ public class Category implements Serializable {
         this.userId = userId;
     }
 
-    public static Category[] populateData() {
-        return new Category[] {
-            new Category("Short Duration", "short_duration", 2, "5 - 10 mins", new Date(), new Date(), true, 0),
-            new Category("Long Duration", "long_duration", 3, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Hobbies", "hobbies", 3, "30 mins", new Date(), new Date(), true, 0),
-            new Category("Outdoor Activities", "outdoor_activities", 3, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Quit Bad Habits", "quit_bad_habits", 2, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Food Habits", "foods_habit", 2, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Socialize", "socialize", 2, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Relaxation", "relaxation", 3, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Physical Health", "physical_health", 3, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Mental Health", "mental_health", 3, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Daily", "daily", 0, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Weekly", "weekly", 0, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Monthly", "monthly", 0, "20 mins - 1 hour", new Date(), new Date(), true, 0),
-            new Category("Self Care", "self_care", 2, "10 - 30 mins", new Date(), new Date(), true, 0),
+  /*  public static Category[] populateData() {
+        return new Category[]{
+                new Category("Short Duration", "short_duration", 2, "5 - 10 mins", "Daily", new Date(), new Date(), true, 0),
+                new Category("Long Duration", "long_duration", 3, "20 mins - 1 hour", "Monthly", new Date(), new Date(), true, 0),
+                new Category("Hobbies", "hobbies", 3, "30 mins", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Outdoor Activities", "outdoor_activities", 3, "20 mins - 1 hour", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Quit Bad Habits", "quit_bad_habits", 2, "20 mins - 1 hour", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Food Habits", "foods_habit", 2, "20 mins - 1 hour", "Daily", new Date(), new Date(), true, 0),
+                new Category("Socialize", "socialize", 2, "20 mins - 1 hour", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Relaxation", "relaxation", 3, "20 mins - 1 hour", "Daily", new Date(), new Date(), true, 0),
+                new Category("Physical Health", "physical_health", 3, "20 mins - 1 hour", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Mental Health", "mental_health", 3, "20 mins - 1 hour", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Daily", "daily", 0, "20 mins - 1 hour", "Daily", new Date(), new Date(), true, 0),
+                new Category("Weekly", "weekly", 0, "20 mins - 1 hour", "Weekly", new Date(), new Date(), true, 0),
+                new Category("Monthly", "monthly", 0, "20 mins - 1 hour", "Monthly", new Date(), new Date(), true, 0),
+                new Category("Self Care", "self_care", 2, "10 - 30 mins", "Daily", new Date(), new Date(), true, 0),
         };
-    }
+    }*/
 }

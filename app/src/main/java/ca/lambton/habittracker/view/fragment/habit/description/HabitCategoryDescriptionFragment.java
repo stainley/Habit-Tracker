@@ -75,7 +75,8 @@ public class HabitCategoryDescriptionFragment extends Fragment {
             habitFoodTitleText.setText(category.getName());
             habitDurationHabitText.setText(String.valueOf(category.getDuration()));
             habitTimeDurationText.setText(String.valueOf(category.getInterval()));
-            habitFrequencyTex.setText("NO VALUE");
+            // TODO: Add frequency for categories
+            habitFrequencyTex.setText(category.getFrequencyUnit());
 
             // TODO: obtain value from the Database to populate the fields
             HabitViewModel habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);

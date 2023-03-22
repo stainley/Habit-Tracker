@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -65,9 +66,10 @@ public abstract class AppDatabase extends RoomDatabase {
                         Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
                             @Override
                             public void run() {
-                                getInstance(context).categoryDao().insertAll(Category.populateData());
-                                getInstance(context).insertQuote(context);
-                                getInstance(context).insertHabit(context);
+                                //getInstance(context).categoryDao().insertAll(Category.populateData());
+                                getInstance(context).populateQuote(context);
+                                getInstance(context).populateHabit(context);
+                                getInstance(context).populateCategory(context);
                             }
                         });
                     }
@@ -87,7 +89,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract ProgressDao progressDao();
 
-    public void insertQuote(Context context) {
+    public void populateQuote(Context context) {
         List<Quote> quotes = readQuoteFromFile(context);
         QuoteDao quoteDao = getInstance(context).quoteDao();
         databaseWriterExecutor.execute(() -> {
@@ -95,10 +97,16 @@ public abstract class AppDatabase extends RoomDatabase {
         });
     }
 
-    public void insertHabit(Context context) {
+    public void populateHabit(Context context) {
         List<Habit> habits = readHabitFromFile(context);
         HabitDao habitDao = getInstance(context).habitDao();
         databaseWriterExecutor.execute(() -> habits.forEach(habitDao::insertHabit));
+    }
+
+    public void populateCategory(Context context) {
+        List<Category> categories = readCategoryFromFile(context);
+        CategoryDao categoryDao = getInstance(context).categoryDao();
+        databaseWriterExecutor.execute(() -> categories.forEach(categoryDao::save));
     }
 
 
@@ -139,12 +147,42 @@ public abstract class AppDatabase extends RoomDatabase {
                 habit.setPredefined(Boolean.parseBoolean(parts[3]));
                 habit.setUserId(Long.parseLong(parts[4]));
                 habit.setDuration(parts[5]);
-                habit.setFrequency(parts[6]);
-                habit.setTime(parts[7]);
-                habit.setCategoryId(Long.parseLong(parts[8]));
-                habit.setImagePath(parts[9]);
+                habit.setDurationUnit(parts[6]);
+                habit.setFrequency(parts[7]);
+                habit.setFrequencyUnit(parts[8]);
+                habit.setCategoryId(Long.parseLong(parts[9]));
+                habit.setImagePath(parts[10]);
 
                 dataList.add(habit);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dataList;
+    }
+
+    private List<Category> readCategoryFromFile(Context context) {
+        List<Category> dataList = new ArrayList<>();
+        AssetManager assetManager = context.getAssets();
+        try {
+            InputStream inputStream = assetManager.open("category.csv");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+
+                Category category = new Category();
+                category.setName(parts[0]);
+                category.setImageName(parts[1]);
+                category.setDuration(Integer.parseInt(parts[2]));
+                category.setInterval(parts[3]);
+                category.setFrequencyUnit(parts[4]);
+                category.setCreatedDate(new Date());
+                category.setUpdatedDate(new Date());
+                category.setIsDefault(true);
+                category.setUserId(-1);
+
+                dataList.add(category);
             }
         } catch (IOException e) {
             e.printStackTrace();
