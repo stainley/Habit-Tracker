@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.antgroup.antv.f2.F2CanvasView;
+import com.antgroup.antv.f2.F2Chart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
@@ -24,7 +27,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,13 +40,17 @@ import ca.lambton.habittracker.databinding.FragmentRecycleViewBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.util.Utils;
 
-public class TodayReportFragment extends Fragment {
+public class TodayReportFragment extends Fragment implements F2CanvasView.Adapter {
 
     private FragmentRecycleViewBinding binding;
     private TodayReportAdapter todayReportAdapter;
 
     private LineChart chart;
+
+    private F2Chart mChart;
+    private F2CanvasView canvasView;
 
 
     @Override
@@ -63,7 +72,6 @@ public class TodayReportFragment extends Fragment {
         progress1.setHabitId(1);
         progressList.add(progress1);
 
-
         Progress progress2 = new Progress();
         progress2.setCounter(1);
         progress2.setUpdatedDate(new Date().getTime());
@@ -74,11 +82,14 @@ public class TodayReportFragment extends Fragment {
         habitProgressList.add(new HabitProgress(habit, progressList));
 
 
-        todayReportAdapter = new TodayReportAdapter(habitProgressList, (lineChart, position) -> {
-            chart = lineChart;
+        todayReportAdapter = new TodayReportAdapter(habitProgressList, (canvasView, position) -> {
+            /*chart = lineChart;
             LineData lineData = setData(7, 12.0f);
             lineChart.setData(lineData);
-            lineChart.notifyDataSetChanged();
+            lineChart.notifyDataSetChanged();*/
+            this.canvasView = canvasView;
+            canvasView.initCanvasContext();
+            canvasView.setAdapter(this);
         });
 
         recycleView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -181,5 +192,34 @@ public class TodayReportFragment extends Fragment {
 
         }
         return data;
+    }
+
+    @Override
+    public void onCanvasDraw(F2CanvasView f2CanvasView) {
+        //Initialize the chart, because you need the width and height of the canvasView,
+        //initialize here to ensure that you can get the width and height of the canvasView
+        if (mChart == null) {
+
+            mChart = F2Chart.create(
+                    canvasView.getContext(),
+                    "LineChart-Kotlin",
+                    canvasView.getWidth(),
+                    canvasView.getHeight()
+            );
+        }
+        //Associating the chart and canvasView, the chart finally needs to display the chart on the canvasView
+        mChart.setCanvas(canvasView);
+        //set chart padding
+        mChart.padding(10.0, 10.0, 10.0, 10.0);
+        //load data from data.json
+        String source = Utils.loadAssetFile(canvasView.getContext(), "data.json");
+
+        //set data to chart
+        mChart.source(source);
+        //Draw a polyline on the chart. The data mappings of the x-axis and y-axis of the polyline are genre and sold fields respectively.
+        mChart.line().color("type") .fixedSize(1.f) .fixedShape("smooth").position("genre*sold");
+
+        //Render and display on canvasView
+        mChart.render();
     }
 }

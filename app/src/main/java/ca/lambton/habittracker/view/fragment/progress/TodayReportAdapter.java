@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.antgroup.antv.f2.F2CanvasView;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -39,7 +40,7 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
         holder.progressIndicator.setProgress(25);
         holder.habitName.setText(habitProgresses.get(position).getHabit().getName());
 
-        this.onTodayReportChangeListener.onGraphChange(holder.graphChart, position);
+        this.onTodayReportChangeListener.onGraphChange(holder.canvasView, position);
 
     }
 
@@ -52,18 +53,21 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
 
         private final CircularProgressIndicator progressIndicator;
         private final TextView habitName;
-        private final LineChart graphChart;
+        //private final LineChart graphChart;
+
+        private final F2CanvasView canvasView;
 
         public TodayReportViewHolder(@NonNull View itemView) {
             super(itemView);
             progressIndicator = itemView.findViewById(R.id.progress_percent);
             habitName = itemView.findViewById(R.id.habit_text);
-            graphChart = itemView.findViewById(R.id.graph_chart);
+            //graphChart = itemView.findViewById(R.id.graph_chart);
+            canvasView = itemView.findViewById(R.id.canvas_view);
         }
     }
 
 
     public interface OnTodayReportChangeListener {
-        void onGraphChange(LineChart lineChart, int position);
+        void onGraphChange(F2CanvasView canvasView, int position);
     }
 }
