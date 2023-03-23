@@ -51,15 +51,24 @@
             android:id="@+id/percent_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="75%"
+            android:text="0%"
             app:layout_constraintBottom_toBottomOf="@id/progress_percent"
             app:layout_constraintEnd_toEndOf="@id/progress_percent"
             app:layout_constraintStart_toStartOf="@id/progress_percent"
             app:layout_constraintTop_toTopOf="@id/progress_percent" />
 
 
-        <com.github.mikephil.charting.charts.LineChart
+        <!--<com.github.mikephil.charting.charts.LineChart
             android:id="@+id/graph_chart"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progress_percent" />-->
+
+        <com.antgroup.antv.f2.F2CanvasView
+            android:id="@+id/canvas_view"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="16dp"
@@ -73,9 +82,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:text="Consistency"
-            app:layout_constraintEnd_toEndOf="@id/graph_chart"
-            app:layout_constraintStart_toStartOf="@id/graph_chart"
-            app:layout_constraintTop_toBottomOf="@id/graph_chart" />
+            app:layout_constraintEnd_toEndOf="@id/canvas_view"
+            app:layout_constraintStart_toStartOf="@id/canvas_view"
+            app:layout_constraintTop_toBottomOf="@id/canvas_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
