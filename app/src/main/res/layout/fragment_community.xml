@@ -78,6 +78,35 @@
 
         </LinearLayout>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="25dp"
+                app:cardElevation="10dp"
+                app:cardCornerRadius="5dp"
+                android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:hint="Find people"
+                android:drawableStart="@drawable/ic_search"
+                android:fontFamily="@font/mulish_regular"
+                android:background="@android:color/transparent"
+                android:textSize="14sp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/neutral_grey"
+                android:textColorHint="@color/neutral_grey"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
