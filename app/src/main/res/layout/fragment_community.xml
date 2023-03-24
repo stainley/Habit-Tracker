@@ -41,6 +41,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hi Stainley,"
+                android:fontFamily="@font/mulish_bold"
+                android:textColor="@color/neutral_black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome to the community !"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/mulish_semi_bold"
+                android:textColor="@color/neutral_black"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
