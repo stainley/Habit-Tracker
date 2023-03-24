@@ -1,4 +1,6 @@
 package ca.lambton.habittracker.view.fragment.community;
 
-public class ComposeFragment {
+import androidx.fragment.app.Fragment;
+
+public class ComposeFragment extends Fragment {
 }
