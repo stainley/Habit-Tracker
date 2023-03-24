@@ -21,101 +21,102 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:fontFamily="@font/mulish_bold"
                 android:text="My Community"
-                android:fontFamily="@font/mulish_bold"
                 android:textColor="@color/neutral_black"
-                android:textSize="24sp"
-                android:layout_margin="15dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hi Stainley,"
-                android:fontFamily="@font/mulish_bold"
-                android:textColor="@color/neutral_black"
-                android:textSize="20sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome to the community !"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/mulish_semi_bold"
-                android:textColor="@color/neutral_black"
-                android:textSize="16sp"/>
-
-        </LinearLayout>
+                android:textSize="24sp" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:layout_gravity="bottom"
-                android:layout_marginEnd="10dp"
-                android:orientation="vertical">
-                <Button
-                    android:id="@+id/btnCompose"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/mulish_bold"
+                        android:text="Hi Stainley,"
+                        android:textColor="@color/neutral_black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/mulish_semi_bold"
+                        android:text="Welcome to the community !"
+                        android:textColor="@color/neutral_black"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/mulish_semi_bold"
-                    android:textSize="16sp"
-                    android:text="Compose" />
-            </LinearLayout>
+                    android:layout_gravity="bottom"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <Button
+                        android:id="@+id/btnCompose"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/mulish_semi_bold"
+                        android:text="Compose"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="25dp"
-                app:cardElevation="10dp"
                 app:cardCornerRadius="5dp"
-                android:layout_height="wrap_content">
+                app:cardElevation="10dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:hint="Find people"
-                android:drawableStart="@drawable/ic_search"
-                android:fontFamily="@font/mulish_regular"
-                android:background="@android:color/transparent"
-                android:textSize="14sp"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="10dp"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/neutral_grey"
-                android:textColorHint="@color/neutral_grey"
-                android:layout_height="wrap_content"/>
+                    <EditText
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:drawableStart="@drawable/ic_search"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/neutral_grey"
+                        android:fontFamily="@font/mulish_regular"
+                        android:hint="Find people"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="10dp"
+                        android:textColorHint="@color/neutral_grey"
+                        android:textSize="14sp" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/mic"
-                android:padding="5dp"
-                app:tint="@color/neutral_grey" />
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:padding="5dp"
+                        android:src="@drawable/mic"
+                        app:tint="@color/neutral_grey" />
 
-        </LinearLayout>
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -123,12 +124,12 @@
                 android:id="@+id/rvPosts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
                 android:overScrollMode="never"
                 android:scrollbars="none"
-                android:layout_marginTop="10dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:orientation="vertical"
-                tools:listitem="@layout/row_card_community"/>
+                tools:listitem="@layout/row_card_community" />
 
         </LinearLayout>
 
