@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="32dp"
+    tools:context=".view.home.HomeFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/greeting_message_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="Hi Stainley"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dayQuoteLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="Quote of the day"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/greeting_message_label" />
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/quoteDayFragmentView"
+            android:name="ca.lambton.habittracker.view.fragment.quote.QuoteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dayQuoteLbl"
+            tools:layout="@layout/fragment_day_quote" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/home_calendar_view"
+            android:name="ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment"
+            android:layout_width="match_parent"
+            android:layout_height="164dp"
+            android:layout_marginTop="16dp"
+            android:minHeight="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quoteDayFragmentView"
+            tools:layout="@layout/calendar_day_layout" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/home_progress_view"
+            android:name="ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/home_calendar_view"
+            tools:layout="@layout/fragment_daily_habit_progress" />
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/summarizedProgressView"
+            android:name="ca.lambton.habittracker.view.fragment.progress.SummarizedProgressFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/home_progress_view"
+            tools:layout="@layout/fragment_today_progress" />
+
+
+        <TextView
+            android:id="@+id/what_you_like_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="@string/more_of_what_you_like_msg"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/summarizedProgressView"
+            app:layout_goneMarginBottom="32dp" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/carousel_some_habit_frag"
+            android:name="ca.lambton.habittracker.view.fragment.habit.HabitCardFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/what_you_like_label"
+            tools:layout="@layout/fragment_recycle" />
+
+        <TextView
+            android:id="@+id/popular_habit_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="@string/popular_habits"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/carousel_some_habit_frag"
+            app:layout_goneMarginBottom="32dp" />
+
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/carousel_popular_habit_frag"
+            android:name="ca.lambton.habittracker.view.fragment.habit.HabitCardFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/popular_habit_label"
+            tools:layout="@layout/fragment_recycle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

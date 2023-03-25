@@ -1,3 +1,49 @@
 <resources>
     <string name="app_name">HabitTracker</string>
+    <string name="today">Today</string>
+    <string name="eat_healty_feel_healty">Eat Healty Feel Healty</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <string-array name="weeks_days">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="my_habits">My Habits</string>
+    <string name="don_t_have_an_account">Don\'t have an account? Click here to Sign up</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="twitter_button">twitter button</string>
+    <string name="facebook_button">facebook button</string>
+    <string name="google_button">google button</string>
+    <string name="or">Or</string>
+    <string name="email_icon">email icon</string>
+    <string name="password_icon">password icon</string>
+    <string name="today_s_progress">Today\'s progress</string>
+    <string name="more_of_what_you_like_msg">More of what you like</string>
+    <string name="popular_habits">Popular habits</string>
+    <string name="habit_categories">Habit Categories</string>
+    <string name="habits">Habits</string>
+    <string name="days">Days</string>
+    <string name="duration">Duration</string>
+    <string name="frequency">Frequency</string>
+    <string name="search">Search</string>
+    <string name="message_info">Adding a vegetable/ fruit juice daily has been shown to increase blood levels of antioxidants, vitamins, and minerals, plus it can help lower blood levels of homocysteine</string>
+    <string name="app_logo">Application Logo</string>
+    <string name="logo_text">Logo Title</string>
+    <string name="splash_screen_quote">Splash Screen Quote</string>
+    <string name="signup">SignUp</string>
+    <string name="emailID">Email ID</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="dontHaveAccount">Don\'t have An Account</string>
+    <string name="term">By registering, you agree to our Term and Conditions</string>
 </resources>

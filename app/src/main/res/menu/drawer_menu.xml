@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <item
+        android:id="@+id/main_item"
+        android:title="Main Item">
+        <menu>
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_home"
+                android:title="Home" />
+
+            <item
+                android:id="@+id/nav_my_habits"
+                android:icon="@drawable/ic_my_habit"
+                android:title="My Habits" />
+
+            <item
+                android:id="@+id/nav_defined_habit"
+                android:icon="@drawable/ic_habit"
+                android:title="Categories" />
+
+            <item
+                android:id="@+id/nav_community"
+                android:icon="@drawable/ic_community"
+                android:title="Community" />
+
+            <item
+                android:id="@+id/nav_report"
+                android:icon="@drawable/ic_report"
+                android:title="Report" />
+
+
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/labels_item"
+        android:title="Credential">
+        <menu>
+
+            <item
+                android:id="@+id/nav_due_today"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings" />
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+</menu>

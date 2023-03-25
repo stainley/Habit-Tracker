@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="32dp">
+
+    <FrameLayout
+        android:id="@id/category_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/category_ca"
+            style="@style/MaterialCardView.NoColour"
+            android:layout_width="210dp"
+            android:layout_height="330dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:animateLayoutChanges="true"
+            android:translationY="3dp"
+            android:translationZ="-12dp"
+            app:cardBackgroundColor="@color/card_background_light_color"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="5dp"
+            app:cardMaxElevation="6dp"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/category_car"
+            style="@style/MaterialCardView.NoColour"
+            android:layout_width="248dp"
+            android:layout_height="320dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:animateLayoutChanges="true"
+            android:translationY="8dp"
+            android:translationZ="-10dp"
+            app:cardBackgroundColor="@color/yellow"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="5dp"
+            app:cardMaxElevation="6dp"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/category_card"
+            style="@style/MaterialCardView.NoColour"
+            android:layout_width="272dp"
+            android:layout_height="320dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:animateLayoutChanges="true"
+            android:translationZ="8dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="5dp"
+            app:cardMaxElevation="6dp"
+            app:cardPreventCornerOverlap="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/category_habit_image"
+                style="@style/circleImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/yoga" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </FrameLayout>
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/left_icon"
+        app:layout_constraintBottom_toBottomOf="@id/category_card"
+        app:layout_constraintEnd_toStartOf="@id/category_card"
+        app:layout_constraintTop_toTopOf="@id/category_card" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/right_icon"
+        app:layout_constraintBottom_toBottomOf="@id/category_card"
+        app:layout_constraintStart_toEndOf="@id/category_card"
+        app:layout_constraintTop_toTopOf="@id/category_card" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

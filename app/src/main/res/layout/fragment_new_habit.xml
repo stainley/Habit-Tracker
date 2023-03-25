@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_new_habit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.newhabit.NewHabitFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/newHabitCardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="24dp"
+        android:focusable="true"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/newHabitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/greetingMessageLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Enter a Habit"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/searchCategoryBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="90"
+                android:contentDescription="Search bar"
+                android:hint="@string/search"
+                android:verticalSpacing="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/greetingMessageLabel" />
+
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="141dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="134dp"
+                android:text="Next"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchCategoryBar" />
+
+
+            <LinearLayout
+                android:id="@+id/orDivider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nextButton">
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="0dp"
+                    android:layout_height="0.2dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="40"
+                    app:dividerColor="@color/neutral_grey" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:text="Or"
+                    android:textColor="@color/neutral_black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="0dp"
+                    android:layout_height="0.2dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_weight="40"
+                    app:dividerColor="@color/neutral_grey" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/exploreCategoryLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:gravity="center"
+                android:text="Create a custom habit or pick from our \n popular categories."
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/orDivider" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/categories_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/mulish_semi_bold"
+                android:text="Explore categories"
+                android:textColor="@color/neutral_black"
+                android:textSize="15sp"
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/exploreCategoryLabel"
+                app:rippleColor="@color/card_background_light_color"
+                app:strokeColor="@color/md_theme_light_primary"
+                app:strokeWidth="1dp" />
+
+            <TextView
+                android:id="@+id/challengesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="34dp"
+                android:gravity="center"
+                android:text="If you like to get some inspirations, \ncheckout our Challenges section."
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/categories_button" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/challengesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/mulish_semi_bold"
+                android:text="Go to Challenges"
+                android:textColor="@color/neutral_black"
+                android:textSize="15sp"
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/challengesLabel"
+                app:rippleColor="@color/card_background_light_color"
+                app:strokeColor="@color/md_theme_light_primary"
+                app:strokeWidth="1dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

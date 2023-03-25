@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.fragment.habit.first.FirstHabitFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/enter_info_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:ems="2"
+                android:fallbackLineSpacing="true"
+                android:fontFamily="@font/mulish_semi_bold"
+                android:gravity="center_horizontal"
+                android:lines="2"
+                android:minWidth="10dp"
+                android:text="Enter the first habit that you wish to build"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@drawable/shadow"
+                android:drawableStart="@drawable/ic_edit"
+                android:drawableEnd="@drawable/ic_right_round"
+                android:elevation="6dp"
+                android:maxLines="1"
+                android:padding="8dp"
+                app:layout_constraintBottom_toTopOf="@id/orDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/enter_info_label"
+                app:layout_goneMarginBottom="32dp" />
+
+
+            <LinearLayout
+                android:id="@+id/orDivider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_text">
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="0dp"
+                    android:layout_height="0.2dp"
+                    android:layout_marginStart="26dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="40"
+                    app:dividerColor="@color/neutral_grey" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:gravity="center"
+                    android:text="Or"
+                    android:textColor="@color/neutral_black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="0dp"
+                    android:layout_height="0.2dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="26dp"
+                    android:layout_weight="40"
+                    app:dividerColor="@color/neutral_grey" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/choose_category_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mulish_semi_bold"
+                android:text="Choose from categories"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@id/habits_pager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/orDivider" />
+
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/habits_pager"
+                android:layout_width="match_parent"
+                android:layout_height="380dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/category_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/choose_category_label" />
+
+            <TextView
+                android:id="@+id/category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mulish_semi_bold"
+                android:text="Food Habits"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/habits_pager" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</RelativeLayout>
+
+

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.fragment.habit.description.HabitCategoryDescriptionFragment">
+
+
+    <TextView
+        android:id="@+id/food_habit_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:fontFamily="@font/mulish_bold"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Food Habits" />
+
+    <TextView
+        android:id="@+id/duration_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/mulish_semi_bold"
+        android:text="@string/duration"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/food_habit_title"
+        app:layout_constraintTop_toBottomOf="@id/food_habit_title" />
+
+
+    <TextView
+        android:id="@+id/time_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:fontFamily="@font/mulish_regular"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/duration_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.10"
+        app:layout_constraintStart_toEndOf="@id/duration_label"
+        app:layout_constraintTop_toTopOf="@id/duration_label"
+        tools:text="10 - 30 mins" />
+
+
+    <TextView
+        android:id="@+id/frequency_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/mulish_semi_bold"
+        android:text="@string/frequency"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/food_habit_title"
+        app:layout_constraintTop_toBottomOf="@id/duration_label" />
+
+    <TextView
+        android:id="@+id/frequency_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/frequency_label"
+        app:layout_constraintStart_toStartOf="@id/time_duration"
+        app:layout_constraintTop_toTopOf="@id/frequency_label"
+        tools:text="Daily/ Weekly/ Monthly" />
+
+    <TextView
+        android:id="@+id/days_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/mulish_semi_bold"
+        android:text="@string/days"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/frequency_label"
+        app:layout_constraintTop_toBottomOf="@id/frequency_label" />
+
+    <TextView
+        android:id="@+id/day_duration_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mulish_regular"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/days_label"
+        app:layout_constraintStart_toStartOf="@id/frequency_message"
+        app:layout_constraintTop_toTopOf="@id/days_label"
+        tools:text="45 - 70" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/collection_custom_habit_rv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:foregroundGravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/days_label"
+        app:layout_constraintVertical_bias="0.75">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</androidx.constraintlayout.widget.ConstraintLayout>
