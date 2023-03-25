@@ -32,57 +32,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:orientation="horizontal"
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/habitProgressbar"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:progress="73"
+            app:indicatorColor="@color/yellow"
+            app:indicatorSize="120dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2">
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:trackColor="@color/card_background_light_color"
+            app:trackCornerRadius="8dp"
+            app:trackThickness="16dp" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:id="@+id/habitProgressbar"
-                    android:layout_width="126dp"
-                    android:layout_height="126dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:progress="73"
-                    app:indicatorColor="@color/yellow"
-                    app:indicatorSize="120dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:trackColor="@color/card_background_light_color"
-                    app:trackCornerRadius="8dp"
-                    app:trackThickness="16dp" />
-
-                <TextView
-                    android:id="@+id/habitPercentageNumText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/mulish_bold"
-                    android:textColor="#DD5001"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="@id/habitProgressbar"
-                    app:layout_constraintEnd_toEndOf="@id/habitProgressbar"
-                    app:layout_constraintStart_toStartOf="@id/habitProgressbar"
-                    app:layout_constraintTop_toTopOf="@id/habitProgressbar"
-                    tools:text="73%" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/habitPercentageNumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="73%"
+            android:textColor="#DD5001"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/habitProgressbar"
+            app:layout_constraintEnd_toEndOf="@id/habitProgressbar"
+            app:layout_constraintStart_toStartOf="@id/habitProgressbar"
+            app:layout_constraintTop_toTopOf="@id/habitProgressbar" />
 
         <TextView
             android:id="@+id/textView3"
