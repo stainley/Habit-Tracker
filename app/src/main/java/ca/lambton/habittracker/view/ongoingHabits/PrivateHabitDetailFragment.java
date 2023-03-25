@@ -10,12 +10,15 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
 
 public class PrivateHabitDetailFragment extends Fragment {
 
     FragmentPrivateHabitDetailBinding binding;
     private GridView ongoingHabitDetailGridInfo;
+
+    private GridView achievementGridInfo;
 
     public PrivateHabitDetailFragment() {
         // Required empty public constructor
@@ -48,6 +51,13 @@ public class PrivateHabitDetailFragment extends Fragment {
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "5/15"));
         OngoingHabitDetailGridInfoAdapter adapter = new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList);
         ongoingHabitDetailGridInfo.setAdapter(adapter);
+
+        achievementGridInfo = (GridView) binding.achievementsGridView;
+        ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<AchievementInfo>();
+        achievementModelArrayList.add(new AchievementInfo("Complete the First\n" +
+                "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
+        achievementGridInfo.setAdapter(achievementAdapter);
 
         return binding.getRoot();
     }

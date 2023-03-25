@@ -43,7 +43,7 @@ public class AchievementGridAdapter extends ArrayAdapter<AchievementInfo> {
         achievementLabel.setText(achievementInfo.getAchievementLabel());
         scoreImageView.setImageResource(achievementInfo.getScoreImage());
         starImageView.setImageResource(achievementInfo.getStarImage());
-        
+
         return listitemView;
     }
 }
