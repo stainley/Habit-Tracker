@@ -47,4 +47,5 @@
     <string name="dontHaveAccount">Don\'t have An Account</string>
     <string name="term">By registering, you agree to our Term and Conditions</string>
     <string name="pauseHabit">Pause habit for me</string>
+    <string name="deleteHabit">Delete habit</string>
 </resources>
