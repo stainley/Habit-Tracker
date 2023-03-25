@@ -37,9 +37,13 @@ public class AchievementGridAdapter extends ArrayAdapter<AchievementInfo> {
         AchievementInfo achievementInfo = getItem(position);
         TextView achievementLabel = listitemView.findViewById(R.id.achievementLabel);
         MaterialCardView achievementsCard = listitemView.findViewById(R.id.achievementsCard);
-        //ImageView achievementImage = listitemView.findViewById(R.id.achievementImage);
-        achievementLabel.setText(achievementInfo.getAchievementLabel());
+        ImageView scoreImageView = listitemView.findViewById(R.id.scoreImageView);
+        ImageView starImageView = listitemView.findViewById(R.id.starImageView);
 
+        achievementLabel.setText(achievementInfo.getAchievementLabel());
+        scoreImageView.setImageResource(achievementInfo.getScoreImage());
+        starImageView.setImageResource(achievementInfo.getStarImage());
+        
         return listitemView;
     }
 }
