@@ -68,7 +68,6 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
 
         private final CircularProgressIndicator progressIndicator;
         private final TextView habitName;
-        //private final LineChart graphChart;
         private final F2CanvasView canvasView;
         private final TextView percentage;
 
@@ -76,7 +75,6 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
             super(itemView);
             progressIndicator = itemView.findViewById(R.id.progress_percent);
             habitName = itemView.findViewById(R.id.habit_text);
-            //graphChart = itemView.findViewById(R.id.graph_chart);
             canvasView = itemView.findViewById(R.id.canvas_view);
             percentage = itemView.findViewById(R.id.percent_num);
         }

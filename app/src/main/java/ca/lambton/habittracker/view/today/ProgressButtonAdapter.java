@@ -72,7 +72,6 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
         private final CircularProgressIndicator progressIndicator;
         private final TextView habitTitle;
         private final TextView progressNumeric;
-
         private final ImageButton increaseButton;
         private final ImageButton decreaseButton;
 

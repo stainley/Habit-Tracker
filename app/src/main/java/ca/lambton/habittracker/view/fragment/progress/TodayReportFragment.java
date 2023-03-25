@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ import ca.lambton.habittracker.databinding.FragmentRecycleViewBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.util.Utils;
 
 public class TodayReportFragment extends Fragment implements F2CanvasView.Adapter {
 
@@ -130,12 +132,20 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        LocalDate todayDate = LocalDate.now();
 
         habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses -> {
             habitProgressList.clear();
             habitProgresses.forEach(habitProgress -> {
-                habitProgressList.add(habitProgress);
+                String startDateString = Utils.parseDate(habitProgress.getHabit().getStartDate());
+                String endDateString = Utils.parseDate(habitProgress.getHabit().getEndDate());
+
+                LocalDate startDate = LocalDate.parse(startDateString);
+                LocalDate endDate = LocalDate.parse(endDateString);
+
+                if (todayDate.isEqual(startDate) || todayDate.isAfter(startDate) && (todayDate.isEqual(endDate) || (todayDate.isBefore(endDate)))) {
+                    habitProgressList.add(habitProgress);
+                }
             });
 
             todayReportAdapter.notifyDataSetChanged();
