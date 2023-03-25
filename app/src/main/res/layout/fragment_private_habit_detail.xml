@@ -113,7 +113,7 @@
         <GridView
             android:id="@+id/ongoingHabitDetailGridView"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="290dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
@@ -163,14 +163,14 @@
         <GridView
             android:id="@+id/achievementsGridView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
-            android:horizontalSpacing="12dp"
+            android:horizontalSpacing="24dp"
             android:listSelector="@android:color/transparent"
-            android:numColumns="2"
+            android:numColumns="3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/achievementsLabel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
