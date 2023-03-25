@@ -56,6 +56,20 @@ public class PrivateHabitDetailFragment extends Fragment {
         ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<AchievementInfo>();
         achievementModelArrayList.add(new AchievementInfo("Complete the First\n" +
                 "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" +
+                "your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" +
+                " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" +
+                " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" +
+                " your Habit Duration\n" +
+                "+\n" +
+                "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" +
+                " your Habit Duration\n" +
+                "+\n" +
+                "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
 
