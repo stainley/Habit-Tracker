@@ -47,16 +47,9 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
         binding = FragmentRecycleViewBinding.inflate(LayoutInflater.from(requireContext()));
         RecyclerView recycleView = binding.recycleView;
         habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
-       /* if (mChart == null) {
-            mChart = F2Chart.create(requireContext(), "LineChart-Kotlin", 700, 350);
-        }*/
+
         todayReportAdapter = new TodayReportAdapter(habitProgressList, (canvasView, position) -> {
 
-
-            /*chart = lineChart;
-            LineData lineData = setData(7, 12.0f);
-            lineChart.setData(lineData);
-            lineChart.notifyDataSetChanged();*/
             canvasView.setAdapter(new F2CanvasView.Adapter() {
                 F2Chart mChart;
 
@@ -96,7 +89,6 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-                        System.out.println(progress.getCounter() + "-" + new Date(progress.getUpdatedDate()));
                     });
 
 

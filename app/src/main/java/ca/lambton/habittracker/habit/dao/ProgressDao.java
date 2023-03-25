@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.RewriteQueriesToDropUnusedColumns;
 import androidx.room.Transaction;
 
+import java.util.Date;
 import java.util.List;
 
 import ca.lambton.habittracker.habit.model.HabitProgress;
@@ -32,4 +33,8 @@ public abstract class ProgressDao {
 
     @Query("DELETE FROM PROGRESS_TBL WHERE PROGRESS_ID = :progressId")
     public abstract void decreaseProgress(long progressId);
+
+    @Query("SELECT * FROM PROGRESS_TBL")
+    @Transaction
+    public abstract LiveData<List<Progress>> getTodayAllMyHabitProgress();
 }

@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,8 +56,13 @@ public class HabitViewModel extends ViewModel {
         return repository.fetchAllMyHabit(userId);
     }
 
+
     public LiveData<List<HabitProgress>> getProgressByHabitId(long habitId) {
         return repository.getHabitProgress(habitId);
+    }
+
+    public LiveData<List<Progress>> getTodayAllMyHabitProgress() {
+        return repository.getTodayAllMyHabitProgress();
     }
 
     public LiveData<List<HabitProgress>> getAllProgress() {

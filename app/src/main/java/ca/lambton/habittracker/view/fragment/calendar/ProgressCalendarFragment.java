@@ -21,6 +21,16 @@ import ca.lambton.habittracker.util.DayData;
 
 public class ProgressCalendarFragment extends Fragment {
 
+    private int percentage;
+
+    public static ProgressCalendarFragment newInstance(int percentage) {
+        ProgressCalendarFragment fragment = new ProgressCalendarFragment();
+        Bundle args = new Bundle();
+        args.putInt("PERCENT", percentage);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Nullable
     @Override
@@ -30,7 +40,11 @@ public class ProgressCalendarFragment extends Fragment {
 
         GridView calendarGridView = binding.calendarGridView;
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(86));
+        if (getArguments() != null) {
+            percentage = getArguments().getInt("PERCENT");
+        }
+
+        CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(percentage));
         calendarGridView.setAdapter(calendarAdapter);
 
         return view;

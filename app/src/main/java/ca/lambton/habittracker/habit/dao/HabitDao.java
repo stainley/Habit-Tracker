@@ -8,9 +8,11 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
 
+import java.util.Date;
 import java.util.List;
 
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 
 @Dao
@@ -30,6 +32,7 @@ public abstract class HabitDao {
 
     @Query("SELECT * FROM HABIT_TBL WHERE CATEGORY_ID = :category")
     public abstract LiveData<List<Habit>> getAllHabitsByCategory(long category);
+
     @Query("SELECT * FROM HABIT_TBL")
     public abstract LiveData<List<Habit>> getAllHabits();
 
@@ -52,4 +55,5 @@ public abstract class HabitDao {
 
         insertProgress(progressList);
     }
+
 }

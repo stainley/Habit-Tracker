@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.Date;
 import java.util.List;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
@@ -77,4 +78,8 @@ public class HabitRepository {
         AppDatabase.databaseWriterExecutor.execute(() -> habitDao.insertProgressHabit(habit, progressList));
     }
 
+    public LiveData<List<Progress>> getTodayAllMyHabitProgress() {
+
+        return progressDao.getTodayAllMyHabitProgress();
+    }
 }
