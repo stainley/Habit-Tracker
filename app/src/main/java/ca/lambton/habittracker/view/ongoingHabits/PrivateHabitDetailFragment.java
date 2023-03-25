@@ -21,7 +21,6 @@ public class PrivateHabitDetailFragment extends Fragment {
     private GridView achievementGridInfo;
 
     public PrivateHabitDetailFragment() {
-        // Required empty public constructor
     }
 
     public static PrivateHabitDetailFragment newInstance(String param1, String param2) {
