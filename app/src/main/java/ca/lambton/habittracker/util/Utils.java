@@ -5,6 +5,9 @@ import android.content.Context;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class Utils {
     public static String loadAssetFile(Context context, String assetFile) {
@@ -23,5 +26,11 @@ public class Utils {
         } catch (IOException e) {
         }
         return null;
+    }
+
+    public static String parseDate(long time) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA);
+        Date date = new Date(time);
+        return formatter.format(date);
     }
 }
