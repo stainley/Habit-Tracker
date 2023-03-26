@@ -46,6 +46,7 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
         String frequency = habitProgresses.get(position).getHabit().getFrequency();
 
         float[] progressNumeric = new float[1];
+        holder.progressIndicator.setProgress(0, true);
 
         if (habitProgresses.get(position).getProgressList().size() > 0) {
 
@@ -70,7 +71,6 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
             progressText.append("").append((int) progressNumeric[0]);
         } else {
             progressText.append("0");
-            holder.progressIndicator.setProgress(0, true);
         }
         progressText
                 .append("/")

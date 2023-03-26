@@ -19,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -83,17 +84,10 @@ public class DueTodayProgressFragment extends Fragment {
 
                 LocalDate today = LocalDate.now();
 
-
-                habitProgress.getProgressList().stream()
-                        .filter(pro -> pro.getDate().equalsIgnoreCase(today.toString())).collect(Collectors.toList()).forEach(progress1 -> {
-
-
-                        });
-
                 for (Progress progress1 : habitProgress.getProgressList()) {
 
                     //if ( progress1.getDate().equalsIgnoreCase(today.toString())) {
-                    if (today.isAfter(LocalDate.parse(progress1.getDate()))) {
+                    if (today.isEqual(LocalDate.parse(progress1.getDate())) || today.isAfter(LocalDate.parse(progress1.getDate()))) {
 
                         int totalCompletedToday = habitProgress.getProgressList().stream()
                                 .filter(pro -> pro.getDate().equalsIgnoreCase(today.toString()))
@@ -114,14 +108,26 @@ public class DueTodayProgressFragment extends Fragment {
 
             //1678078800000
             //1679112000000
+            // Decrease only from today, don't delete pass record
             @Override
             public void onDecreaseClick(View view, int position) {
                 HabitProgress habitProgress = habitProgresses.get(position);
                 List<Progress> progressList = habitProgress.getProgressList();
 
                 if (progressList.size() > 0) {
-                    long progressId = progressList.stream().map(Progress::getProgressId).reduce((first, second) -> second).get();
-                    habitViewModel.decrease(progressId);
+                    LocalDate today = LocalDate.now();
+
+                    List<Long> idToRemove = progressList.stream()
+                            .filter(old -> LocalDate.parse(old.getDate()).isEqual(today) || LocalDate.parse(old.getDate()).isAfter(today))
+                            .map(Progress::getProgressId)
+                            .collect(Collectors.toList());
+
+                    if (idToRemove.size() > 0) {
+                        long progressId = idToRemove.stream()
+                                .reduce((first, second) -> second)
+                                .get();
+                        habitViewModel.decrease(progressId);
+                    }
                 }
             }
         });
