@@ -64,7 +64,7 @@
             tools:layout="@layout/calendar_day_layout" />
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/home_progress_view"
+            android:id="@+id/weekly_calendar"
             android:name="ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -85,7 +85,7 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/home_progress_view"
+            app:layout_constraintTop_toBottomOf="@id/weekly_calendar"
             tools:layout="@layout/fragment_today_progress" />
 
 

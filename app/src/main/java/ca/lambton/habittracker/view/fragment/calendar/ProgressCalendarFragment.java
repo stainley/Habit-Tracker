@@ -20,8 +20,10 @@ import ca.lambton.habittracker.databinding.CalendarDayLayoutBinding;
 import ca.lambton.habittracker.util.DayData;
 
 public class ProgressCalendarFragment extends Fragment {
-
     private int percentage;
+
+    public ProgressCalendarFragment() {
+    }
 
     public static ProgressCalendarFragment newInstance(int percentage) {
         ProgressCalendarFragment fragment = new ProgressCalendarFragment();
@@ -31,6 +33,12 @@ public class ProgressCalendarFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+    }
 
     @Nullable
     @Override

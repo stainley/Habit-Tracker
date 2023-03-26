@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentTodayDueProgressBinding;
@@ -49,7 +50,8 @@ public class DueTodayProgressFragment extends Fragment {
         binding = FragmentTodayDueProgressBinding.inflate(LayoutInflater.from(requireContext()));
 
         //TODO: Add logic due for today Habits
-        Fragment progressCalendar = ProgressCalendarFragment.newInstance((int) todayProgress);
+        //Fragment progressCalendar = ProgressCalendarFragment.newInstance((int) todayProgress);
+        Fragment progressCalendar = new ProgressCalendarFragment();
         FragmentManager fragmentManager = getParentFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.weekly_calendar, progressCalendar).commit();
 
@@ -79,14 +81,39 @@ public class DueTodayProgressFragment extends Fragment {
                 progress.setDate(LocalDate.now().toString());
                 progress.setTime(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
 
+                LocalDate today = LocalDate.now();
 
-                if (habitProgress.getProgressList().size() < Integer.parseInt(habitProgress.getHabit().getFrequency())) {
+
+                habitProgress.getProgressList().stream()
+                        .filter(pro -> pro.getDate().equalsIgnoreCase(today.toString())).collect(Collectors.toList()).forEach(progress1 -> {
+
+
+                        });
+
+                for (Progress progress1 : habitProgress.getProgressList()) {
+
+                    //if ( progress1.getDate().equalsIgnoreCase(today.toString())) {
+                    if (today.isAfter(LocalDate.parse(progress1.getDate()))) {
+
+                        int totalCompletedToday = habitProgress.getProgressList().stream()
+                                .filter(pro -> pro.getDate().equalsIgnoreCase(today.toString()))
+                                .mapToInt(Progress::getCounter).sum();
+
+                        if (totalCompletedToday < Integer.parseInt(habitProgress.getHabit().getFrequency())) {
+                            habitViewModel.increase(progress);
+                            break;
+                        }
+                    }
+                }
+
+                if (habitProgress.getProgressList().size() == 0) {
                     habitViewModel.increase(progress);
                 }
+
             }
 
             //1678078800000
-//1679112000000
+            //1679112000000
             @Override
             public void onDecreaseClick(View view, int position) {
                 HabitProgress habitProgress = habitProgresses.get(position);
@@ -154,10 +181,12 @@ public class DueTodayProgressFragment extends Fragment {
             result = (todayProgress / totalFrequencies) * 100;
             System.out.println(result);
             Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) result);
+            //Fragment fragmentProgressCalendar = new ProgressCalendarFragment();
             fragmentManager.beginTransaction().replace(R.id.weekly_calendar, fragmentProgressCalendar).commit();
 
             progressButtonAdapter.notifyDataSetChanged();
         });
+
 
         progressButtonsRecycleView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         progressButtonsRecycleView.setAdapter(progressButtonAdapter);
