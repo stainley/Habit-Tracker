@@ -11,19 +11,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentTodayDetailProgressBinding;
+import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 
 
 public class TodayDetailProgressFragment extends Fragment {
 
     FragmentTodayDetailProgressBinding binding;
+    private HabitViewModel habitViewModel;
+    private TodayDetailProgressAdapter progressAdapter;
+    private final List<DailyProgressData> progressDataList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -32,23 +41,40 @@ public class TodayDetailProgressFragment extends Fragment {
 
         RecyclerView recycleDetailedProgress = binding.recycleDetailedProgress;
 
-        List<DailyProgressData> progressDataList = new ArrayList<>();
-        // TODO: Dummy data. pass the value the percentage integer base on the image
-
-        progressDataList.add(new DailyProgressData(requireContext(), "Do Yoga", getProgressIcon(53)));
-        progressDataList.add(new DailyProgressData(requireContext(), "Enjoy Outdoors", getProgressIcon(18)));
-        progressDataList.add(new DailyProgressData(requireContext(), "Meditation", getProgressIcon(100)));
-        progressDataList.add(new DailyProgressData(requireContext(), "Drink Water", getProgressIcon(78)));
-        progressDataList.add(new DailyProgressData(requireContext(), "Exercise", null));
-        progressDataList.add(new DailyProgressData(requireContext(), "Study", getProgressIcon(100)));
-
-        TodayDetailProgressAdapter progressAdapter = new TodayDetailProgressAdapter(progressDataList);
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+        progressAdapter = new TodayDetailProgressAdapter(progressDataList);
 
         recycleDetailedProgress.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+
+        obtainProgressByHabit();
         recycleDetailedProgress.setAdapter(progressAdapter);
 
-
         return binding.getRoot();
+    }
+
+    public void obtainProgressByHabit() {
+        LocalDate today = LocalDate.now();
+
+        habitViewModel.getAllProgress().observe(getViewLifecycleOwner(), habitProgressResult -> {
+
+            habitProgressResult.forEach(habitProgress -> {
+
+                Map<Long, Integer> progressGroupBy = habitProgress.getProgressList().stream()
+                        .filter(oldDate -> LocalDate.parse(oldDate.getDate()).isEqual(today) || LocalDate.parse(oldDate.getDate()).isAfter(today))
+                        .collect(Collectors.groupingBy(Progress::getHabitId, Collectors.summingInt(Progress::getCounter)));
+
+
+                progressGroupBy.forEach((habitId, total) -> {
+
+                    float frequency = habitProgress.getHabit().getFrequency();
+                    float result = (total / frequency) * 100;
+
+                    progressDataList.add(new DailyProgressData(requireContext(), habitProgress.getHabit().getName(), getProgressIcon((int) result)));
+                });
+
+            });
+            progressAdapter.notifyItemRangeChanged(0, habitProgressResult.size());
+        });
     }
 
     private Drawable getProgressIcon(int percentage) {
@@ -81,7 +107,6 @@ public class TodayDetailProgressFragment extends Fragment {
             this.imageDrawable = imageDrawable;
             this.context = context;
         }
-
 
         public String getHabitName() {
             return habitName;

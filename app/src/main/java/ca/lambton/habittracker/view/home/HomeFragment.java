@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(LayoutInflater.from(requireContext()));
         supportFragmentManager = getChildFragmentManager();
 
-        habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
     }
 
@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
 
 
         Fragment summarizedProgress = new SummarizedProgressFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
+        getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
         return root;
     }
