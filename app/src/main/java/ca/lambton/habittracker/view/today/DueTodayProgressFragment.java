@@ -39,6 +39,7 @@ public class DueTodayProgressFragment extends Fragment {
     FragmentTodayDueProgressBinding binding;
     RecyclerView progressButtonsRecycleView;
     private ProgressButtonAdapter progressButtonAdapter;
+    private FragmentManager fragmentManager;
 
     private float todayProgress = 0;
     private float totalFrequencies;
@@ -50,11 +51,7 @@ public class DueTodayProgressFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = FragmentTodayDueProgressBinding.inflate(LayoutInflater.from(requireContext()));
 
-        //TODO: Add logic due for today Habits
-        //Fragment progressCalendar = ProgressCalendarFragment.newInstance((int) todayProgress);
-        Fragment progressCalendar = new ProgressCalendarFragment();
-        FragmentManager fragmentManager = getParentFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.weekly_calendar, progressCalendar).commit();
+        fragmentManager = getParentFragmentManager();
 
         progressButtonsRecycleView = binding.progressButtons;
 
@@ -85,7 +82,7 @@ public class DueTodayProgressFragment extends Fragment {
                 LocalDate today = LocalDate.now();
 
                 for (Progress progress1 : habitProgress.getProgressList()) {
-                    
+
                     if (today.isEqual(LocalDate.parse(progress1.getDate())) || today.isAfter(LocalDate.parse(progress1.getDate()))) {
 
                         int totalCompletedToday = habitProgress.getProgressList().stream()
@@ -182,7 +179,7 @@ public class DueTodayProgressFragment extends Fragment {
 
             float result = (todayProgress / totalFrequencies) * 100;
             Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) result);
-            fragmentManager.beginTransaction().replace(R.id.weekly_calendar, fragmentProgressCalendar).commit();
+            fragmentManager.beginTransaction().replace(R.id.due_today_calendar, fragmentProgressCalendar).commit();
 
             progressButtonAdapter.notifyDataSetChanged();
         });
@@ -195,6 +192,9 @@ public class DueTodayProgressFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Fragment progressCalendar = ProgressCalendarFragment.newInstance(0);
+        fragmentManager.beginTransaction().replace(R.id.due_today_calendar, progressCalendar).commit();
+
 
         return binding.getRoot();
     }

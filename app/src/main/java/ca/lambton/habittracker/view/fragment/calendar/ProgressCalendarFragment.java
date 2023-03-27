@@ -21,6 +21,7 @@ import ca.lambton.habittracker.util.DayData;
 
 public class ProgressCalendarFragment extends Fragment {
     private int percentage;
+    private CalendarDayLayoutBinding binding;
 
     public ProgressCalendarFragment() {
     }
@@ -36,15 +37,14 @@ public class ProgressCalendarFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        binding = CalendarDayLayoutBinding.inflate(LayoutInflater.from(requireContext()));
 
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        CalendarDayLayoutBinding binding = CalendarDayLayoutBinding.inflate(inflater);
-        View view = binding.getRoot();
+
 
         GridView calendarGridView = binding.calendarGridView;
 
@@ -55,7 +55,7 @@ public class ProgressCalendarFragment extends Fragment {
         CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(percentage));
         calendarGridView.setAdapter(calendarAdapter);
 
-        return view;
+        return binding.getRoot();
     }
 
     private List<DayData> getWeekdaysWithPercentage(int percentage) {
