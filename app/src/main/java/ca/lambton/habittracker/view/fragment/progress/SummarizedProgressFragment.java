@@ -23,7 +23,6 @@ import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
-import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
 
 public class SummarizedProgressFragment extends Fragment {
     private FragmentTodayProgressBinding binding;
