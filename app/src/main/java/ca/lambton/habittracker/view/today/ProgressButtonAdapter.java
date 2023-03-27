@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
@@ -36,31 +37,45 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
 
     @Override
     public void onBindViewHolder(@NonNull ProgressButtonViewHolder holder, int position) {
-
+        LocalDate todayDate = LocalDate.now();
         holder.increaseButton.setOnClickListener(v -> onHabitOperationCallback.onIncreaseClick(holder.increaseButton, position));
         holder.decreaseButton.setOnClickListener(v -> onHabitOperationCallback.onDecreaseClick(holder.decreaseButton, position));
 
         holder.habitTitle.setText(habitProgresses.get(position).getHabit().getName());
-        StringBuilder progressBuilder = new StringBuilder();
-        String frequency = habitProgresses.get(position).getHabit().getFrequency();
+        StringBuilder progressText = new StringBuilder();
+        int frequency = habitProgresses.get(position).getHabit().getFrequency();
 
+        float[] progressNumeric = new float[1];
+        holder.progressIndicator.setProgress(0, true);
 
         if (habitProgresses.get(position).getProgressList().size() > 0) {
-            float counter = habitProgresses.get(position).getProgressList().stream().mapToInt(Progress::getCounter).sum();
-            float freq = Float.parseFloat(habitProgresses.get(position).getHabit().getFrequency());
 
-            float result = (counter / freq) * 100;
+            habitProgresses.get(position).getProgressList().forEach(progress -> {
+                LocalDate progressUpdated = LocalDate.parse(progress.getDate());
 
-            progressBuilder.append("" + (int) counter);
-            holder.progressIndicator.setProgress((int) result, true);
+                if (todayDate.isEqual(progressUpdated)) {
+
+                    float counter = habitProgresses.get(position).getProgressList().stream()
+                            .filter(pro -> pro.getDate().equalsIgnoreCase(progressUpdated.toString()))
+                            .mapToInt(Progress::getCounter).sum();
+
+                    float freq = habitProgresses.get(position).getHabit().getFrequency();
+
+                    float result = (counter / freq) * 100;
+                    progressNumeric[0] = counter;
+
+                    holder.progressIndicator.setProgress((int) result, false);
+                }
+            });
+
+            progressText.append("").append((int) progressNumeric[0]);
         } else {
-            progressBuilder.append("0");
-            holder.progressIndicator.setProgress(0, true);
+            progressText.append("0");
         }
-        progressBuilder
+        progressText
                 .append("/")
                 .append(frequency);
-        holder.progressNumeric.setText(progressBuilder.toString());
+        holder.progressNumeric.setText(progressText.toString());
     }
 
     @Override
@@ -72,7 +87,6 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
         private final CircularProgressIndicator progressIndicator;
         private final TextView habitTitle;
         private final TextView progressNumeric;
-
         private final ImageButton increaseButton;
         private final ImageButton decreaseButton;
 

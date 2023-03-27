@@ -20,34 +20,53 @@ import ca.lambton.habittracker.databinding.CalendarDayLayoutBinding;
 import ca.lambton.habittracker.util.DayData;
 
 public class ProgressCalendarFragment extends Fragment {
+    private int percentage;
+    private CalendarDayLayoutBinding binding;
 
+    public ProgressCalendarFragment() {
+    }
+
+    public static ProgressCalendarFragment newInstance(int percentage) {
+        ProgressCalendarFragment fragment = new ProgressCalendarFragment();
+        Bundle args = new Bundle();
+        args.putInt("PERCENT", percentage);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = CalendarDayLayoutBinding.inflate(LayoutInflater.from(requireContext()));
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        CalendarDayLayoutBinding binding = CalendarDayLayoutBinding.inflate(inflater);
-        View view = binding.getRoot();
 
-        GridView calendarGridView = binding.calendarGridView;
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(86));
+        GridView calendarGridView = binding.customCalendarView;
+
+        if (getArguments() != null) {
+            percentage = getArguments().getInt("PERCENT");
+        }
+
+        CalendarAdapter calendarAdapter = new CalendarAdapter(requireContext(), getWeekdaysWithPercentage(percentage));
         calendarGridView.setAdapter(calendarAdapter);
 
-        return view;
+        return binding.getRoot();
     }
 
     private List<DayData> getWeekdaysWithPercentage(int percentage) {
         List<DayData> dayDataList = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.CANADA);
-        //calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
         for (int i = 0; i < 6; i++) {
             String dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
             int dayNumber = calendar.getTime().getDate();
             DayData dayData = new DayData(dayOfWeek, dayNumber, i == 0 ? percentage : 0);
 
-            System.out.println("First Day of Week: " + dayNumber);
             dayDataList.add(dayData);
             calendar.add(Calendar.DAY_OF_WEEK, 1);
         }

@@ -21,4 +21,6 @@
     <string name="duration">Duration</string>
     <string name="frequency">Frequency</string>
     <string name="message_info">Adding a vegetable/ fruit juice daily has been shown to increase blood levels of antioxidants, vitamins, and minerals, plus it can help lower blood levels of homocysteine</string>
+    <string name="progress">Progress</string>
+    <string name="_0_0">0/0</string>
 </resources>

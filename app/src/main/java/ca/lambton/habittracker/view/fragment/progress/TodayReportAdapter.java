@@ -9,32 +9,26 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.antgroup.antv.f2.F2CanvasView;
-import com.antgroup.antv.f2.F2Chart;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.HabitProgress;
+import ca.lambton.habittracker.habit.model.Progress;
 
 public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.TodayReportViewHolder> {
 
     private final List<HabitProgress> habitProgresses;
     private final OnTodayReportChangeListener onTodayReportChangeListener;
 
-
     public TodayReportAdapter(List<HabitProgress> habitProgresses, OnTodayReportChangeListener onTodayReportChangeListener) {
         this.habitProgresses = habitProgresses;
         this.onTodayReportChangeListener = onTodayReportChangeListener;
-
-
     }
 
     @NonNull
@@ -46,10 +40,18 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TodayReportViewHolder holder, int position) {
+        double frequency = habitProgresses.get(position).getHabit().getFrequency();
 
-        double totalCompleted = habitProgresses.get(position).getProgressList().stream().count();
-        double frequency = Double.parseDouble(habitProgresses.get(position).getHabit().getFrequency());
-        int percentageValue = (int) ((totalCompleted / frequency) * 100);
+        Map<String, Integer> progressList = habitProgresses.get(position).getProgressList()
+                .stream()
+                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+
+        progressList.size();
+        AtomicReference<Double> result = new AtomicReference<>((double) 0);
+        progressList.forEach((date, sum) -> result.updateAndGet(v -> ((double) (v + (sum / frequency) * 100))));
+
+        int percentageValue = (int) (result.get() / progressList.size());
+
         holder.percentage.setText(String.format(Locale.CANADA, "%d%%", percentageValue));
         holder.progressIndicator.setProgress(percentageValue);
         holder.habitName.setText(habitProgresses.get(position).getHabit().getName());
@@ -63,12 +65,10 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
         return habitProgresses.size();
     }
 
-
     static class TodayReportViewHolder extends RecyclerView.ViewHolder {
 
         private final CircularProgressIndicator progressIndicator;
         private final TextView habitName;
-        //private final LineChart graphChart;
         private final F2CanvasView canvasView;
         private final TextView percentage;
 
@@ -76,7 +76,6 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
             super(itemView);
             progressIndicator = itemView.findViewById(R.id.progress_percent);
             habitName = itemView.findViewById(R.id.habit_text);
-            //graphChart = itemView.findViewById(R.id.graph_chart);
             canvasView = itemView.findViewById(R.id.canvas_view);
             percentage = itemView.findViewById(R.id.percent_num);
         }

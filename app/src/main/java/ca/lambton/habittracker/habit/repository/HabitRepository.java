@@ -4,6 +4,8 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
@@ -61,6 +63,16 @@ public class HabitRepository {
         return progressDao.getAllProgress();
     }
 
+    public List<HabitProgress> getHabitProgressNotLive() {
+        List<HabitProgress> allProgressNotLive = new ArrayList<>();
+
+        AppDatabase.databaseWriterExecutor.execute(() -> {
+            allProgressNotLive.addAll(progressDao.getAllProgressNotLive());
+        });
+
+        return allProgressNotLive;
+    }
+
     public LiveData<List<Habit>> fetchAllMyHabit(long userId) {
         return habitDao.fetchAllMyHabits(userId);
     }
@@ -77,4 +89,8 @@ public class HabitRepository {
         AppDatabase.databaseWriterExecutor.execute(() -> habitDao.insertProgressHabit(habit, progressList));
     }
 
+    public LiveData<List<Progress>> getTodayAllMyHabitProgress() {
+
+        return progressDao.getTodayAllMyHabitProgress();
+    }
 }

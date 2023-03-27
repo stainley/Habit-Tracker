@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import com.google.android.material.card.MaterialCardView;
 import java.util.ArrayList;
 
 import ca.lambton.habittracker.R;
-import ca.lambton.habittracker.view.myhabits.MyHabitsGridButton;
 
 public class OngoingHabitDetailGridInfoAdapter extends ArrayAdapter<OngoingHabitDetailGridInfo> {
 

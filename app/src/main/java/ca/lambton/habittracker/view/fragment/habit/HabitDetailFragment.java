@@ -38,11 +38,17 @@ public class HabitDetailFragment extends Fragment {
             }
         }
 
-        binding.frequencyValue.setText(habit.getFrequency());
-        binding.durationValue.setText(habit.getDuration());
-        binding.daysValue.setText(habit.getFrequency());
-        binding.titleHabit.setText(habit.getName());
-        binding.messageValue.setText(habit.getDescription());
+        if (habit != null) {
+            String frequency = String.valueOf(habit.getFrequency());
+
+            binding.frequencyValue.setText(frequency);
+            binding.durationValue.setText(habit.getDuration());
+            binding.daysValue.setText(habit.getFrequency());
+            binding.titleHabit.setText(habit.getName());
+            binding.messageValue.setText(habit.getDescription());
+        }
+
+
         return binding.getRoot();
     }
 }

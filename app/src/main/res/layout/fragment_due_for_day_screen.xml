@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/progress_view"
+            android:id="@+id/progress_button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -23,11 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Progress"
+            android:text="@string/progress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progress_view" />
+            app:layout_constraintTop_toBottomOf="@id/progress_button_container" />
 
 
         <androidx.fragment.app.FragmentContainerView
