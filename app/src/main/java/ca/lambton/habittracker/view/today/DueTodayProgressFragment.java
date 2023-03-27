@@ -19,7 +19,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,6 @@ import ca.lambton.habittracker.databinding.FragmentTodayDueProgressBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
@@ -57,7 +55,7 @@ public class DueTodayProgressFragment extends Fragment {
 
         habitProgresses.clear();
 
-        habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
         progressButtonAdapter = new ProgressButtonAdapter(habitProgresses, new ProgressButtonAdapter.OnHabitOperationCallback() {
 
@@ -184,7 +182,7 @@ public class DueTodayProgressFragment extends Fragment {
             }
 
 
-            progressButtonAdapter.notifyDataSetChanged();
+            progressButtonAdapter.notifyItemRangeChanged(0, habitProgresses1.size());
         });
 
 

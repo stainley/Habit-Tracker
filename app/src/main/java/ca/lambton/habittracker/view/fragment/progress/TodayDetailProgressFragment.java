@@ -63,16 +63,20 @@ public class TodayDetailProgressFragment extends Fragment {
                         .filter(oldDate -> LocalDate.parse(oldDate.getDate()).isEqual(today) || LocalDate.parse(oldDate.getDate()).isAfter(today))
                         .collect(Collectors.groupingBy(Progress::getHabitId, Collectors.summingInt(Progress::getCounter)));
 
+                float frequency = habitProgress.getHabit().getFrequency();
+
+                if (habitProgress.getProgressList().size() == 0) {
+                    progressDataList.add(new DailyProgressData(requireContext(), habitProgress.getHabit().getName(), getProgressIcon(0)));
+                }
 
                 progressGroupBy.forEach((habitId, total) -> {
 
-                    float frequency = habitProgress.getHabit().getFrequency();
                     float result = (total / frequency) * 100;
 
                     progressDataList.add(new DailyProgressData(requireContext(), habitProgress.getHabit().getName(), getProgressIcon((int) result)));
                 });
-
             });
+
             progressAdapter.notifyItemRangeChanged(0, habitProgressResult.size());
         });
     }
@@ -86,9 +90,9 @@ public class TodayDetailProgressFragment extends Fragment {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_25);
         } else if (percentage >= 50 && percentage <= 74) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_50);
-        } else if (percentage > 75 && percentage <= 99) {
+        } else if (percentage >= 75 && percentage <= 95) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_75);
-        } else if (percentage >= 100) {
+        } else if (percentage > 95) {
             icon = AppCompatResources.getDrawable(requireContext(), R.drawable.percent_100);
         }
 
