@@ -43,7 +43,7 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
 
         holder.habitTitle.setText(habitProgresses.get(position).getHabit().getName());
         StringBuilder progressText = new StringBuilder();
-        String frequency = habitProgresses.get(position).getHabit().getFrequency();
+        int frequency = habitProgresses.get(position).getHabit().getFrequency();
 
         float[] progressNumeric = new float[1];
         holder.progressIndicator.setProgress(0, true);
@@ -59,7 +59,7 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
                             .filter(pro -> pro.getDate().equalsIgnoreCase(progressUpdated.toString()))
                             .mapToInt(Progress::getCounter).sum();
 
-                    float freq = Float.parseFloat(habitProgresses.get(position).getHabit().getFrequency());
+                    float freq = habitProgresses.get(position).getHabit().getFrequency();
 
                     float result = (counter / freq) * 100;
                     progressNumeric[0] = counter;

@@ -31,6 +31,10 @@ public abstract class ProgressDao {
     @Query("SELECT * FROM HABIT_TBL WHERE PREDEFINED = 0")
     public abstract LiveData<List<HabitProgress>> getAllProgress();
 
+    @Transaction
+    @Query("SELECT * FROM HABIT_TBL WHERE PREDEFINED = 0")
+    public abstract List<HabitProgress> getAllProgressNotLive();
+
     @Query("DELETE FROM PROGRESS_TBL WHERE PROGRESS_ID = :progressId")
     public abstract void decreaseProgress(long progressId);
 

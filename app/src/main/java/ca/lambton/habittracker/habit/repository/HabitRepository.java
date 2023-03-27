@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +61,16 @@ public class HabitRepository {
 
     public LiveData<List<HabitProgress>> getHabitProgress() {
         return progressDao.getAllProgress();
+    }
+
+    public List<HabitProgress> getHabitProgressNotLive() {
+        List<HabitProgress> allProgressNotLive = new ArrayList<>();
+
+        AppDatabase.databaseWriterExecutor.execute(() -> {
+            allProgressNotLive.addAll(progressDao.getAllProgressNotLive());
+        });
+
+        return allProgressNotLive;
     }
 
     public LiveData<List<Habit>> fetchAllMyHabit(long userId) {

@@ -69,6 +69,10 @@ public class HabitViewModel extends ViewModel {
         return repository.getHabitProgress();
     }
 
+    public List<HabitProgress> getHabitProgressNotLive() {
+        return repository.getHabitProgressNotLive();
+    }
+
     public void increase(Progress progress) {
         this.repository.increaseHabit(progress);
     }

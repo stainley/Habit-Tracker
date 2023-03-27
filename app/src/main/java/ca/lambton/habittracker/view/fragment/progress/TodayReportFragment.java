@@ -100,7 +100,7 @@ public class TodayReportFragment extends Fragment {
                     System.out.println(source);
                     mChart.source(source);
 
-                    mChart.setScale("progress", new F2Chart.ScaleConfigBuilder().precision(0).max(Double.parseDouble(habitProgressList.get(position).getHabit().getFrequency())).min(0));
+                    mChart.setScale("progress", new F2Chart.ScaleConfigBuilder().precision(0).max(habitProgressList.get(position).getHabit().getFrequency()).min(0));
                     mChart.setScale("date", new F2Chart.ScaleConfigBuilder().precision(0).tickCount(2).range(new double[]{0.1, 0.9}));
 
                     //Draw a polyline on the chart. The data mappings of the x-axis and y-axis of the polyline are genre and sold fields respectively.

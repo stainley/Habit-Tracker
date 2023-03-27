@@ -40,7 +40,7 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TodayReportViewHolder holder, int position) {
-        double frequency = Double.parseDouble(habitProgresses.get(position).getHabit().getFrequency());
+        double frequency = habitProgresses.get(position).getHabit().getFrequency();
 
         Map<String, Integer> progressList = habitProgresses.get(position).getProgressList()
                 .stream()

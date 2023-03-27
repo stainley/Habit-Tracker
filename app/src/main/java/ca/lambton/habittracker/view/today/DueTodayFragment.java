@@ -9,6 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentDueForDayScreenBinding;
@@ -26,13 +29,13 @@ public class DueTodayFragment extends Fragment {
 
         //DUE TODAY CONTAINER
         Fragment dueTodayProgress = new DueTodayProgressFragment();
-        FragmentManager fragmentManager = getParentFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.progress_view, dueTodayProgress).commit();
+        FragmentManager fragmentManager = getChildFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.progress_button_container, dueTodayProgress).commit();
 
         //GRAPH CONTAINER
         Fragment todayGraphReport = new TodayReportFragment();
         fragmentManager.beginTransaction().replace(R.id.graph_report_container, todayGraphReport).commit();
-        
+
     }
 
     @Nullable
@@ -42,4 +45,6 @@ public class DueTodayFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+
 }

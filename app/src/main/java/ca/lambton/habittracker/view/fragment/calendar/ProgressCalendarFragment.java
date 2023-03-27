@@ -38,7 +38,6 @@ public class ProgressCalendarFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = CalendarDayLayoutBinding.inflate(LayoutInflater.from(requireContext()));
-
     }
 
     @Nullable
@@ -46,7 +45,7 @@ public class ProgressCalendarFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        GridView calendarGridView = binding.calendarGridView;
+        GridView calendarGridView = binding.customCalendarView;
 
         if (getArguments() != null) {
             percentage = getArguments().getInt("PERCENT");
@@ -62,14 +61,12 @@ public class ProgressCalendarFragment extends Fragment {
         List<DayData> dayDataList = new ArrayList<>();
 
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.CANADA);
-        //calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
 
         for (int i = 0; i < 6; i++) {
             String dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault());
             int dayNumber = calendar.getTime().getDate();
             DayData dayData = new DayData(dayOfWeek, dayNumber, i == 0 ? percentage : 0);
 
-            System.out.println("First Day of Week: " + dayNumber);
             dayDataList.add(dayData);
             calendar.add(Calendar.DAY_OF_WEEK, 1);
         }

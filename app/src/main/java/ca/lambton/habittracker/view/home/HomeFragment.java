@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.R;
@@ -34,7 +33,7 @@ public class HomeFragment extends Fragment {
     private FragmentManager supportFragmentManager;
     private FragmentHomeBinding binding;
     private HabitViewModel habitViewModel;
-    private static float finalResult;
+    private float finalResult;
 
     private float todayProgress = 0;
     private float totalFrequencies;
@@ -45,13 +44,10 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentHomeBinding.inflate(LayoutInflater.from(requireContext()));
-        supportFragmentManager = getParentFragmentManager();
+        supportFragmentManager = getChildFragmentManager();
 
         habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
 
-
-        //Fragment calendarFragment = new ProgressCalendarFragment();
-        //supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
     }
 
     @Nullable
@@ -59,16 +55,14 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         todayCalendarProgress();
-        FragmentManager supportFragmentManager = getParentFragmentManager();
 
-        Fragment calendarFragment = ProgressCalendarFragment.newInstance(0);
+        Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
         supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
-
 
         Fragment quoteDayFragment = new QuoteFragment();
         supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
-
 
         Fragment summarizedProgress = new SummarizedProgressFragment();
         supportFragmentManager.beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
@@ -80,20 +74,15 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) finalResult);
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.home_calendar_view, fragmentProgressCalendar, "home_calendar").commit();
-
     }
 
     public void todayCalendarProgress() {
 
-        habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
+        habitViewModel.getAllProgress().observe(getViewLifecycleOwner(), habitProgresses1 -> {
             //System.out.println("My Progress: " + habitProgresses1.size());
             LocalDate todayDate = LocalDate.now();
             AtomicInteger index = new AtomicInteger();
             habitProgresses.clear();
-
 
             for (HabitProgress hp : habitProgresses1) {
 
@@ -115,9 +104,7 @@ public class HomeFragment extends Fragment {
             todayProgress = 0;
 
             habitProgresses.forEach(habitProgress -> {
-                totalFrequencies += Integer.parseInt(habitProgress.getHabit().getFrequency());
-
-                System.out.println(habitProgresses1.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.DAILY.name()) + " RESULT");
+                totalFrequencies += habitProgress.getHabit().getFrequency();
 
                 // Filter by daily/weekly
                 String startDateString = Utils.parseDate(habitProgress.getHabit().getStartDate());
@@ -139,11 +126,10 @@ public class HomeFragment extends Fragment {
                 index.set(index.get() + 1);
 
             });
-            float result = (todayProgress / totalFrequencies) * 100;
-            finalResult = result;
-            System.out.println("Total Percentage: " + result);
+            finalResult = (todayProgress / totalFrequencies) * 100;
 
-
+            Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
+            supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
         });
     }
 

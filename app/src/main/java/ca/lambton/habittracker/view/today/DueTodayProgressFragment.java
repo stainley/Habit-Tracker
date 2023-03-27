@@ -89,7 +89,7 @@ public class DueTodayProgressFragment extends Fragment {
                                 .filter(pro -> pro.getDate().equalsIgnoreCase(today.toString()))
                                 .mapToInt(Progress::getCounter).sum();
 
-                        if (totalCompletedToday < Integer.parseInt(habitProgress.getHabit().getFrequency())) {
+                        if (totalCompletedToday < habitProgress.getHabit().getFrequency()) {
                             habitViewModel.increase(progress);
                             break;
                         }
@@ -152,7 +152,7 @@ public class DueTodayProgressFragment extends Fragment {
             todayProgress = 0;
 
             habitProgresses.forEach(habitProgress -> {
-                totalFrequencies += Integer.parseInt(habitProgress.getHabit().getFrequency());
+                totalFrequencies += habitProgress.getHabit().getFrequency();
 
                 System.out.println(habitProgresses1.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.DAILY.name()) + " RESULT");
 
@@ -179,7 +179,10 @@ public class DueTodayProgressFragment extends Fragment {
 
             float result = (todayProgress / totalFrequencies) * 100;
             Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) result);
-            fragmentManager.beginTransaction().replace(R.id.due_today_calendar, fragmentProgressCalendar).commit();
+            if (!fragmentManager.isDestroyed()) {
+                fragmentManager.beginTransaction().replace(R.id.due_today_calendar, fragmentProgressCalendar).commit();
+            }
+
 
             progressButtonAdapter.notifyDataSetChanged();
         });

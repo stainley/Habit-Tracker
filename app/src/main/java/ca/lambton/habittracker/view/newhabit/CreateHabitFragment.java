@@ -33,6 +33,7 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
+import ca.lambton.habittracker.view.today.DueTodayProgressFragment;
 
 public class CreateHabitFragment extends Fragment {
 
@@ -173,10 +174,12 @@ public class CreateHabitFragment extends Fragment {
         // TODO: Add user ID
         newHabit.setName(binding.titleHabit.getText().toString());
         newHabit.setDescription(binding.description.getText().toString());
-        newHabit.setDuration(binding.durationText.getText().toString());
+        int duration = binding.durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
+        newHabit.setDuration(duration);
         newHabit.setDurationUnit(durationUnit.name());
         newHabit.setCreationDate(new Date().getTime());
-        newHabit.setFrequency(binding.frequencyText.getText().toString());
+        int frequency = binding.frequencyText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.frequencyText.getText().toString());
+        newHabit.setFrequency(frequency);
         newHabit.setFrequencyUnit(frequencyUnit.name());
 
         newHabit.setHabitType(habitType.name());
