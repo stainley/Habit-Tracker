@@ -1,14 +1,21 @@
 package ca.lambton.habittracker.view.ongoingHabits;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.GridView;
 
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
@@ -71,6 +78,13 @@ public class PrivateHabitDetailFragment extends Fragment {
                 "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
+
+        HashSet<Date> events = new HashSet<>();
+        events.add(new Date(2023, 3, 13));
+        events.add(new Date(2023, 3, 15));
+        events.add(new Date(2023, 3, 21));
+        CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
+        cv.updateCalendar(events);
 
         return binding.getRoot();
     }
