@@ -18,16 +18,18 @@ import java.util.stream.Collectors;
 import ca.lambton.habittracker.databinding.FragmentDailyHabitProgressBinding;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 
 public class DailyProgressFragment extends Fragment {
 
     private FragmentDailyHabitProgressBinding binding;
 
+    private HabitViewModel habitViewModel;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentDailyHabitProgressBinding.inflate(inflater);
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
         return binding.getRoot();
     }
@@ -36,7 +38,7 @@ public class DailyProgressFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         LocalDate today = LocalDate.now();
-        HabitViewModel habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+
 
         habitViewModel.getAllProgress().observe(getViewLifecycleOwner(), habitProgresses -> {
             AtomicInteger totalHabit = new AtomicInteger();
@@ -47,16 +49,17 @@ public class DailyProgressFragment extends Fragment {
                 Map<Long, Integer> summarizedByHabitId = habitProgress.getProgressList().stream()
                         .filter(oldDate -> LocalDate.parse(oldDate.getDate()).isEqual(today) || LocalDate.parse(oldDate.getDate()).isAfter(today))
                         .collect(Collectors.groupingBy(Progress::getHabitId, Collectors.summingInt(Progress::getCounter)));
+                totalHabit.getAndIncrement();
 
                 summarizedByHabitId.forEach((habitId, habitProgressNumber) -> {
-                    totalHabit.getAndIncrement();
 
                     if (habitProgress.getHabit().getId() == habitId && habitProgress.getHabit().getFrequency() == habitProgressNumber) {
                         habitCompleted.getAndIncrement();
                     }
                 });
 
-                binding.completedDailyHabitLabel.setText(habitCompleted.get() + "/" + totalHabit.get());
+                String completedDaily = habitCompleted.get() + "/" + totalHabit.get();
+                binding.completedDailyHabitLabel.setText(completedDaily);
             });
         });
     }

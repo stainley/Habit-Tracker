@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -76,7 +75,6 @@ public class SummarizedProgressFragment extends Fragment {
             habitProgresses.forEach(habitProgress -> {
                 totalFrequencies += habitProgress.getHabit().getFrequency();
 
-                // Filter by daily/weekly
                 String startDateString = Utils.parseDate(habitProgress.getHabit().getStartDate());
                 String endDateString = Utils.parseDate(habitProgress.getHabit().getEndDate());
 
@@ -97,16 +95,10 @@ public class SummarizedProgressFragment extends Fragment {
 
             });
             finalResult = (todayProgress / totalFrequencies) * 100;
-            binding.percentageNumText.setText((int) finalResult + "%");
+            String percentageValue = (int) finalResult + "%";
+            binding.percentageNumText.setText(percentageValue);
             binding.totalDailyProgressbar.setProgress((int) finalResult, true);
         });
     }
 
-    private void calculateAvgProgress(int... progress) {
-        // TODO: pass the average of habit process integer
-        int sum = Arrays.stream(progress).sum();
-
-        binding.percentageNumText.setText((sum / progress.length) + "%");
-        binding.totalDailyProgressbar.setProgress((sum / progress.length), true);
-    }
 }
