@@ -85,8 +85,7 @@ public class DueTodayProgressFragment extends Fragment {
                 LocalDate today = LocalDate.now();
 
                 for (Progress progress1 : habitProgress.getProgressList()) {
-
-                    //if ( progress1.getDate().equalsIgnoreCase(today.toString())) {
+                    
                     if (today.isEqual(LocalDate.parse(progress1.getDate())) || today.isAfter(LocalDate.parse(progress1.getDate()))) {
 
                         int totalCompletedToday = habitProgress.getProgressList().stream()
@@ -106,8 +105,6 @@ public class DueTodayProgressFragment extends Fragment {
 
             }
 
-            //1678078800000
-            //1679112000000
             // Decrease only from today, don't delete pass record
             @Override
             public void onDecreaseClick(View view, int position) {
@@ -151,7 +148,6 @@ public class DueTodayProgressFragment extends Fragment {
                     habitProgresses.add(hp);
                 }
 
-
                 System.out.println(startDate);
             }
 
@@ -183,11 +179,9 @@ public class DueTodayProgressFragment extends Fragment {
                 index.set(index.get() + 1);
 
             });
-            float result = 0;
-            result = (todayProgress / totalFrequencies) * 100;
-            System.out.println(result);
+
+            float result = (todayProgress / totalFrequencies) * 100;
             Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) result);
-            //Fragment fragmentProgressCalendar = new ProgressCalendarFragment();
             fragmentManager.beginTransaction().replace(R.id.weekly_calendar, fragmentProgressCalendar).commit();
 
             progressButtonAdapter.notifyDataSetChanged();
@@ -197,7 +191,6 @@ public class DueTodayProgressFragment extends Fragment {
         progressButtonsRecycleView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         progressButtonsRecycleView.setAdapter(progressButtonAdapter);
     }
-
 
     @Nullable
     @Override
