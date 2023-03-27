@@ -151,13 +151,13 @@ public class CustomCalendarView extends LinearLayout
      */
     public void updateCalendar()
     {
-        updateCalendar(null);
+        updateCalendar(null, null);
     }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(HashSet<Date> events)
+    public void updateCalendar(HashSet<Date> events, ArrayList<String> habitProgress)
     {
         ArrayList<Date> cells = new ArrayList<>();
         Calendar calendar = (Calendar)currentDate.clone();
@@ -173,7 +173,7 @@ public class CustomCalendarView extends LinearLayout
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        grid.setAdapter(new CalendarAdapter(getContext(), cells, events));
+        grid.setAdapter(new CalendarAdapter(getContext(), cells, events, habitProgress));
 
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         txtDate.setText(sdf.format(currentDate.getTime()));
@@ -188,13 +188,16 @@ public class CustomCalendarView extends LinearLayout
     {
         private HashSet<Date> eventDays;
 
+        private ArrayList<String> habitProgress;
+
 
         private LayoutInflater inflater;
 
-        public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<Date> eventDays)
+        public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<Date> eventDays, ArrayList<String> habitProgress)
         {
             super(context, R.layout.control_calendar_day, days);
             this.eventDays = eventDays;
+            this.habitProgress = habitProgress;
             inflater = LayoutInflater.from(context);
         }
 
@@ -214,13 +217,18 @@ public class CustomCalendarView extends LinearLayout
 
             if (eventDays != null)
             {
-                for (Date eventDate : eventDays)
-                {
+                for (int i = 0; i < eventDays.size(); i++) {
+                    Date eventDate = (Date) eventDays.toArray()[i];
                     if (eventDate.getDate() == day)
                     {
                         view.findViewById(R.id.dateRelativeLayout).setBackground(getResources().getDrawable(R.drawable.shape_circle));
-                        //view.findViewById(R.id.dateLinearFirstHalf).setBackgroundColor(getResources().getColor(R.color.yellow));
-                        view.findViewById(R.id.dateLinearFirstHalf).setBackground(getResources().getDrawable(R.drawable.shape_rec_left_round));
+
+                        if (this.habitProgress.get(i) == "100")  {
+                            view.findViewById(R.id.dateLinearLayout).setBackground(getResources().getDrawable(R.drawable.shape_rec_round));
+                        } else if (this.habitProgress.get(i) == "50") {
+                            view.findViewById(R.id.dateLinearFirstHalf).setBackground(getResources().getDrawable(R.drawable.shape_rec_left_round));
+                        }
+
                         break;
                     }
                 }
