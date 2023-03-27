@@ -48,9 +48,7 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
 
         progressList.size();
         AtomicReference<Double> result = new AtomicReference<>((double) 0);
-        progressList.forEach((date, sum) -> {
-            result.updateAndGet(v -> ((double) (v + (sum / frequency) * 100)));
-        });
+        progressList.forEach((date, sum) -> result.updateAndGet(v -> ((double) (v + (sum / frequency) * 100))));
 
         int percentageValue = (int) (result.get() / progressList.size());
 
