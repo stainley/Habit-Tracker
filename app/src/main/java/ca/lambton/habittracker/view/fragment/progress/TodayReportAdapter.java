@@ -26,12 +26,9 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
     private final List<HabitProgress> habitProgresses;
     private final OnTodayReportChangeListener onTodayReportChangeListener;
 
-
     public TodayReportAdapter(List<HabitProgress> habitProgresses, OnTodayReportChangeListener onTodayReportChangeListener) {
         this.habitProgresses = habitProgresses;
         this.onTodayReportChangeListener = onTodayReportChangeListener;
-
-
     }
 
     @NonNull
@@ -69,7 +66,6 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
     public int getItemCount() {
         return habitProgresses.size();
     }
-
 
     static class TodayReportViewHolder extends RecyclerView.ViewHolder {
 

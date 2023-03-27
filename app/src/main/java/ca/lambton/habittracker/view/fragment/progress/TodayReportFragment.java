@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.antgroup.antv.f2.F2CanvasView;
 import com.antgroup.antv.f2.F2Chart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,24 +22,24 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.databinding.FragmentRecycleViewBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
+import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Utils;
 
-public class TodayReportFragment extends Fragment implements F2CanvasView.Adapter {
+public class TodayReportFragment extends Fragment {
 
     private FragmentRecycleViewBinding binding;
     private TodayReportAdapter todayReportAdapter;
     private final List<HabitProgress> habitProgressList = new ArrayList<>();
     private HabitViewModel habitViewModel;
-
-    //private F2Chart mChart;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,16 +75,19 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
 
                     AtomicInteger counter = new AtomicInteger();
                     AtomicInteger value = new AtomicInteger();
-                    habitProgressList.get(position).getProgressList().forEach(progress -> {
+
+                    Map<String, Integer> groupByDate = habitProgressList.get(position).getProgressList().stream()
+                            .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+
+
+                    groupByDate.forEach((date, totalPerDay) -> {
                         value.getAndIncrement();
+
                         JSONObject jsonObject = new JSONObject();
                         try {
 
-                            counter.addAndGet(progress.getCounter());
-                            jsonObject.put("progress", counter.get());
-
-                            new Date(progress.getUpdatedDate());
-                            jsonObject.put("date", value.get());
+                            jsonObject.put("progress", totalPerDay);
+                            jsonObject.put("date", date);
 
                             jsonArray.put(jsonObject);
                         } catch (JSONException e) {
@@ -93,16 +95,13 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
                         }
                     });
 
-
                     //set data to chart
-
                     String source = jsonArray.toString();
                     System.out.println(source);
                     mChart.source(source);
 
                     mChart.setScale("progress", new F2Chart.ScaleConfigBuilder().precision(0).max(Double.parseDouble(habitProgressList.get(position).getHabit().getFrequency())).min(0));
-                    mChart.setScale("date", new F2Chart.ScaleConfigBuilder().precision(1).tickCount(7).range(new double[]{0.1, 0.9}));
-
+                    mChart.setScale("date", new F2Chart.ScaleConfigBuilder().precision(0).tickCount(2).range(new double[]{0.1, 0.9}));
 
                     //Draw a polyline on the chart. The data mappings of the x-axis and y-axis of the polyline are genre and sold fields respectively.
                     mChart.line().color("type", new String[]{"ORANGE"})
@@ -126,7 +125,6 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
 
         recycleView.setLayoutManager(new GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false));
         recycleView.setAdapter(todayReportAdapter);
-
     }
 
     @Nullable
@@ -153,16 +151,5 @@ public class TodayReportFragment extends Fragment implements F2CanvasView.Adapte
 
         return binding.getRoot();
     }
-
-
-    private static void onGraphChange(HorizontalBarChart barChart, int position) {
-
-    }
-
-    @Override
-    public void onCanvasDraw(F2CanvasView f2CanvasView) {
-
-    }
-
 
 }
