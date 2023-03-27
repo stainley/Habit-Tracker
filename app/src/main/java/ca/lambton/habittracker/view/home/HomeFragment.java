@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment {
 
 
         Fragment summarizedProgress = new SummarizedProgressFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
+        getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
         return root;
     }

@@ -27,7 +27,7 @@ public class SummarizedProgressFragment extends Fragment {
         getParentFragmentManager().beginTransaction().replace(R.id.fragment_detailed_progress, recycleDetailedProgress).commit();
 
         // pass the values
-        calculateAvgProgress(65, 55, 25, 85);
+        calculateAvgProgress(65, 55, 85, 85);
         return binding.getRoot();
     }
 

@@ -42,6 +42,7 @@ public class TodayDetailProgressFragment extends Fragment {
         progressDataList.add(new DailyProgressData(requireContext(), "Exercise", null));
         progressDataList.add(new DailyProgressData(requireContext(), "Study", getProgressIcon(100)));
 
+
         TodayDetailProgressAdapter progressAdapter = new TodayDetailProgressAdapter(progressDataList);
 
         recycleDetailedProgress.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
