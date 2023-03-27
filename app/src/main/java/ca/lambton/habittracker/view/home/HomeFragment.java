@@ -25,6 +25,7 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
+import ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment;
 import ca.lambton.habittracker.view.fragment.progress.SummarizedProgressFragment;
 import ca.lambton.habittracker.view.fragment.quote.QuoteFragment;
 
@@ -63,6 +64,10 @@ public class HomeFragment extends Fragment {
 
         Fragment quoteDayFragment = new QuoteFragment();
         supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
+
+        DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
+        supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
+
 
         Fragment summarizedProgress = new SummarizedProgressFragment();
         supportFragmentManager.beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
