@@ -146,9 +146,9 @@ public abstract class AppDatabase extends RoomDatabase {
                 habit.setCreationDate(Long.parseLong(parts[2]));
                 habit.setPredefined(Boolean.parseBoolean(parts[3]));
                 habit.setUserId(Long.parseLong(parts[4]));
-                habit.setDuration(parts[5]);
+                habit.setDuration(Integer.parseInt(parts[5]));
                 habit.setDurationUnit(parts[6]);
-                habit.setFrequency(parts[7]);
+                habit.setFrequency(Integer.parseInt(parts[7]));
                 habit.setFrequencyUnit(parts[8]);
                 habit.setCategoryId(Long.parseLong(parts[9]));
                 habit.setImagePath(parts[10]);
