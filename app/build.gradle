@@ -56,6 +56,8 @@ dependencies {
 
     //implementation 'com.github.florent37:arclayout:1.0.3'
     implementation 'xyz.sahildave:arclayout:1.0.0'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
 
     testImplementation 'junit:junit:4.13.2'

@@ -60,6 +60,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:background="@drawable/mail"
+            android:clickable="true"
             android:contentDescription="@string/google_button" />
     </LinearLayout>
 
@@ -109,12 +110,12 @@
         app:layout_constraintTop_toTopOf="@id/password_login_text" />
 
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <CheckBox
         android:id="@+id/remember_ckb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/lock_icon"
+        app:layout_constraintStart_toStartOf="@id/lock_icon"
         app:layout_constraintTop_toBottomOf="@id/password_login_text" />
 
     <TextView
@@ -125,6 +126,7 @@
         android:text="@string/remember_me"
         app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
         app:layout_constraintStart_toEndOf="@id/remember_ckb"
+        app:layout_constraintStart_toStartOf="@id/password_login_text"
         app:layout_constraintTop_toTopOf="@id/remember_ckb" />
 
 
@@ -135,30 +137,27 @@
         android:text="@string/forgot_password"
         app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintTop_toTopOf="@id/remember_ckb" />
 
-
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:id="@+id/password_login_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="@string/password"
-        android:inputType="textPassword"
+        android:hint="Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/img_at"
+        app:layout_constraintStart_toStartOf="@id/email_login_text"
         app:layout_constraintTop_toBottomOf="@id/email_login_text" />
 
-
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/login_btn"
-        android:layout_width="wrap_content"
+        style="?attr/colorSurface"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/login_button"
         android:text="@string/login"
         app:layout_constraintBottom_toTopOf="@id/signup_text"
         app:layout_constraintEnd_toEndOf="parent"
