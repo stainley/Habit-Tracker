@@ -41,7 +41,7 @@
     <string name="app_logo">Application Logo</string>
     <string name="logo_text">Logo Title</string>
     <string name="splash_screen_quote">Splash Screen Quote</string>
-    <string name="signup">SignUp</string>
+    <string name="signup">Sign Up</string>
     <string name="emailID">Email ID</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="dontHaveAccount">Don\'t have An Account</string>
@@ -50,4 +50,6 @@
     <string name="deleteHabit">Delete habit</string>
     <string name="progress">Progress</string>
     <string name="_0_0">0/0</string>
+    <string name="user_name">User Name</string>
+    <string name="already_have_an_account_click_here_to_login">Already have an account? Click here to Login</string>
 </resources>

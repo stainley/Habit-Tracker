@@ -26,8 +26,11 @@
 
         <activity
             android:name=".view.LoginFragment"
-            android:exported="true"
-            android:theme="@style/AppTheme.ActionBar" />
+            android:exported="true" />
+        <activity
+            android:name=".view.SignupFragment"
+            android:exported="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

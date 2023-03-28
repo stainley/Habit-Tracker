@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.habit.model.User;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private HabitViewModel habitViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +68,34 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
+        View headerView = navigationView.getHeaderView(0);
+        TextView loggedName = headerView.findViewById(R.id.name_logged_label);
+        TextView loggedEmail = headerView.findViewById(R.id.email_logged_label);
+        ImageView profileImage = headerView.findViewById(R.id.profile_image);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = auth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            loggedName.setText(firebaseUser.getDisplayName());
+            loggedEmail.setText(firebaseUser.getEmail());
+
+            if (firebaseUser.getPhotoUrl() != null) {
+                Picasso.get().load(firebaseUser.getPhotoUrl()).fit().into(profileImage);
+            }
+        }
+
         navigationView.getMenu().findItem(R.id.menu_logout).setOnMenuItemClickListener(menuItem -> {
             this.signOut();
             return true;
         });
+
+
     }
 
     @Nullable
@@ -82,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     public View onCreateView(@NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
+
 
         return super.onCreateView(name, context, attrs);
     }

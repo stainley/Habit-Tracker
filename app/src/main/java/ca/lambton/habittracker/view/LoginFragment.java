@@ -66,6 +66,8 @@ public class LoginFragment extends AppCompatActivity {
 
         binding.loginBtn.setOnClickListener(this::loginWithEmail);
 
+        binding.signupText.setOnClickListener(this::signupView);
+
 
         mAuth = FirebaseAuth.getInstance();
         oneTapClient = Identity.getSignInClient(this);
@@ -80,13 +82,22 @@ public class LoginFragment extends AppCompatActivity {
                 .setAutoSelectEnabled(true).build();
     }
 
+    private void signupView(View view) {
+
+        Intent signupIntent = new Intent(this, SignupFragment.class);
+        startActivity(signupIntent);
+    }
+
     private void loginWithEmail(View view) {
         String email = binding.emailLoginText.getText().toString();
         String password = binding.passwordLoginText.getText().toString();
 
+        if (email.equals("") || password.equals("")) {
+            Toast.makeText(getApplicationContext(), "Email/Password is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
         signInEmailAndPassword(email, password);
     }
-
 
     /**
      *
