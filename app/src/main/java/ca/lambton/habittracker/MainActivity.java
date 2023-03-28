@@ -27,7 +27,7 @@ import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.habit.model.User;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.view.LoginFragment;
+import ca.lambton.habittracker.view.login.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
