@@ -156,4 +156,17 @@
             app:popUpTo="@id/groupHabitDetailFragment" />
     </fragment>
 
+
+    <activity
+        android:id="@+id/loginFragment"
+        android:name="ca.lambton.habittracker.view.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" />
+
+    <activity
+        android:id="@+id/signupFragment"
+        android:name="ca.lambton.habittracker.view.SignupFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_signup" />
+
 </navigation>

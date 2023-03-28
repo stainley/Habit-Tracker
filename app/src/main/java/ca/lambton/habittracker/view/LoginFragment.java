@@ -31,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,8 +47,8 @@ import ca.lambton.habittracker.databinding.FragmentLoginBinding;
 import ca.lambton.habittracker.habit.model.User;
 
 public class LoginFragment extends AppCompatActivity {
-    FragmentLoginBinding binding;
-
+    private final static String TAG = LoginFragment.class.getSimpleName();
+    private FragmentLoginBinding binding;
     private FirebaseAuth mAuth;
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
@@ -68,6 +69,8 @@ public class LoginFragment extends AppCompatActivity {
 
         binding.signupText.setOnClickListener(this::signupView);
 
+        binding.forgotPassword.setOnClickListener(this::forgotPassword);
+
 
         mAuth = FirebaseAuth.getInstance();
         oneTapClient = Identity.getSignInClient(this);
@@ -80,6 +83,26 @@ public class LoginFragment extends AppCompatActivity {
                         .setFilterByAuthorizedAccounts(false).build())
                 // Automatically sign in when exactly one credential is retrieved.
                 .setAutoSelectEnabled(true).build();
+    }
+
+    private void forgotPassword(View view) {
+        String emailAddress = binding.emailLoginText.getText().toString();
+
+        if (emailAddress.equals("")) {
+            Toast.makeText(getApplicationContext(), "Email is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Snackbar.make(view, "Would you like to reset your password?", Toast.LENGTH_SHORT).setAction("Yes", v -> {
+            mAuth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.d(TAG, "Email sent.");
+                    Toast.makeText(getApplicationContext(), "Email sent.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Email not found", Toast.LENGTH_LONG).show();
+                }
+            });
+        }).setAnchorView(binding.signupText).show();
     }
 
     private void signupView(View view) {

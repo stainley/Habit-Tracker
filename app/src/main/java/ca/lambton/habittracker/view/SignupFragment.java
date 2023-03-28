@@ -28,6 +28,12 @@ public class SignupFragment extends FragmentActivity {
 
         mAuth = FirebaseAuth.getInstance();
         binding.signupBtn.setOnClickListener(this::signup);
+
+        binding.loginText.setOnClickListener(this::moveToLogin);
+    }
+
+    private void moveToLogin(View view) {
+        finish();
     }
 
     private void signup(View view) {
