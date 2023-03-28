@@ -38,9 +38,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 import ca.lambton.habittracker.MainActivity;
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentLoginBinding;
+import ca.lambton.habittracker.habit.model.User;
 
 public class LoginFragment extends AppCompatActivity {
     FragmentLoginBinding binding;
@@ -93,8 +96,21 @@ public class LoginFragment extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 // Sign in successful
-                Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(mainIntent);
+                FirebaseUser currentUser = task.getResult().getUser();
+                if (currentUser != null) {
+
+                    User user = new User();
+                    user.setAccountId(currentUser.getUid());
+                    user.setEmail(currentUser.getEmail());
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("user", user);
+
+                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+                    mainIntent.putExtras(bundle);
+
+                    startActivity(mainIntent);
+                }
             } else {
                 // sign in failed
                 Toast.makeText(getApplicationContext(), "User/Password incorrect", Toast.LENGTH_SHORT).show();
@@ -194,13 +210,25 @@ public class LoginFragment extends AppCompatActivity {
         super.onStart();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
+        updateUI(currentUser);
 
     }
 
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
+            User user = new User();
+            user.setAccountId(currentUser.getUid());
+            user.setEmail(currentUser.getEmail());
+            user.setName(currentUser.getDisplayName());
+            if (currentUser.getPhotoUrl() != null)
+                user.setPhotoUrl(Objects.requireNonNull(currentUser.getPhotoUrl()).toString());
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("user", user);
+
             Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+            mainIntent.putExtras(bundle);
+
             startActivity(mainIntent);
         }
     }

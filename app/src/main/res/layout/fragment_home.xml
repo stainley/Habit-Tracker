@@ -19,7 +19,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:fontFamily="@font/mulish_bold"
-            android:text="Hi Stainley"
+            android:text="Hi"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

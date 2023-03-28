@@ -11,19 +11,24 @@ import java.util.List;
 import ca.lambton.habittracker.common.db.AppDatabase;
 import ca.lambton.habittracker.habit.dao.HabitDao;
 import ca.lambton.habittracker.habit.dao.ProgressDao;
+import ca.lambton.habittracker.habit.dao.UserDao;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.model.User;
 
 public class HabitRepository {
 
     private HabitDao habitDao;
     private ProgressDao progressDao;
 
+    private UserDao userDao;
+
     public HabitRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         habitDao = db.habitDao();
         progressDao = db.progressDao();
+        userDao = db.userDao();
     }
 
     public LiveData<List<Habit>> getAllHabitByCategory(long category) {
@@ -92,5 +97,13 @@ public class HabitRepository {
     public LiveData<List<Progress>> getTodayAllMyHabitProgress() {
 
         return progressDao.getTodayAllMyHabitProgress();
+    }
+
+    public void saveUser(User user) {
+        AppDatabase.databaseWriterExecutor.execute(() -> userDao.saveUser(user));
+    }
+
+    public LiveData<User> getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
     }
 }

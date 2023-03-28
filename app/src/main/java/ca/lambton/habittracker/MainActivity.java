@@ -1,8 +1,11 @@
 package ca.lambton.habittracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -16,10 +19,13 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
+import ca.lambton.habittracker.habit.model.User;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.view.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,15 +44,37 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawerLayout = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_settings, R.id.nav_my_habits)
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_my_habits, R.id.menu_logout)
                 .setOpenableLayout(drawerLayout)
                 .build();
+
+        habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
+
+        User user = (User) getIntent().getSerializableExtra("user");
+
+        if (user != null) {
+
+            habitViewModel.getUserByEmail(user.getEmail()).observe(this, userResult -> {
+                if (userResult != null) {
+                    if (!user.getEmail().equalsIgnoreCase(userResult.getEmail())) {
+                        habitViewModel.saveUser(user);
+                    }
+                } else {
+                    habitViewModel.saveUser(user);
+                }
+            });
+        }
+
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
+        navigationView.getMenu().findItem(R.id.menu_logout).setOnMenuItemClickListener(menuItem -> {
+            this.signOut();
+            return true;
+        });
     }
 
     @Nullable
@@ -61,12 +89,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     public HabitViewModel habitViewModel() {
         return this.habitViewModel;
+    }
+
+    private void signOut() {
+        FirebaseAuth.getInstance().signOut();
+
+        // Start your login activity here
+        Intent loginActivity = new Intent(this, LoginFragment.class);
+        startActivity(loginActivity);
     }
 
 }

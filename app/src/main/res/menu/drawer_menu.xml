@@ -38,7 +38,7 @@
     </item>
 
     <item
-        android:id="@+id/labels_item"
+        android:id="@+id/secondary_items"
         android:title="Credential">
         <menu>
 
@@ -47,7 +47,7 @@
                 android:icon="@drawable/ic_settings"
                 android:title="Settings" />
             <item
-                android:id="@+id/logout"
+                android:id="@+id/menu_logout"
                 android:icon="@drawable/ic_logout"
                 android:title="Logout" />
         </menu>

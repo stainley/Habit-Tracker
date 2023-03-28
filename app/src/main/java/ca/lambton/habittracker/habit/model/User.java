@@ -1,16 +1,25 @@
 package ca.lambton.habittracker.habit.model;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
-public class User {
+import java.io.Serializable;
 
-    @PrimaryKey
+@Entity(tableName = "USER_TBL")
+public class User implements Serializable {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "USER_ID")
     private long id;
+    @ColumnInfo(name = "ACCOUNT_ID")
     private String accountId;
+    @ColumnInfo(name = "NAME")
     private String name;
+    @ColumnInfo(name = "EMAIL")
     private String email;
+    @ColumnInfo(name = "PHOTO_URL")
+    private String photoUrl;
 
     public long getId() {
         return id;
@@ -42,5 +51,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }
