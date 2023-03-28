@@ -29,16 +29,19 @@ import ca.lambton.habittracker.common.model.Picture;
 import ca.lambton.habittracker.habit.dao.HabitDao;
 import ca.lambton.habittracker.habit.dao.ProgressDao;
 import ca.lambton.habittracker.habit.dao.QuoteDao;
+import ca.lambton.habittracker.habit.dao.UserDao;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.model.Quote;
+import ca.lambton.habittracker.habit.model.User;
 
 @Database(entities = {
         Category.class,
         Picture.class,
         Quote.class,
         Habit.class,
-        Progress.class
+        Progress.class,
+        User.class
 }, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -66,7 +69,6 @@ public abstract class AppDatabase extends RoomDatabase {
                         Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
                             @Override
                             public void run() {
-                                //getInstance(context).categoryDao().insertAll(Category.populateData());
                                 getInstance(context).populateQuote(context);
                                 getInstance(context).populateHabit(context);
                                 getInstance(context).populateCategory(context);
@@ -88,6 +90,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract HabitDao habitDao();
 
     public abstract ProgressDao progressDao();
+
+    public abstract UserDao userDao();
 
     public void populateQuote(Context context) {
         List<Quote> quotes = readQuoteFromFile(context);
@@ -146,9 +150,9 @@ public abstract class AppDatabase extends RoomDatabase {
                 habit.setCreationDate(Long.parseLong(parts[2]));
                 habit.setPredefined(Boolean.parseBoolean(parts[3]));
                 habit.setUserId(Long.parseLong(parts[4]));
-                habit.setDuration(parts[5]);
+                habit.setDuration(Integer.parseInt(parts[5]));
                 habit.setDurationUnit(parts[6]);
-                habit.setFrequency(parts[7]);
+                habit.setFrequency(Integer.parseInt(parts[7]));
                 habit.setFrequencyUnit(parts[8]);
                 habit.setCategoryId(Long.parseLong(parts[9]));
                 habit.setImagePath(parts[10]);

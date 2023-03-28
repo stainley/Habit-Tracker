@@ -21,7 +21,12 @@ public class Progress implements Serializable {
     private long habitId;
     private boolean isCompleted;
     private int counter;
+    @ColumnInfo(name = "UPDATE_DATE_TIME")
     private long updatedDate;
+    @ColumnInfo(name = "UPDATED_DATE")
+    private String date;
+    @ColumnInfo(name = "UPDATED_TIME")
+    private String time;
 
     public long getProgressId() {
         return progressId;
@@ -61,5 +66,21 @@ public class Progress implements Serializable {
 
     public void setUpdatedDate(long updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

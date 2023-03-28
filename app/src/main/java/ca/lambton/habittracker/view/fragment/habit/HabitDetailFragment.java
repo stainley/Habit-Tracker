@@ -10,6 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import com.squareup.picasso.Picasso;
 
@@ -21,12 +24,18 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 
 public class HabitDetailFragment extends Fragment {
-    FragmentHabitDetailBinding binding;
+    private FragmentHabitDetailBinding binding;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = FragmentHabitDetailBinding.inflate(LayoutInflater.from(requireContext()));
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentHabitDetailBinding.inflate(inflater, container, false);
 
         assert getArguments() != null;
         Habit habit = (Habit) getArguments().getSerializable("habit");
@@ -38,11 +47,16 @@ public class HabitDetailFragment extends Fragment {
             }
         }
 
-        binding.frequencyValue.setText(habit.getFrequency());
-        binding.durationValue.setText(habit.getDuration());
-        binding.daysValue.setText(habit.getFrequency());
-        binding.titleHabit.setText(habit.getName());
-        binding.messageValue.setText(habit.getDescription());
+        if (habit != null) {
+            String frequency = String.valueOf(habit.getFrequency());
+            binding.frequencyValue.setText(frequency);
+            binding.durationValue.setText(String.valueOf(habit.getDuration()));
+            binding.daysValue.setText(String.valueOf(habit.getFrequency()));
+            binding.titleHabit.setText(habit.getName());
+            binding.messageValue.setText(habit.getDescription());
+        }
+
+
         return binding.getRoot();
     }
 }

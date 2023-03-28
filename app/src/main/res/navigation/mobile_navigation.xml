@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+   <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
@@ -10,6 +10,20 @@
         android:name="ca.lambton.habittracker.view.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_community"
+        android:name="ca.lambton.habittracker.view.fragment.community.CommunityFragment"
+        android:label="Community"
+        tools:layout="@layout/fragment_community" >
+        <action
+            android:id="@+id/action_nav_community_to_nav_compose"
+            app:destination="@id/nav_compose" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_compose"
+        android:name="ca.lambton.habittracker.view.fragment.community.ComposeFragment"
+        android:label="New Post"
+        tools:layout="@layout/fragment_compose" />
     <fragment
         android:id="@+id/nav_settings"
         android:name="ca.lambton.habittracker.view.settings.SettingsFragment"
@@ -33,7 +47,7 @@
     <fragment
         android:id="@+id/nav_habit_detail"
         android:name="ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment"
-        android:label="HabitDetailFragment"
+        android:label="Habit Detail"
         tools:layout="@layout/fragment_habit_detail">
         <argument
             android:name="habitId"
@@ -64,7 +78,8 @@
         android:id="@+id/createHabitFragment"
         android:name="ca.lambton.habittracker.view.newhabit.CreateHabitFragment"
         android:label="Create Habit"
-        tools:layout="@layout/fragment_new_habit" />
+        tools:layout="@layout/fragment_create_habit_layout" />
+
     <fragment
         android:id="@+id/nav_due_today"
         android:name="ca.lambton.habittracker.view.today.DueTodayFragment"
@@ -140,4 +155,18 @@
             app:destination="@id/nav_defined_habit"
             app:popUpTo="@id/groupHabitDetailFragment" />
     </fragment>
+
+
+    <activity
+        android:id="@+id/loginFragment"
+        android:name="ca.lambton.habittracker.view.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login" />
+
+    <activity
+        android:id="@+id/signupFragment"
+        android:name="ca.lambton.habittracker.view.SignupFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_signup" />
+
 </navigation>

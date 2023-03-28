@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "HABIT_TBL")
+@Entity(tableName = "HABIT_TBL", indices = {@Index(name = "IDX_HABIT", value = "HABIT_ID")})
 public class Habit implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -24,12 +24,11 @@ public class Habit implements Serializable {
     @ColumnInfo(name = "USER_ID")
     private long userId;
     @ColumnInfo(name = "DURATION")
-    private String duration;
-
+    private int duration;
     @ColumnInfo(name = "DURATION_UNIT")
     private String durationUnit;
     @ColumnInfo(name = "FREQUENCY")
-    private String frequency;
+    private int frequency;
 
     @ColumnInfo(name = "FREQUENCY_UNIT")
     private String frequencyUnit;
@@ -99,19 +98,19 @@ public class Habit implements Serializable {
         this.userId = userId;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
-    public String getFrequency() {
+    public int getFrequency() {
         return frequency;
     }
 
-    public void setFrequency(String frequency) {
+    public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
 

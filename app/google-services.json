@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "453015779547-0tguspa08orus5und367jpp88nm2m010.apps.googleusercontent.com",
+          "client_id": "453015779547-ln43kg3ccoqb6efl81ugd884j8fj7uav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.lambton.habittracker",
+            "certificate_hash": "0cafd5a24f9cce87e70cb8ef811d4370c7109078"
+          }
+        },
+        {
+          "client_id": "453015779547-d7pggumgu5d0da2qs27aml7332trcvqo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

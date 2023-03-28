@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_margin="8dp"
+    tools:context=".view.today.DueTodayProgressFragment">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/weekly_calendar"
+        android:id="@+id/due_today_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,5 +20,5 @@
         android:id="@+id/progress_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/weekly_calendar" />
+        app:layout_constraintTop_toBottomOf="@id/due_today_calendar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

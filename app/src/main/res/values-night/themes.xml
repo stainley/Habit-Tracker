@@ -28,4 +28,56 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
     </style>
+
+    <style name="CustomTextAppearance" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/mcv_text_date_light</item>
+    </style>
+
+    <style name="Theme.App" parent="Theme.Material3.DayNight">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="MaterialCardView.NoColour" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/material_dynamic_primary100</item>
+    </style>
+
+    <style name="CategoryListCustomTextColor" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/neutral_grey</item>
+    </style>
+
+    <style name="Theme.NavDrawere.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.NavDrawere.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Custom.CardView.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="strokeColor">@color/md_theme_light_primary</item>
+    </style>
+
+    <style name="circleImageView" parent="MaterialAlertDialog.Material3">
+        <item name="cornerFamilyBottomLeft">rounded</item>
+        <item name="cornerSizeBottomLeft">18%</item>
+        <item name="cornerSizeBottomRight">18%</item>
+    </style>
+
+    <style name="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="materialThemeOverlay">
+            @style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox
+        </item>
+        <item name="endIconMode">dropdown_menu</item>
+    </style>
+
+    <style name="AppThemeLogin" parent="ThemeOverlay.MaterialComponents.Dark">
+        <!-- Add attributes here -->
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryVariant">#000000</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#2962FF</item>
+        <item name="colorSecondaryVariant">#0039CB</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorError">#F44336</item>
+        <item name="colorOnError">#FFFFFF</item>
+        <item name="colorSurface">#FFFFFF</item>
+        <item name="colorOnSurface">#212121</item>
+        <item name="colorOnBackground">#212121</item>
+    </style>
 </resources>

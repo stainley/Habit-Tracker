@@ -9,6 +9,9 @@ import android.widget.GridView;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
@@ -21,7 +24,6 @@ public class PrivateHabitDetailFragment extends Fragment {
     private GridView achievementGridInfo;
 
     public PrivateHabitDetailFragment() {
-        // Required empty public constructor
     }
 
     public static PrivateHabitDetailFragment newInstance(String param1, String param2) {
@@ -72,6 +74,15 @@ public class PrivateHabitDetailFragment extends Fragment {
                 "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
+
+        HashSet<Date> events = new HashSet<>();
+        events.add(new Date(2023, 3, 13));
+        events.add(new Date(2023, 3, 15));
+        events.add(new Date(2023, 3, 21));
+        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
+
+        CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
+        cv.updateCalendar(events, habitProgress);
 
         return binding.getRoot();
     }
