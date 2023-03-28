@@ -18,6 +18,8 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import ca.lambton.habittracker.view.LoginFragment;
+
 public class OnBoarding extends AppCompatActivity {
 
     private TextView tvSkip;
@@ -177,7 +179,7 @@ public class OnBoarding extends AppCompatActivity {
     private void launchHomeScreen() {
         //Add the login activity or anyother humpy dumpy activity
         introPref.setIsFirstTimeLaunch(false);
-        startActivity(new Intent(OnBoarding.this, MainActivity.class));
+        startActivity(new Intent(OnBoarding.this, LoginFragment.class));
         finish();
     }
 }

@@ -47,16 +47,15 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    /*implementation 'com.github.gastricspark:scrolldatepicker:0.0.1'*/
-    /*implementation 'com.github.thellmund:android-week-view:5.3.2'*/
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
 
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.3'
-    //implementation 'com.littlemango:stacklayoutmanager:1.0.5'
 
     //implementation 'com.github.florent37:arclayout:1.0.3'
     implementation 'xyz.sahildave:arclayout:1.0.0'
-
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -75,8 +74,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
 
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
+    /*implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'*/
 
     // Android Room Database
     annotationProcessor 'androidx.room:room-compiler:2.5.0'

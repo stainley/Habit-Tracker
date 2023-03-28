@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +21,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentHomeBinding;
+import ca.lambton.habittracker.databinding.HeaderNavigationDrawerBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
@@ -31,6 +34,7 @@ import ca.lambton.habittracker.view.fragment.quote.QuoteFragment;
 
 public class HomeFragment extends Fragment {
 
+    private FirebaseAuth mAuth;
     private FragmentManager supportFragmentManager;
     private FragmentHomeBinding binding;
     private HabitViewModel habitViewModel;
@@ -41,11 +45,14 @@ public class HomeFragment extends Fragment {
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
 
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentHomeBinding.inflate(LayoutInflater.from(requireContext()));
+
         supportFragmentManager = getChildFragmentManager();
+        mAuth = FirebaseAuth.getInstance();
 
         habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
@@ -72,12 +79,20 @@ public class HomeFragment extends Fragment {
         Fragment summarizedProgress = new SummarizedProgressFragment();
         getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            String userDisplay = "Hi " + user.getDisplayName();
+            binding.greetingMessageLabel.setText(userDisplay);
+        }
+
         return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
     }
 

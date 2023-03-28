@@ -40,7 +40,7 @@ public class HabitDetailFragment extends Fragment {
 
         if (habit != null) {
             String frequency = String.valueOf(habit.getFrequency());
-
+            //FIXME: android.content.res.Resources$NotFoundException: String resource ID #0x3
             binding.frequencyValue.setText(frequency);
             binding.durationValue.setText(habit.getDuration());
             binding.daysValue.setText(habit.getFrequency());

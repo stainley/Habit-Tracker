@@ -13,6 +13,7 @@ import java.util.Objects;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.model.User;
 import ca.lambton.habittracker.habit.repository.HabitRepository;
 
 public class HabitViewModel extends ViewModel {
@@ -51,7 +52,6 @@ public class HabitViewModel extends ViewModel {
         return repository.getHabitByName(name);
     }
 
-    //FIXME: We need to use the user_id otherwise predefined
     public LiveData<List<Habit>> fetchAllMyHabits(long userId) {
         return repository.fetchAllMyHabit(userId);
     }
@@ -86,4 +86,11 @@ public class HabitViewModel extends ViewModel {
     }
 
 
+    public void saveUser(@NonNull User user) {
+        this.repository.saveUser(user);
+    }
+
+    public LiveData<User> getUserByEmail(@NonNull String email) {
+       return this.repository.getUserByEmail(email);
+    }
 }
