@@ -11,22 +11,34 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import ca.lambton.habittracker.databinding.FragmentCommunityBinding;
 
 public class CommunityFragment extends Fragment {
 
     private FragmentCommunityBinding binding;
+    private FirebaseUser firebaseUser;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = FragmentCommunityBinding.inflate(LayoutInflater.from(requireContext()));
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (firebaseUser != null) {
+            firebaseUser.getDisplayName();
+            binding.userProfile.setText(firebaseUser.getDisplayName() == null ? "" : firebaseUser.getDisplayName());
+        }
+
         return binding.getRoot();
     }
 
