@@ -13,12 +13,16 @@
     <fragment
         android:id="@+id/nav_community"
         android:name="ca.lambton.habittracker.view.fragment.community.CommunityFragment"
-        android:label="fragment_community"
-        tools:layout="@layout/fragment_community" />
+        android:label="Community"
+        tools:layout="@layout/fragment_community" >
+        <action
+            android:id="@+id/action_nav_community_to_nav_compose"
+            app:destination="@id/nav_compose" />
+    </fragment>
     <fragment
         android:id="@+id/nav_compose"
         android:name="ca.lambton.habittracker.view.fragment.community.ComposeFragment"
-        android:label="fragment_compose"
+        android:label="New Post"
         tools:layout="@layout/fragment_compose" />
     <fragment
         android:id="@+id/nav_settings"
