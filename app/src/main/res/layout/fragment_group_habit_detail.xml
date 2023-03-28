@@ -41,6 +41,7 @@
             android:id="@+id/groupNamesHeaderLayout"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:layout_marginTop="26dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="9"
@@ -173,5 +174,19 @@
             </RelativeLayout>
         </LinearLayout>
 
+
+        <GridView
+            android:id="@+id/groupCircularProgressGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:horizontalSpacing="12dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupNamesHeaderLayout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
