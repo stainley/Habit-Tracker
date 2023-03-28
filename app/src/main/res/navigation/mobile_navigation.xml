@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/nav_habit_detail"
         android:name="ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment"
-        android:label="HabitDetailFragment"
+        android:label="Habit Detail"
         tools:layout="@layout/fragment_habit_detail">
         <argument
             android:name="habitId"
