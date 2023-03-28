@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.view;
+package ca.lambton.habittracker.view.login;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,28 +8,20 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
-import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -37,7 +29,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -45,6 +36,7 @@ import ca.lambton.habittracker.MainActivity;
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentLoginBinding;
 import ca.lambton.habittracker.habit.model.User;
+import ca.lambton.habittracker.view.SignupFragment;
 
 public class LoginFragment extends AppCompatActivity {
     private final static String TAG = LoginFragment.class.getSimpleName();
@@ -75,14 +67,8 @@ public class LoginFragment extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         oneTapClient = Identity.getSignInClient(this);
 
+        signInRequest = FirebaseUtils.signInRequest(this);
 
-        signInRequest = BeginSignInRequest.builder().setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder().setSupported(true).build()).setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder().setSupported(true)
-                        // Your server's client ID, not your Android client ID.
-                        .setServerClientId(getString(R.string.default_web_client_id))
-                        // Only show accounts previously used to sign in.
-                        .setFilterByAuthorizedAccounts(false).build())
-                // Automatically sign in when exactly one credential is retrieved.
-                .setAutoSelectEnabled(true).build();
     }
 
     private void forgotPassword(View view) {
@@ -265,9 +251,5 @@ public class LoginFragment extends AppCompatActivity {
 
             startActivity(mainIntent);
         }
-    }
-
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
     }
 }

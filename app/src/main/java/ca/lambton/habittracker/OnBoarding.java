@@ -18,7 +18,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import ca.lambton.habittracker.view.LoginFragment;
+import ca.lambton.habittracker.view.login.LoginFragment;
 
 public class OnBoarding extends AppCompatActivity {
 

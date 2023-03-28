@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".view.LoginFragment"
+            android:name=".view.login.LoginFragment"
             android:exported="true" />
         <activity
             android:name=".view.SignupFragment"

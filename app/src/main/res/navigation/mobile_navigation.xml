@@ -159,7 +159,7 @@
 
     <activity
         android:id="@+id/loginFragment"
-        android:name="ca.lambton.habittracker.view.LoginFragment"
+        android:name="ca.lambton.habittracker.view.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
 
