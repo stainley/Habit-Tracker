@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -39,105 +40,136 @@
         <LinearLayout
             android:id="@+id/groupNamesHeaderLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:gravity="center_vertical"
+            android:layout_height="30dp"
+            android:gravity="center"
             android:orientation="horizontal"
+            android:weightSum="9"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/habitLabelLayout"
-            android:weightSum="9">
+            app:layout_constraintTop_toBottomOf="@+id/habitLabelLayout">
 
             <RelativeLayout
                 android:id="@+id/groupHeaderNameMember1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
+
                 <RelativeLayout
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:background="@color/mildLavender">
-                </RelativeLayout>
+                    android:background="@color/mildLavender"></RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/groupHeaderNameMember2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
-                <RelativeLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true">
-                    <TextView
-                        android:id="@+id/groupHeaderNameMember2Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Me"
-                        android:textSize="12sp" />
-                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/groupHeaderNameMember2Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Me"
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/groupHeaderNameMember3"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
+
                 <RelativeLayout
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:background="@color/mildLavender">
-                </RelativeLayout>
+                    android:background="@color/mildLavender"></RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/groupHeaderNameMember4"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
-                <RelativeLayout
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true">
-                    <TextView
-                        android:id="@+id/groupHeaderNameMember4Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Anudeep"
-                        android:textSize="12sp" />
-                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/groupHeaderNameMember4Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Anudee"
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/groupHeaderNameMember5"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
+
                 <RelativeLayout
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:background="@color/mildLavender">
-                </RelativeLayout>
+                    android:background="@color/mildLavender"></RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/groupHeaderNameMember6"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/groupHeaderNameMember6Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Jenny"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/groupHeaderNameMember7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
                 <RelativeLayout
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_centerInParent="true">
-                    <TextView
-                        android:id="@+id/groupHeaderNameMember6Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Jenny"
-                        android:textSize="12sp" />
-                </RelativeLayout>
+                    android:layout_centerInParent="true"
+                    android:background="@color/mildLavender"></RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/groupHeaderNameMember8"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/groupHeaderNameMember8Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Kreger"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/groupHeaderNameMember9"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:background="@color/mildLavender"></RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
 
