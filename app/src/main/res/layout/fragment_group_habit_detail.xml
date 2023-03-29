@@ -188,5 +188,17 @@
             android:numColumns="4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/groupNamesHeaderLayout" />
+
+        <TextView
+            android:id="@+id/overallProgressTextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:text="Overall completion percentage"
+            android:textColor="@color/neutral_grey"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupCircularProgressGrid" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
