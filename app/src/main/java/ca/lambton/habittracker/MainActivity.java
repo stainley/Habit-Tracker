@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private HabitViewModel habitViewModel;
+
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +71,23 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        navController.addOnDestinationChangedListener((navController, navDestination, bundle) -> {
+            if (navDestination.getId() == R.id.profile_fragment) {
+                drawerLayout.closeDrawers();
+            }
+        });
 
 
         View headerView = navigationView.getHeaderView(0);
         TextView loggedName = headerView.findViewById(R.id.name_logged_label);
         TextView loggedEmail = headerView.findViewById(R.id.email_logged_label);
         ImageView profileImage = headerView.findViewById(R.id.profile_image);
+
+        profileImage.setOnClickListener(this::profileScreen);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = auth.getCurrentUser();
@@ -96,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void profileScreen(View view) {
+        navController.navigate(R.id.profile_fragment);
     }
 
     @Nullable
