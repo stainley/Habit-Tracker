@@ -269,5 +269,19 @@
                 android:text="Kreger"
                 android:textColor="@color/radio_flat_text_selector" />
         </RadioGroup>
+
+        <GridView
+            android:id="@+id/ongoingHabitDetailGridView"
+            android:layout_width="match_parent"
+            android:layout_height="290dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:horizontalSpacing="12dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_button_view" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
