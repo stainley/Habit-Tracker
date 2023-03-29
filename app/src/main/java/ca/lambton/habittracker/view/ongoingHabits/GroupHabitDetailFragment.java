@@ -45,6 +45,17 @@ public class GroupHabitDetailFragment extends Fragment {
         GroupCircularProgressGridAdapter adapter = new GroupCircularProgressGridAdapter(getContext(), new ArrayList<String>(Arrays.asList("75", "85", "67", "92")));
         groupCircularProgressGrid.setAdapter(adapter);
 
+//        RadioGroup radioGroup = findViewById(R.id.my_radio_group);
+//        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+//                // Do something when a RadioButton is checked
+//                RadioButton checkedRadioButton = findViewById(checkedId);
+//                String checkedText = checkedRadioButton.getText().toString();
+//                Toast.makeText(getApplicationContext(), "Selected option: " + checkedText, Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
         return binding.getRoot();
     }
 }
