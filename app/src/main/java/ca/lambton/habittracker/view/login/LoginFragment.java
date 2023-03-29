@@ -4,16 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
@@ -33,7 +32,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Objects;
 
 import ca.lambton.habittracker.MainActivity;
-import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentLoginBinding;
 import ca.lambton.habittracker.habit.model.User;
 import ca.lambton.habittracker.view.SignupFragment;
