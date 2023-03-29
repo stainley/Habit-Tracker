@@ -1,12 +1,16 @@
 package ca.lambton.habittracker.view.profile;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +54,7 @@ public class ProfileFragment extends Fragment {
     private ArrayList<String> permissionsList;
     private StorageReference storageRef;
     private CircleImageView profileImage;
+    private Uri tempImageUri = null;
 
     private final String[] permissionsStr = {Manifest.permission.CAMERA};
 
@@ -73,16 +78,87 @@ public class ProfileFragment extends Fragment {
         }
     });
 
+    private final ActivityResultLauncher<Uri> selectCameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
+        if (result) {
+
+            try {
+                String picturePath = "content://media/" + tempImageUri.getPath();
+
+                Picasso.get().load(picturePath).resize(300, 300).centerInside().into(profileImage);
+                profileImage.setDrawingCacheEnabled(true);
+                profileImage.buildDrawingCache(true);
+
+                new Thread(() -> {
+
+                    try {
+                        Thread.sleep(1000);
+
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (profileImage.getDrawable() != null) {
+                        Bitmap bitmap = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                        byte[] data = outputStream.toByteArray();
+
+                        StorageReference photosRef = storageRef.child("photos/" + currentUser.getUid());
+                        UploadTask uploadTask = photosRef.putBytes(data);
+
+                        uploadTask.addOnFailureListener(exception -> {
+                            // Handle unsuccessful uploads
+                            Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
+                        }).addOnSuccessListener(taskSnapshot -> {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            Toast.makeText(requireContext(), "Photo uploaded", Toast.LENGTH_SHORT).show();
+                        });
+
+
+                        uploadTask.continueWithTask(task -> {
+                            if (!task.isSuccessful()) {
+                                throw Objects.requireNonNull(task.getException());
+                            }
+                            // Continue with the task to get the download URL
+                            return photosRef.getDownloadUrl();
+                        }).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Uri photoDownloadUri = task.getResult();
+                                UserProfileChangeRequest profileChangeNameRequest = new UserProfileChangeRequest.Builder()
+                                        .setPhotoUri(photoDownloadUri)
+                                        .build();
+
+                                currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(taskProfile -> {
+                                    if (taskProfile.isSuccessful()) {
+                                        Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                // Handle failures
+                                Log.e(TAG, "Error fetching the photo URL");
+                            }
+                        });
+                    }
+                }).start();
+
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    });
+
     private final ActivityResultLauncher<PickVisualMediaRequest> selectPictureLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), new ActivityResultCallback<>() {
 
         @Override
         public void onActivityResult(Uri result) {
             try {
                 if (result != null) {
+                    tempImageUri = result;
                     String picturePath = "content://media/" + result.getPath();
                     System.out.println(picturePath);
 
-                    Picasso.get().load(result).fit().into(profileImage);
+                    Picasso.get().load(picturePath).resize(300, 300).centerInside().into(profileImage);
 
                     profileImage.setDrawingCacheEnabled(true);
                     profileImage.buildDrawingCache(true);
@@ -160,11 +236,13 @@ public class ProfileFragment extends Fragment {
         binding.editNameButton.setOnClickListener(this::editProfileName);
 
         binding.changeImageButton.setOnClickListener(this::changeProfilePicture);
+        binding.cameraImageButton.setOnClickListener(this::takePhotoProfile);
 
         // Create a Cloud Storage reference from the app
         storageRef = FirebaseStorage.getInstance().getReference();
 
     }
+
 
     @Nullable
     @Override
@@ -231,10 +309,27 @@ public class ProfileFragment extends Fragment {
         addPhotoFromLibrary();
     }
 
+    private void takePhotoProfile(View view) {
+        takePhoto();
+    }
+
     public void addPhotoFromLibrary() {
         System.out.println("ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) " + ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA));
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             selectPictureLauncher.launch(new PickVisualMediaRequest());
+        }
+    }
+
+    public void takePhoto() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+            ContentResolver cr = requireContext().getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+            tempImageUri = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            selectCameraLauncher.launch(tempImageUri);
         }
     }
 
