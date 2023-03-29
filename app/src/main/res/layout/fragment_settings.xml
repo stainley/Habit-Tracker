@@ -16,6 +16,7 @@
         android:minHeight="340dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/card_stack_category_item"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -93,9 +94,12 @@
         android:id="@+id/collection_custom_habit_rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/days_label">
+        app:layout_constraintTop_toBottomOf="@id/days_label"
+        tools:listitem="@layout/predefined_category_buttons">
 
 
     </androidx.recyclerview.widget.RecyclerView>
