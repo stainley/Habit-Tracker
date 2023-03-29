@@ -19,6 +19,8 @@ public class GroupHabitDetailFragment extends Fragment {
 
     private GridView groupCircularProgressGrid;
 
+    private GridView ongoingHabitDetailGridInfo;
+
     public GroupHabitDetailFragment() {
         // Required empty public constructor
     }
@@ -55,6 +57,17 @@ public class GroupHabitDetailFragment extends Fragment {
 //                Toast.makeText(getApplicationContext(), "Selected option: " + checkedText, Toast.LENGTH_SHORT).show();
 //            }
 //        });
+
+        ongoingHabitDetailGridInfo = (GridView) binding.ongoingHabitDetailGridView;
+        ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList = new ArrayList<OngoingHabitDetailGridInfo>();
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", "5"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "42/100"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", "10"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "2/3"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days missed", "5"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "5/15"));
+        OngoingHabitDetailGridInfoAdapter progressAdapter = new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList);
+        ongoingHabitDetailGridInfo.setAdapter(progressAdapter);
 
         return binding.getRoot();
     }
