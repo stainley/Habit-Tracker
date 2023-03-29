@@ -168,5 +168,10 @@
         android:name="ca.lambton.habittracker.view.SignupFragment"
         android:label="Sign Up"
         tools:layout="@layout/fragment_signup" />
+    <fragment
+        android:id="@+id/profile_fragment"
+        android:name="ca.lambton.habittracker.view.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
 
 </navigation>
