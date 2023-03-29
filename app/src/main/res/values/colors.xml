@@ -103,4 +103,5 @@
     <color name="editTextBG">#DADADA</color>
     <color name="transparent">#00000000</color>
     <color name="textColor">#6e6e6e</color>
+    <color name="mildLavender">#C9B0FD</color>
 </resources>
