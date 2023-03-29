@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.habit.HabitDetailFragment"
-    >
+    tools:context=".view.fragment.habit.HabitDetailFragment">
 
     <TextView
         android:id="@+id/titleHabit"
@@ -155,6 +154,7 @@
 
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/take_habit"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginStart="32dp"

@@ -9,15 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
-import androidx.navigation.Navigation;
 
-import java.sql.SQLOutput;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +33,6 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
-import ca.lambton.habittracker.view.today.DueTodayProgressFragment;
 
 public class CreateHabitFragment extends Fragment {
 
@@ -50,6 +49,8 @@ public class CreateHabitFragment extends Fragment {
 
     ArrayAdapter<String> categoryDropDownAdapter;
 
+    private FirebaseUser mUser;
+
     public CreateHabitFragment() {
     }
 
@@ -63,11 +64,12 @@ public class CreateHabitFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         habitViewModel = new ViewModelProvider(new ViewModelStore(), new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
 
@@ -83,11 +85,10 @@ public class CreateHabitFragment extends Fragment {
                 int month = calendar.get(Calendar.MONTH);
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        (view12, year1, monthOfYear, dayOfMonth) -> {
-                            // set the selected date to the EditText
-                            editTextStartDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1);
-                        }, year, month, day);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view12, year1, monthOfYear, dayOfMonth) -> {
+                    // set the selected date to the EditText
+                    editTextStartDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1);
+                }, year, month, day);
 
                 datePickerDialog.show();
             }
@@ -102,14 +103,13 @@ public class CreateHabitFragment extends Fragment {
                 int month = calendar.get(Calendar.MONTH);
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                // set the selected date to the EditText
-                                editTextEndDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, year, month, day);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // set the selected date to the EditText
+                        editTextEndDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                    }
+                }, year, month, day);
 
                 datePickerDialog.show();
             }
@@ -171,7 +171,7 @@ public class CreateHabitFragment extends Fragment {
 
     private void createHabit(View view) {
         Habit newHabit = new Habit();
-        // TODO: Add user ID
+        newHabit.setUserId(mUser != null ? mUser.getUid() : "");
         newHabit.setName(binding.titleHabit.getText().toString());
         newHabit.setDescription(binding.description.getText().toString());
         int duration = binding.durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
@@ -191,13 +191,15 @@ public class CreateHabitFragment extends Fragment {
         try {
             startDate = simpleDateFormat.parse(binding.editTextStartDate.getText().toString());
             endDate = simpleDateFormat.parse(binding.editTextEndDate.getText().toString());
-            System.out.println(startDate.getTime());
+
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
 
-        newHabit.setStartDate(startDate.getTime());
-        newHabit.setEndDate(endDate.getTime());
+        if (startDate != null)
+            newHabit.setStartDate(startDate.getTime());
+        if (endDate != null)
+            newHabit.setEndDate(endDate.getTime());
 
         if (newHabit.getName().isEmpty() || newHabit.getName() == null) {
             habitViewModel.saveHabit(newHabit);
