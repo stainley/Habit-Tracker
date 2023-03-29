@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +26,6 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
-import kotlinx.coroutines.flow.Flow;
 
 public class HabitDetailFragment extends Fragment {
     private FragmentHabitDetailBinding binding;
