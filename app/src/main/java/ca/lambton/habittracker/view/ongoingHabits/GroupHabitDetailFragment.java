@@ -1,16 +1,23 @@
 package ca.lambton.habittracker.view.ongoingHabits;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
-import ca.lambton.habittracker.R;
+import androidx.fragment.app.Fragment;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import ca.lambton.habittracker.databinding.FragmentGroupHabitDetailBinding;
 
 public class GroupHabitDetailFragment extends Fragment {
+
+    FragmentGroupHabitDetailBinding binding;
+
+    private GridView groupCircularProgressGrid;
 
     public GroupHabitDetailFragment() {
         // Required empty public constructor
@@ -31,7 +38,13 @@ public class GroupHabitDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group_habit_detail, container, false);
+        binding = FragmentGroupHabitDetailBinding.inflate(inflater, container, false);
+
+        groupCircularProgressGrid = (GridView) binding.groupCircularProgressGrid;
+
+        GroupCircularProgressGridAdapter adapter = new GroupCircularProgressGridAdapter(getContext(), new ArrayList<String>(Arrays.asList("75", "85", "67", "92")));
+        groupCircularProgressGrid.setAdapter(adapter);
+
+        return binding.getRoot();
     }
 }
