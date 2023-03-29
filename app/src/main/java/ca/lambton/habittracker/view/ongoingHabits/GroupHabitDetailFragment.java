@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 
 import ca.lambton.habittracker.databinding.FragmentGroupHabitDetailBinding;
 
@@ -68,6 +70,15 @@ public class GroupHabitDetailFragment extends Fragment {
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "5/15"));
         OngoingHabitDetailGridInfoAdapter progressAdapter = new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList);
         ongoingHabitDetailGridInfo.setAdapter(progressAdapter);
+
+        HashSet<Date> events = new HashSet<>();
+        events.add(new Date(2023, 3, 13));
+        events.add(new Date(2023, 3, 15));
+        events.add(new Date(2023, 3, 21));
+        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
+
+        CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
+        cv.updateCalendar(events, habitProgress);
 
         return binding.getRoot();
     }
