@@ -152,13 +152,13 @@ public class MyHabitsFragment extends Fragment {
         return position -> {
             switch (position) {
                 case 0:
-                    Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.newHabitFragment);
                     break;
                 case 1:
                     Navigation.findNavController(requireView()).navigate(R.id.nav_due_today);
                     break;
                 case 2:
-                    Navigation.findNavController(getView()).navigate(R.id.ongoingHabitFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.ongoingHabitFragment);
                     break;
             }
         };

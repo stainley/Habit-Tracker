@@ -10,27 +10,38 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.databinding.FragmentDailyHabitProgressBinding;
+import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 
 public class DailyProgressFragment extends Fragment {
-
     private FragmentDailyHabitProgressBinding binding;
-
     private HabitViewModel habitViewModel;
+    private FirebaseUser mUser;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = FragmentDailyHabitProgressBinding.inflate(LayoutInflater.from(requireContext()));
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentDailyHabitProgressBinding.inflate(inflater);
-        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
         return binding.getRoot();
     }
 
@@ -44,7 +55,12 @@ public class DailyProgressFragment extends Fragment {
             AtomicInteger totalHabit = new AtomicInteger();
             AtomicInteger habitCompleted = new AtomicInteger();
 
-            habitProgresses.forEach(habitProgress -> {
+
+            List<HabitProgress> myHabitProgressFiltered = habitProgresses.stream()
+                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()))
+                    .collect(Collectors.toList());
+
+            myHabitProgressFiltered.forEach(habitProgress -> {
 
                 Map<Long, Integer> summarizedByHabitId = habitProgress.getProgressList().stream()
                         .filter(oldDate -> LocalDate.parse(oldDate.getDate()).isEqual(today) || LocalDate.parse(oldDate.getDate()).isAfter(today))
