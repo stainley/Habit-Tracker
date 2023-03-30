@@ -11,12 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.databinding.FragmentPublicChallengesBinding;
 import ca.lambton.habittracker.habit.model.Habit;
@@ -26,7 +22,6 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 
 public class PublicChallengesFragment extends Fragment {
     private FragmentPublicChallengesBinding binding;
-    private FirebaseUser mUser;
     private HabitViewModel habitViewModel;
     private OngoingHabitsRecycleAdapter privateOngoingHabitListAdapter;
     private final List<Habit> habits = new ArrayList<>();
@@ -36,7 +31,6 @@ public class PublicChallengesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentPublicChallengesBinding.inflate(LayoutInflater.from(requireContext()));
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
 
