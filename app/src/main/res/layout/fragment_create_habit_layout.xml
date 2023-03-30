@@ -16,13 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="224dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/detail_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
+                android:layout_gravity="top"
                 android:cropToPadding="true"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/food_habits_full" />
@@ -55,6 +56,7 @@
             app:cardMaxElevation="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleHabit">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,20 +77,19 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:hint="Select Category"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/CategoryLabel">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_txt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textAutoComplete"
-                    >
-                    </AutoCompleteTextView>
+                        android:inputType="textAutoComplete"></AutoCompleteTextView>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -421,17 +422,22 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/habitTypeLabel">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/personalHabitType"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:text="Personal" />
+                android:text="Personal"
+                app:cornerRadius="100dp"
+                app:rippleColor="@color/card_background_light_color"
+                app:strokeColor="@color/md_theme_light_primary"
+                app:strokeWidth="1dp" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/publicHabitType"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:checkable="true"
                 android:text="Public"
                 android:textColor="@color/neutral_black"
                 app:backgroundTint="@android:color/transparent"
