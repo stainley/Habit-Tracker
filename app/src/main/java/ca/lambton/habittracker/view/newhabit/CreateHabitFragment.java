@@ -191,11 +191,7 @@ public class CreateHabitFragment extends Fragment {
 
     private void createHabit(View view) {
 
-        if (binding.titleHabit.getText().toString().equals("") ||
-                binding.frequencyText.getText().toString().equals("") ||
-                binding.editTextStartDate.getText().toString().equals("") ||
-                binding.editTextEndDate.getText().toString().equals("") ||
-                binding.autoCompleteTxt.getText().toString().equals("")) {
+        if (binding.titleHabit.getText().toString().equals("") || binding.frequencyText.getText().toString().equals("") || binding.editTextStartDate.getText().toString().equals("") || binding.editTextEndDate.getText().toString().equals("") || binding.autoCompleteTxt.getText().toString().equals("")) {
 
             Toast.makeText(requireContext(), "Some fields are required", Toast.LENGTH_SHORT).show();
             binding.titleHabit.setError("This field is required");
@@ -244,10 +240,10 @@ public class CreateHabitFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-        if (newHabit.getName().isEmpty() || newHabit.getName() == null) {
-            habitViewModel.saveHabit(newHabit);
-        } else {
-            habitViewModel.saveHabit(newHabit);
+        habitViewModel.saveHabit(newHabit);
+
+        if (newHabit.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.toString())) {
+            habitViewModel.saveCloudHabit(newHabit);
         }
 
         Toast.makeText(requireContext(), "New habit registered", Toast.LENGTH_SHORT).show();

@@ -1,7 +1,6 @@
 package ca.lambton.habittracker.view.fragment.habit.description;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class HabitCategoryDescriptionFragment extends Fragment {
         if (getArguments() != null) {
             Category category = (Category) getArguments().getSerializable("category");
 
-            habitFoodTitleText.setText(category.getName());
+            habitFoodTitleText.setText(category != null ? category.getName() : "");
             habitDurationHabitText.setText(String.valueOf(category.getDuration()));
             habitTimeDurationText.setText(String.valueOf(category.getInterval()));
             habitFrequencyTex.setText(category.getFrequencyUnit());
