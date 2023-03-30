@@ -17,7 +17,6 @@ import java.util.List;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 
 public class PrivateHabitsFragment extends Fragment {
 
@@ -28,33 +27,18 @@ public class PrivateHabitsFragment extends Fragment {
 
     private final List<Habit> habits = new ArrayList<>();
 
-    public PrivateHabitsFragment() {
-        // Required empty public constructor
-    }
-    public static PrivateHabitsFragment newInstance(String param1, String param2) {
-        PrivateHabitsFragment fragment = new PrivateHabitsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentPrivateHabitsBinding.inflate(LayoutInflater.from(requireContext()));
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentPrivateHabitsBinding.inflate(inflater, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
 
-        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
-        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), result -> {
-            this.habits.clear();
-            this.habits.addAll(result);
-            privateOngoingHabitListAdapter.notifyDataSetChanged();
-        });
 
         privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -72,5 +56,16 @@ public class PrivateHabitsFragment extends Fragment {
 
             }
         };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), result -> {
+            this.habits.clear();
+            this.habits.addAll(result);
+            privateOngoingHabitListAdapter.notifyItemRangeChanged(0, result.size());
+        });
     }
 }

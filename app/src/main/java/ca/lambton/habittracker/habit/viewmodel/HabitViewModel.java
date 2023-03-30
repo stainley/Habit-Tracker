@@ -97,4 +97,8 @@ public class HabitViewModel extends ViewModel {
     public void saveCloudHabit(Habit habit) {
         this.repository.saveCloudHabit(habit);
     }
+
+    public LiveData<List<Habit>> getAllHabitCloud() {
+        return this.repository.getAllHabitCloud();
+    }
 }
