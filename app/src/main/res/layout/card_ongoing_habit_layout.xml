@@ -15,7 +15,76 @@
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/habitNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/mulish_semi_bold"
+            android:maxEms="4"
+            android:maxLines="2"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/memberCountLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Add Veggie" />
+
+        <TextView
+            android:id="@+id/memberCountLabel"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/habitNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel"
+            tools:text="4 Members" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/habitProgressbar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="12dp"
+            android:progress="73"
+            app:indicatorColor="@color/yellow"
+            app:indicatorSize="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:trackColor="@color/card_background_light_color"
+            app:trackCornerRadius="8dp"
+            app:trackThickness="4dp" />
+
+        <TextView
+            android:id="@+id/habitPercentageNumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mulish_bold"
+            android:textColor="#DD5001"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/habitProgressbar"
+            app:layout_constraintEnd_toEndOf="@id/habitProgressbar"
+            app:layout_constraintStart_toStartOf="@id/habitProgressbar"
+            app:layout_constraintTop_toTopOf="@id/habitProgressbar"
+            tools:text="73%" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -24,7 +93,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        &lt;!&ndash;<androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
@@ -56,7 +125,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/habitNameLabel"
                 tools:text="4 Members" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>&ndash;&gt;
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -96,6 +165,6 @@
                 tools:text="73%" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+    </LinearLayout>-->
 
 </com.google.android.material.card.MaterialCardView>

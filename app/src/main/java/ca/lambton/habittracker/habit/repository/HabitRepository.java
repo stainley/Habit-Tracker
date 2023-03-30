@@ -4,9 +4,16 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
 import ca.lambton.habittracker.habit.dao.HabitDao;
@@ -21,14 +28,19 @@ public class HabitRepository {
 
     private HabitDao habitDao;
     private ProgressDao progressDao;
-
     private UserDao userDao;
 
+    private FirebaseFirestore dbFirebase;
+    private Application application;
+
     public HabitRepository(Application application) {
+        this.application = application;
         AppDatabase db = AppDatabase.getDatabase(application);
         habitDao = db.habitDao();
         progressDao = db.progressDao();
         userDao = db.userDao();
+
+        dbFirebase = FirebaseFirestore.getInstance();
     }
 
     public LiveData<List<Habit>> getAllHabitByCategory(long category) {
@@ -105,5 +117,60 @@ public class HabitRepository {
 
     public LiveData<User> getUserByEmail(String email) {
         return userDao.getUserByEmail(email);
+    }
+
+    public void saveCloudHabit(Habit habit) {
+
+        // Create a reference to the collection
+        CollectionReference collectionRef = FirebaseFirestore.getInstance()
+                .collection("habit").document(habit.getUserId()).collection("public");
+
+        //db.collection('users').where('interests', 'array-contains', {name: "soccer", kind:"sports"})
+        // Create a query to check if the document already exists
+
+        System.out.println(collectionRef.getPath());
+
+        Query query = collectionRef
+                .where(Filter.and
+                                (Filter.equalTo("habit", habit),
+                                Filter.equalTo("habit.id", habit.getId()),
+                                Filter.equalTo("habit.userId", habit.getUserId())));
+
+
+        // Execute the query
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (!querySnapshot.isEmpty()) {
+                    // Document already exists
+                    querySnapshot.getDocuments().forEach(documentSnapshot -> {
+                        System.out.println(documentSnapshot.get("habit"));
+                    });
+                } else {
+
+                    System.out.println("Inner result: " + habit);
+
+                    // Document does not exist, so insert it
+                    Map<String, Habit> habitMap = new HashMap<>();
+                    habitMap.put("habit", habit);
+
+                    dbFirebase.collection("habit")
+                            .document(habit.getUserId())
+                            .collection("public")
+                            .add(habitMap)
+                            .addOnSuccessListener(documentReference -> {
+                                System.out.println("Document added with ID: " + documentReference.getId());
+                            })
+                            .addOnFailureListener(failure -> {
+                                System.err.println("Error adding document");
+                            });
+
+                    //collectionRef.add(habitMap);
+                }
+            } else {
+                // Handle errors
+            }
+        });
+
     }
 }
