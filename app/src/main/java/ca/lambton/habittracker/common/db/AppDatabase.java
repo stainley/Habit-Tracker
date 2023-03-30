@@ -156,7 +156,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 habit.setFrequencyUnit(parts[8]);
                 habit.setCategoryId(Long.parseLong(parts[9]));
                 habit.setImagePath(parts[10]);
-
+                habit.setHabitType(parts[11]);
                 dataList.add(habit);
             }
         } catch (IOException e) {
