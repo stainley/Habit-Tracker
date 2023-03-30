@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -13,51 +14,40 @@ import ca.lambton.habittracker.databinding.FragmentOngoingHabitsBinding;
 
 public class OngoingHabitsFragment extends Fragment {
 
-    FragmentOngoingHabitsBinding binding;
-
-    public OngoingHabitsFragment() {
-        // Required empty public constructor
-    }
-
-    public static OngoingHabitsFragment newInstance(String param1, String param2) {
-        OngoingHabitsFragment fragment = new OngoingHabitsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private FragmentOngoingHabitsBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ongoing_habits, container, false);
-        binding = FragmentOngoingHabitsBinding.inflate(inflater, container, false);
+        binding = FragmentOngoingHabitsBinding.inflate(LayoutInflater.from(requireContext()));
 
         binding.allHabitsCard.setOnClickListener(this::allHabitsCardClicked);
         binding.privateHabitsCard.setOnClickListener(this::privateHabitsCardClicked);
         binding.groupHabitsCard.setOnClickListener(this::groupHabitsCardClicked);
-        //binding.publicChallengesCard.setOnClickListener(this::publicChallengesCardClicked);
+
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
 
         return binding.getRoot();
     }
 
     private void allHabitsCardClicked(View view) {
-        Navigation.findNavController(getView()).navigate(R.id.allHabitsFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.allHabitsFragment);
     }
 
     private void privateHabitsCardClicked(View view) {
-        Navigation.findNavController(getView()).navigate(R.id.privateHabitsFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.privateHabitsFragment);
     }
 
     private void groupHabitsCardClicked(View view) {
-        Navigation.findNavController(getView()).navigate(R.id.groupHabitsFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.groupHabitsFragment);
     }
 
     private void publicChallengesCardClicked(View view) {
-        Navigation.findNavController(getView()).navigate(R.id.publicChallengesFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.publicChallengesFragment);
     }
 }

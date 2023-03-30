@@ -9,7 +9,17 @@
         android:id="@+id/nav_home"
         android:name="ca.lambton.habittracker.view.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_nav_home_to_profile_fragment"
+            app:destination="@id/profile_fragment" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_community"
+            app:destination="@id/nav_community" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_my_habits"
+            app:destination="@id/nav_my_habits" />
+    </fragment>
     <fragment
         android:id="@+id/nav_community"
         android:name="ca.lambton.habittracker.view.fragment.community.CommunityFragment"
@@ -33,7 +43,17 @@
         android:id="@+id/nav_my_habits"
         android:name="ca.lambton.habittracker.view.myhabits.MyHabitsFragment"
         android:label="My Habits"
-        tools:layout="@layout/fragment_my_habits" />
+        tools:layout="@layout/fragment_my_habits" >
+        <action
+            android:id="@+id/action_nav_my_habits_to_newHabitFragment"
+            app:destination="@id/newHabitFragment" />
+        <action
+            android:id="@+id/action_nav_my_habits_to_nav_due_today"
+            app:destination="@id/nav_due_today" />
+        <action
+            android:id="@+id/action_nav_my_habits_to_ongoingHabitFragment"
+            app:destination="@id/ongoingHabitFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nav_defined_habit"
         android:name="ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment"
@@ -68,6 +88,9 @@
             android:id="@+id/action_newHabitFragment_to_nav_defined_habit"
             app:destination="@id/nav_defined_habit"
             app:popUpTo="@id/newHabitFragment" />
+        <action
+            android:id="@+id/action_newHabitFragment_to_createHabitFragment"
+            app:destination="@id/createHabitFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_first_habit_Fragment"
@@ -91,29 +114,31 @@
         android:label="Ongoing Habits"
         tools:layout="@layout/fragment_ongoing_habits">
         <action
-            android:id="@+id/action_ongoingHabitFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/ongoingHabitFragment" />
+            android:id="@+id/action_ongoingHabitFragment_to_groupHabitsFragment"
+            app:destination="@id/groupHabitsFragment" />
+        <action
+            android:id="@+id/action_ongoingHabitFragment_to_privateHabitsFragment"
+            app:destination="@id/privateHabitsFragment" />
+        <action
+            android:id="@+id/action_ongoingHabitFragment_to_allHabitsFragment"
+            app:destination="@id/allHabitsFragment" />
+        <action
+            android:id="@+id/action_ongoingHabitFragment_to_publicChallengesFragment"
+            app:destination="@id/publicChallengesFragment" />
     </fragment>
     <fragment
         android:id="@+id/allHabitsFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.AllHabitsFragment"
         android:label="Ongoing - All Habits"
-        tools:layout="@layout/fragment_all_habits">
-        <action
-            android:id="@+id/action_allHabitFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/allHabitsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_all_habits"/>
     <fragment
         android:id="@+id/privateHabitsFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitsFragment"
         android:label="Ongoing - Private Habits"
         tools:layout="@layout/fragment_private_habits">
         <action
-            android:id="@+id/action_privateHabitFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/privateHabitsFragment" />
+            android:id="@+id/action_privateHabitsFragment_to_privateHabitDetailFragment"
+            app:destination="@id/privateHabitDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/groupHabitsFragment"
@@ -121,40 +146,24 @@
         android:label="Ongoing - Group Habits"
         tools:layout="@layout/fragment_group_habits">
         <action
-            android:id="@+id/action_groupHabitFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/groupHabitsFragment" />
+            android:id="@+id/action_groupHabitsFragment_to_groupHabitDetailFragment"
+            app:destination="@id/groupHabitDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/publicChallengesFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.PublicChallengesFragment"
         android:label="Ongoing - Public Challenges"
-        tools:layout="@layout/fragment_public_challenges">
-        <action
-            android:id="@+id/action_publicChallengesFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/publicChallengesFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_public_challenges"/>
     <fragment
         android:id="@+id/privateHabitDetailFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitDetailFragment"
         android:label="Private Habit Detail"
-        tools:layout="@layout/fragment_public_challenges">
-        <action
-            android:id="@+id/action_privateHabitDetailFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/privateHabitDetailFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_public_challenges"/>
     <fragment
         android:id="@+id/groupHabitDetailFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitDetailFragment"
         android:label="Group Habit Detail"
-        tools:layout="@layout/fragment_public_challenges">
-        <action
-            android:id="@+id/action_groupHabitDetailFragment_to_nav_defined_habit"
-            app:destination="@id/nav_defined_habit"
-            app:popUpTo="@id/groupHabitDetailFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_public_challenges"/>
 
 
     <activity

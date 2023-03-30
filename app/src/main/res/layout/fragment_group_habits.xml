@@ -25,7 +25,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:padding="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupHabitsLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/groupHabitsLabel"
+        app:spanCount="2"
+        tools:listitem="@layout/card_ongoing_habit_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
