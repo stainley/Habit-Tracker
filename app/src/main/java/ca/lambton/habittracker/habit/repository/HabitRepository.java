@@ -1,8 +1,10 @@
 package ca.lambton.habittracker.habit.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Filter;
@@ -26,15 +28,14 @@ import ca.lambton.habittracker.habit.model.User;
 
 public class HabitRepository {
 
-    private HabitDao habitDao;
-    private ProgressDao progressDao;
-    private UserDao userDao;
+    private static final String TAG = HabitRepository.class.getName();
 
-    private FirebaseFirestore dbFirebase;
-    private Application application;
+    private final HabitDao habitDao;
+    private final ProgressDao progressDao;
+    private final UserDao userDao;
+    private final FirebaseFirestore dbFirebase;
 
     public HabitRepository(Application application) {
-        this.application = application;
         AppDatabase db = AppDatabase.getDatabase(application);
         habitDao = db.habitDao();
         progressDao = db.progressDao();
@@ -83,9 +84,7 @@ public class HabitRepository {
     public List<HabitProgress> getHabitProgressNotLive() {
         List<HabitProgress> allProgressNotLive = new ArrayList<>();
 
-        AppDatabase.databaseWriterExecutor.execute(() -> {
-            allProgressNotLive.addAll(progressDao.getAllProgressNotLive());
-        });
+        AppDatabase.databaseWriterExecutor.execute(() -> allProgressNotLive.addAll(progressDao.getAllProgressNotLive()));
 
         return allProgressNotLive;
     }
@@ -127,12 +126,9 @@ public class HabitRepository {
 
         //db.collection('users').where('interests', 'array-contains', {name: "soccer", kind:"sports"})
         // Create a query to check if the document already exists
-
-        System.out.println(collectionRef.getPath());
-
         Query query = collectionRef
                 .where(Filter.and
-                                (Filter.equalTo("habit", habit),
+                        (Filter.equalTo("habit", habit),
                                 Filter.equalTo("habit.id", habit.getId()),
                                 Filter.equalTo("habit.userId", habit.getUserId())));
 
@@ -143,9 +139,7 @@ public class HabitRepository {
                 QuerySnapshot querySnapshot = task.getResult();
                 if (!querySnapshot.isEmpty()) {
                     // Document already exists
-                    querySnapshot.getDocuments().forEach(documentSnapshot -> {
-                        System.out.println(documentSnapshot.get("habit"));
-                    });
+                    querySnapshot.getDocuments().forEach(documentSnapshot -> System.out.println(documentSnapshot.get("habit")));
                 } else {
 
                     System.out.println("Inner result: " + habit);
@@ -158,19 +152,42 @@ public class HabitRepository {
                             .document(habit.getUserId())
                             .collection("public")
                             .add(habitMap)
-                            .addOnSuccessListener(documentReference -> {
-                                System.out.println("Document added with ID: " + documentReference.getId());
-                            })
-                            .addOnFailureListener(failure -> {
-                                System.err.println("Error adding document");
-                            });
+                            .addOnSuccessListener(documentReference -> Log.i(TAG, "Document added with ID: " + documentReference.getId()))
+                            .addOnFailureListener(failure -> Log.e(TAG, "Error adding document"));
 
                     //collectionRef.add(habitMap);
                 }
             } else {
                 // Handle errors
+                Log.e(TAG, "An error had occurred");
             }
         });
 
+    }
+
+    public LiveData<List<Habit>> getAllHabitCloud() {
+
+        MutableLiveData<List<Habit>> habitListMutableData = new MutableLiveData<>();
+        Query query = FirebaseFirestore.getInstance().collectionGroup("public");
+
+        // Execute the query
+        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Habit> habits = new ArrayList<>();
+
+            queryDocumentSnapshots.forEach(queryDocumentSnapshot -> {
+                String documentId = queryDocumentSnapshot.getId();
+                Habit habit = queryDocumentSnapshot.get("habit", Habit.class);
+
+                System.out.println(queryDocumentSnapshot.get("habit.id"));
+                habits.add(habit);
+
+
+                System.out.println(documentId);
+
+                habitListMutableData.setValue(habits);
+            });
+        });
+
+        return habitListMutableData;
     }
 }

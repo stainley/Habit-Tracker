@@ -1,5 +1,6 @@
 package ca.lambton.habittracker.view.ongoingHabits;
 
+import android.net.wifi.aware.PublishDiscoverySession;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import ca.lambton.habittracker.R;
@@ -25,6 +27,7 @@ public class OngoingHabitsFragment extends Fragment {
         binding.allHabitsCard.setOnClickListener(this::allHabitsCardClicked);
         binding.privateHabitsCard.setOnClickListener(this::privateHabitsCardClicked);
         binding.groupHabitsCard.setOnClickListener(this::groupHabitsCardClicked);
+        binding.publicHabitCard.setOnClickListener(this::publicChallengesCardClicked);
 
     }
 
@@ -48,6 +51,8 @@ public class OngoingHabitsFragment extends Fragment {
     }
 
     private void publicChallengesCardClicked(View view) {
-        Navigation.findNavController(requireView()).navigate(R.id.publicChallengesFragment);
+        NavDirections navPublicChallenge = OngoingHabitsFragmentDirections.actionOngoingHabitFragmentToPublicChallengesFragment();
+
+        Navigation.findNavController(requireView()).navigate(navPublicChallenge);
     }
 }
