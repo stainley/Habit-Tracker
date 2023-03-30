@@ -43,6 +43,10 @@ public class HabitRepository {
         return habitDao.getAllPersonalHabits();
     }
 
+    public LiveData<List<Habit>> getAllPublicHabit() {
+        return habitDao.getAllPublicHabits();
+    }
+
     public LiveData<Habit> getHabitById(long id) {
         return habitDao.fetchById(id);
     }
