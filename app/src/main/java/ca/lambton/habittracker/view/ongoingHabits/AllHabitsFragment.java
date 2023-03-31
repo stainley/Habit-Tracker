@@ -92,7 +92,7 @@ public class AllHabitsFragment extends Fragment {
             if (isGroup1) {
                 Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
             } else {
-                NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail().setHabit(habits.get(position));
+                NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail(null).setHabit(habits.get(position));
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
             }
         };

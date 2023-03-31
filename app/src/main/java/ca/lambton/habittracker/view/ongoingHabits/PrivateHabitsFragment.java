@@ -52,7 +52,7 @@ public class PrivateHabitsFragment extends Fragment {
     @NonNull
     private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
         return (position, isGroup1) -> {
-            NavDirections navDirections = PrivateHabitsFragmentDirections.actionPrivateHabitsFragmentToPrivateHabitDetailFragment().setHabit(habits.get(position));
+            NavDirections navDirections = PrivateHabitsFragmentDirections.actionPrivateHabitsFragmentToPrivateHabitDetailFragment(null).setHabit(habits.get(position));
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
         };
     }
