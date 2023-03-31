@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_community"
-        android:name="ca.lambton.habittracker.view.fragment.community.CommunityFragment"
+        android:name="ca.lambton.habittracker.community.view.CommunityFragment"
         android:label="Community"
         tools:layout="@layout/fragment_community" >
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_compose"
-        android:name="ca.lambton.habittracker.view.fragment.community.ComposeFragment"
+        android:name="ca.lambton.habittracker.community.view.ComposeFragment"
         android:label="New Post"
         tools:layout="@layout/fragment_compose" />
     <fragment

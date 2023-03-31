@@ -29,4 +29,5 @@
     <string name="quote_of_the_day">Quote of the day</string>
     <string name="hello">Hello</string>
     <string name="public_habits">Public Habits</string>
+    <string name="compose">Compose</string>
 </resources>

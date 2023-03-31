@@ -26,7 +26,7 @@
 
 
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/author_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -54,7 +54,7 @@
             app:tint="@color/neutral_grey" />
 
         <TextView
-            android:id="@+id/tvDescription"
+            android:id="@+id/post_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -65,8 +65,8 @@
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnOptions"
-            app:layout_constraintStart_toStartOf="@id/tvName"
-            app:layout_constraintTop_toBottomOf="@id/tvName"
+            app:layout_constraintStart_toStartOf="@id/author_text"
+            app:layout_constraintTop_toBottomOf="@id/author_text"
             app:layout_constraintVertical_bias="0" />
 
         <ImageButton
@@ -80,7 +80,7 @@
             android:src="@drawable/ic_like"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@id/tvDescription"
+            app:layout_constraintTop_toBottomOf="@id/post_text"
             app:layout_constraintVertical_bias="0"
             app:tint="@color/neutral_grey" />
 
@@ -109,7 +109,7 @@
             android:src="@drawable/ic_comment"
             app:layout_constraintBottom_toBottomOf="@id/btnLike"
             app:layout_constraintStart_toEndOf="@id/tvLike"
-            app:layout_constraintTop_toBottomOf="@id/tvDescription"
+            app:layout_constraintTop_toBottomOf="@id/post_text"
             app:layout_constraintTop_toTopOf="@id/btnLike"
             app:tint="@color/neutral_grey" />
 
