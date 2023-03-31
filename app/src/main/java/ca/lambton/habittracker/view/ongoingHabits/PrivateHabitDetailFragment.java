@@ -15,6 +15,7 @@ import java.util.HashSet;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
+import ca.lambton.habittracker.habit.model.Habit;
 
 public class PrivateHabitDetailFragment extends Fragment {
 
@@ -43,14 +44,33 @@ public class PrivateHabitDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
+        assert getArguments() != null;
+        Habit habit = (Habit) getArguments().getSerializable("habit");
+
+        if (habit != null) {
+            System.out.println("habit " + habit);
+        }
+
+        if (habit != null) {
+            binding.habitNameLabel.setText(habit.getName());
+        }
+
         ongoingHabitDetailGridInfo = (GridView) binding.ongoingHabitDetailGridView;
         ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList = new ArrayList<OngoingHabitDetailGridInfo>();
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", "5"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "42/100"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", "10"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "2/3"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days missed", "5"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "5/15"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", "0"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/100"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", "0"));
+
+        if (habit != null) {
+            if (habit.getFrequencyUnit() == "DAILY") {
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", "0/3"));
+            } else if (habit.getFrequencyUnit() == "WEEKLY") {
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "0/3"));
+            }
+            else {
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "0/15"));
+            }
+        }
         OngoingHabitDetailGridInfoAdapter adapter = new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList);
         ongoingHabitDetailGridInfo.setAdapter(adapter);
 
