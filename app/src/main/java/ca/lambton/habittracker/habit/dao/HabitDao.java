@@ -37,6 +37,18 @@ public abstract class HabitDao {
     @Query("SELECT * FROM HABIT_TBL")
     public abstract LiveData<List<Habit>> getAllHabits();
 
+    @Query("SELECT * FROM HABIT_TBL WHERE HABIT_TYPE = 'PERSONAL' and USER_ID != -1")
+    public abstract LiveData<List<Habit>> getAllPersonalHabits();
+
+    @Query("SELECT * FROM HABIT_TBL WHERE HABIT_TYPE = 'PERSONAL' AND USER_ID = :userId")
+    public abstract LiveData<List<Habit>> getAllPersonalHabitsByUserId(String userId);
+
+    @Query("SELECT * FROM HABIT_TBL WHERE HABIT_TYPE = 'PUBLIC'")
+    public abstract LiveData<List<Habit>> getAllPublicHabits();
+
+    @Query("SELECT * FROM HABIT_TBL WHERE HABIT_TYPE = 'PUBLIC' AND USER_ID = :userId")
+    public abstract LiveData<List<Habit>> getAllPublicHabitsByUserId(String userId);
+
     @Query("SELECT * FROM HABIT_TBL WHERE HABIT_ID = :id")
     public abstract LiveData<Habit> fetchById(Long id);
 

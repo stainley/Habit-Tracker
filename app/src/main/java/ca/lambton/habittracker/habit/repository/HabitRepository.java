@@ -52,6 +52,22 @@ public class HabitRepository {
         return habitDao.getAllHabits();
     }
 
+    public LiveData<List<Habit>> getAllPersonalHabit() {
+        return habitDao.getAllPersonalHabits();
+    }
+
+    public LiveData<List<Habit>> getAllPublicHabit() {
+        return habitDao.getAllPublicHabits();
+    }
+
+    public LiveData<List<Habit>> getAllPersonalHabitByUserId(String userId) {
+        return habitDao.getAllPersonalHabitsByUserId(userId);
+    }
+
+    public LiveData<List<Habit>> getAllPublicHabitByUserId(String userId) {
+        return habitDao.getAllPublicHabitsByUserId(userId);
+    }
+
     public LiveData<Habit> getHabitById(long id) {
         return habitDao.fetchById(id);
     }
