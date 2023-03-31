@@ -170,8 +170,6 @@ public class HabitRepository {
                             .add(habitMap)
                             .addOnSuccessListener(documentReference -> Log.i(TAG, "Document added with ID: " + documentReference.getId()))
                             .addOnFailureListener(failure -> Log.e(TAG, "Error adding document"));
-
-                    //collectionRef.add(habitMap);
                 }
             } else {
                 // Handle errors
