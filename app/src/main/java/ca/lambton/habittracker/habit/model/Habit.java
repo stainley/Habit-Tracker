@@ -170,4 +170,25 @@ public class Habit implements Serializable {
     public void setEndDate(long endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public String toString() {
+        return "Habit{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", creationDate=" + creationDate +
+                ", isPredefined=" + isPredefined +
+                ", userId='" + userId + '\'' +
+                ", duration=" + duration +
+                ", durationUnit='" + durationUnit + '\'' +
+                ", frequency=" + frequency +
+                ", frequencyUnit='" + frequencyUnit + '\'' +
+                ", categoryId=" + categoryId +
+                ", imagePath='" + imagePath + '\'' +
+                ", habitType='" + habitType + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }

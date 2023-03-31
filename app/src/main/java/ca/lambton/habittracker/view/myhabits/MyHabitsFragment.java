@@ -34,11 +34,6 @@ import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyHabitsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MyHabitsFragment extends Fragment {
     private GridView myHabitsGridButton;
     private CategoryViewModel categoryViewModel;
@@ -49,26 +44,6 @@ public class MyHabitsFragment extends Fragment {
 
     private final List<Category> categories = new ArrayList<>();
     private List<Category> categoriesFiltered = new ArrayList<>();
-
-    public MyHabitsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyHabitsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MyHabitsFragment newInstance(String param1, String param2) {
-        MyHabitsFragment fragment = new MyHabitsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +76,7 @@ public class MyHabitsFragment extends Fragment {
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Completed habits", R.drawable.ic_completed_habits));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Habit history", R.drawable.ic_habit_history));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Challenges & Leaderboard", R.drawable.ic_challenges_leaderboard));
-        MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(getContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
+        MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(requireContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
         categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
@@ -177,13 +152,13 @@ public class MyHabitsFragment extends Fragment {
         return position -> {
             switch (position) {
                 case 0:
-                    Navigation.findNavController(getView()).navigate(R.id.newHabitFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.newHabitFragment);
                     break;
                 case 1:
                     Navigation.findNavController(requireView()).navigate(R.id.nav_due_today);
                     break;
                 case 2:
-                    Navigation.findNavController(getView()).navigate(R.id.ongoingHabitFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.ongoingHabitFragment);
                     break;
             }
         };

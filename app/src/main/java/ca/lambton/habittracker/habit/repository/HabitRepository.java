@@ -1,12 +1,21 @@
 package ca.lambton.habittracker.habit.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.Filter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
 import ca.lambton.habittracker.habit.dao.HabitDao;
@@ -19,16 +28,20 @@ import ca.lambton.habittracker.habit.model.User;
 
 public class HabitRepository {
 
-    private HabitDao habitDao;
-    private ProgressDao progressDao;
+    private static final String TAG = HabitRepository.class.getName();
 
-    private UserDao userDao;
+    private final HabitDao habitDao;
+    private final ProgressDao progressDao;
+    private final UserDao userDao;
+    private final FirebaseFirestore dbFirebase;
 
     public HabitRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         habitDao = db.habitDao();
         progressDao = db.progressDao();
         userDao = db.userDao();
+
+        dbFirebase = FirebaseFirestore.getInstance();
     }
 
     public LiveData<List<Habit>> getAllHabitByCategory(long category) {
@@ -87,9 +100,7 @@ public class HabitRepository {
     public List<HabitProgress> getHabitProgressNotLive() {
         List<HabitProgress> allProgressNotLive = new ArrayList<>();
 
-        AppDatabase.databaseWriterExecutor.execute(() -> {
-            allProgressNotLive.addAll(progressDao.getAllProgressNotLive());
-        });
+        AppDatabase.databaseWriterExecutor.execute(() -> allProgressNotLive.addAll(progressDao.getAllProgressNotLive()));
 
         return allProgressNotLive;
     }
@@ -121,5 +132,78 @@ public class HabitRepository {
 
     public LiveData<User> getUserByEmail(String email) {
         return userDao.getUserByEmail(email);
+    }
+
+    public void saveCloudHabit(Habit habit) {
+
+        // Create a reference to the collection
+        CollectionReference collectionRef = FirebaseFirestore.getInstance()
+                .collection("habit").document(habit.getUserId()).collection("public");
+
+        //db.collection('users').where('interests', 'array-contains', {name: "soccer", kind:"sports"})
+        // Create a query to check if the document already exists
+        Query query = collectionRef
+                .where(Filter.and
+                        (Filter.equalTo("habit", habit),
+                                Filter.equalTo("habit.id", habit.getId()),
+                                Filter.equalTo("habit.userId", habit.getUserId())));
+
+
+        // Execute the query
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (!querySnapshot.isEmpty()) {
+                    // Document already exists
+                    querySnapshot.getDocuments().forEach(documentSnapshot -> System.out.println(documentSnapshot.get("habit")));
+                } else {
+
+                    System.out.println("Inner result: " + habit);
+
+                    // Document does not exist, so insert it
+                    Map<String, Habit> habitMap = new HashMap<>();
+                    habitMap.put("habit", habit);
+
+                    dbFirebase.collection("habit")
+                            .document(habit.getUserId())
+                            .collection("public")
+                            .add(habitMap)
+                            .addOnSuccessListener(documentReference -> Log.i(TAG, "Document added with ID: " + documentReference.getId()))
+                            .addOnFailureListener(failure -> Log.e(TAG, "Error adding document"));
+
+                    //collectionRef.add(habitMap);
+                }
+            } else {
+                // Handle errors
+                Log.e(TAG, "An error had occurred");
+            }
+        });
+
+    }
+
+    public LiveData<List<Habit>> getAllHabitCloud() {
+
+        MutableLiveData<List<Habit>> habitListMutableData = new MutableLiveData<>();
+        Query query = FirebaseFirestore.getInstance().collectionGroup("public");
+
+        // Execute the query
+        query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Habit> habits = new ArrayList<>();
+
+            queryDocumentSnapshots.forEach(queryDocumentSnapshot -> {
+                String documentId = queryDocumentSnapshot.getId();
+                Habit habit = queryDocumentSnapshot.get("habit", Habit.class);
+
+                System.out.println(queryDocumentSnapshot.get("habit.id"));
+                habits.add(habit);
+
+
+                System.out.println(documentId);
+
+                habitListMutableData.setValue(habits);
+            });
+        });
+
+        return habitListMutableData;
     }
 }

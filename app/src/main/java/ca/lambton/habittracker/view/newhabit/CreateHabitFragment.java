@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
@@ -61,30 +62,20 @@ public class CreateHabitFragment extends Fragment {
 
     private FirebaseUser mUser;
 
-    public CreateHabitFragment() {
-    }
-
-    public static CreateHabitFragment newInstance(String param1, String param2) {
-        CreateHabitFragment fragment = new CreateHabitFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentCreateHabitLayoutBinding.inflate(LayoutInflater.from(requireContext()));
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        habitViewModel = new ViewModelProvider(new ViewModelStore(), new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
-
-        View view = inflater.inflate(R.layout.fragment_create_habit_layout, container, false);
-        binding = FragmentCreateHabitLayoutBinding.inflate(inflater, container, false);
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
         EditText editTextStartDate = binding.editTextStartDate;
         editTextStartDate.setOnClickListener(v -> {
@@ -127,17 +118,14 @@ public class CreateHabitFragment extends Fragment {
             }
         });
 
-        binding.frequencyUnitRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+        binding.frequencyUnitRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 
-                if (checkedId == R.id.frequencyUnitDay) {
-                    frequencyUnit = Frequency.DAILY;
-                } else if (checkedId == R.id.frequencyUnitWeek) {
-                    frequencyUnit = Frequency.WEEKLY;
-                } else if (checkedId == R.id.frequencyUnitMonth) {
-                    frequencyUnit = Frequency.MONTHLY;
-                }
+            if (checkedId == R.id.frequencyUnitDay) {
+                frequencyUnit = Frequency.DAILY;
+            } else if (checkedId == R.id.frequencyUnitWeek) {
+                frequencyUnit = Frequency.WEEKLY;
+            } else if (checkedId == R.id.frequencyUnitMonth) {
+                frequencyUnit = Frequency.MONTHLY;
             }
         });
 
@@ -203,8 +191,15 @@ public class CreateHabitFragment extends Fragment {
 
     private void createHabit(View view) {
 
-        if (binding.titleHabit.getText().toString().equals("") || binding.frequencyText.getText().toString().equals("") || binding.editTextStartDate.getText().toString().equals("") || binding.editTextStartDate.getText().toString().equals("")) {
+        if (binding.titleHabit.getText().toString().equals("") || binding.frequencyText.getText().toString().equals("") || binding.editTextStartDate.getText().toString().equals("") || binding.editTextEndDate.getText().toString().equals("") || binding.autoCompleteTxt.getText().toString().equals("")) {
+
             Toast.makeText(requireContext(), "Some fields are required", Toast.LENGTH_SHORT).show();
+            binding.titleHabit.setError("This field is required");
+            binding.frequencyText.setError("This field is required");
+            binding.editTextStartDate.setError("This field is required");
+            binding.editTextEndDate.setError("This field is required");
+            binding.autoCompleteTxt.setError("This field is required");
+
             return;
         }
 
@@ -245,10 +240,10 @@ public class CreateHabitFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-        if (newHabit.getName().isEmpty() || newHabit.getName() == null) {
-            habitViewModel.saveHabit(newHabit);
-        } else {
-            habitViewModel.saveHabit(newHabit);
+        habitViewModel.saveHabit(newHabit);
+
+        if (newHabit.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.toString())) {
+            habitViewModel.saveCloudHabit(newHabit);
         }
 
         Toast.makeText(requireContext(), "New habit registered", Toast.LENGTH_SHORT).show();

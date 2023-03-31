@@ -107,6 +107,14 @@ public class HabitViewModel extends ViewModel {
     }
 
     public LiveData<User> getUserByEmail(@NonNull String email) {
-       return this.repository.getUserByEmail(email);
+        return this.repository.getUserByEmail(email);
+    }
+
+    public void saveCloudHabit(Habit habit) {
+        this.repository.saveCloudHabit(habit);
+    }
+
+    public LiveData<List<Habit>> getAllHabitCloud() {
+        return this.repository.getAllHabitCloud();
     }
 }
