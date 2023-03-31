@@ -39,7 +39,6 @@ public class PrivateHabitsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
 
-
         privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
@@ -62,10 +61,10 @@ public class PrivateHabitsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), result -> {
+        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
             this.habits.clear();
             this.habits.addAll(result);
-            privateOngoingHabitListAdapter.notifyItemRangeChanged(0, result.size());
+            privateOngoingHabitListAdapter.notifyDataSetChanged();
         });
     }
 }
