@@ -30,7 +30,8 @@ public class AllHabitsFragment extends Fragment {
 
     HabitViewModel habitViewModel;
 
-    private final List<Habit> habits = new ArrayList<>();
+    private final List<Habit> privateHabits = new ArrayList<>();
+    private final List<Habit> groupHabits = new ArrayList<>();
 
     public AllHabitsFragment() {
         // Required empty public constructor
@@ -53,23 +54,28 @@ public class AllHabitsFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentAllHabitsBinding.inflate(inflater, container, false);
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
-        RecyclerView groupRecyclerView = binding.groupOngoingHabitsList;
+        //RecyclerView groupRecyclerView = binding.groupOngoingHabitsList;
 
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
-        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), result -> {
-            this.habits.clear();
-            this.habits.addAll(result);
+        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
+            this.privateHabits.clear();
+            this.privateHabits.addAll(result);
             privateOngoingHabitListAdapter.notifyDataSetChanged();
-            groupOngoingHabitListAdapter.notifyDataSetChanged();
         });
 
-        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
+        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(privateHabits, getOnCallbackOngoingHabit(privateHabits, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
 
-        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, true), this.getContext(), true);
-        groupRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        groupRecyclerView.setAdapter(groupOngoingHabitListAdapter);
+//        habitViewModel.getAllPublicHabits().observe(getViewLifecycleOwner(), result -> {
+//            this.groupHabits.clear();
+//            this.groupHabits.addAll(result);
+//            groupOngoingHabitListAdapter.notifyDataSetChanged();
+//        });
+
+//        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(groupHabits, getOnCallbackOngoingHabit(groupHabits, true), this.getContext(), true);
+//        groupRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+//        groupRecyclerView.setAdapter(groupOngoingHabitListAdapter);
 
         return binding.getRoot();
     }
