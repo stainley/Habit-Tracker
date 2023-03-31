@@ -8,12 +8,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -48,12 +51,9 @@ public class PrivateHabitsFragment extends Fragment {
 
     @NonNull
     private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
-        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
-
-            @Override
-            public void onRowClicked(int position, boolean isGroup) {
-
-            }
+        return (position, isGroup1) -> {
+            NavDirections navDirections = PrivateHabitsFragmentDirections.actionPrivateHabitsFragmentToPrivateHabitDetailFragment().setHabit(habits.get(position));
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
         };
     }
 
