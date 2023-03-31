@@ -23,8 +23,8 @@
     <fragment
         android:id="@+id/nav_community"
         android:name="ca.lambton.habittracker.community.view.CommunityFragment"
-        android:label="Community"
-        tools:layout="@layout/fragment_community" >
+        android:label="My Community"
+        tools:layout="@layout/fragment_community">
         <action
             android:id="@+id/action_nav_community_to_nav_compose"
             app:destination="@id/nav_compose" />
@@ -159,8 +159,12 @@
     <fragment
         android:id="@+id/publicChallengesFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.PublicChallengesFragment"
-        android:label="Ongoing - Public Challenges"
-        tools:layout="@layout/fragment_public_challenges"/>
+        android:label="Ongoing -  Public Challenges"
+        tools:layout="@layout/fragment_public_challenges">
+        <action
+            android:id="@+id/action_publicChallengesFragment_to_nav_habit_detail"
+            app:destination="@id/nav_habit_detail" />
+    </fragment>
     <fragment
         android:id="@+id/private_habit_detail_fragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitDetailFragment"
@@ -172,7 +176,6 @@
             app:argType="long" />
         <argument
             android:name="habit"
-            android:defaultValue="@null"
             app:argType="ca.lambton.habittracker.habit.model.Habit"
             app:nullable="true" />
     </fragment>
