@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,31 +48,19 @@ public class AllHabitsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentAllHabitsBinding.inflate(LayoutInflater.from(requireContext()));
+        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAllHabitsBinding.inflate(inflater, container, false);
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
         //RecyclerView groupRecyclerView = binding.groupOngoingHabitsList;
-
-        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
-        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
-            this.privateHabits.clear();
-            this.privateHabits.addAll(result);
-            privateOngoingHabitListAdapter.notifyDataSetChanged();
-        });
 
         privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(privateHabits, getOnCallbackOngoingHabit(privateHabits, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
-
-//        habitViewModel.getAllPublicHabits().observe(getViewLifecycleOwner(), result -> {
-//            this.groupHabits.clear();
-//            this.groupHabits.addAll(result);
-//            groupOngoingHabitListAdapter.notifyDataSetChanged();
-//        });
 
 //        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(groupHabits, getOnCallbackOngoingHabit(groupHabits, true), this.getContext(), true);
 //        groupRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -80,17 +69,31 @@ public class AllHabitsFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
+            this.privateHabits.clear();
+            this.privateHabits.addAll(result);
+            privateOngoingHabitListAdapter.notifyDataSetChanged();
+        });
+
+//        habitViewModel.getAllPublicHabits().observe(getViewLifecycleOwner(), result -> {
+//            this.groupHabits.clear();
+//            this.groupHabits.addAll(result);
+//            groupOngoingHabitListAdapter.notifyDataSetChanged();
+//        });
+    }
+
     @NonNull
     private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, Boolean isGroup) {
-        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
-
-            @Override
-            public void onRowClicked(int position, boolean isGroup) {
-                if (isGroup) {
-                    Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
-                } else {
-                    Navigation.findNavController(getView()).navigate(R.id.privateHabitDetailFragment);
-                }
+        return (position, isGroup1) -> {
+            if (isGroup1) {
+                Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
+            } else {
+                NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail().setHabit(habits.get(position));
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
             }
         };
     }
