@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import ca.lambton.habittracker.databinding.FragmentAllHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragmentDirections;
 
 public class AllHabitsFragment extends Fragment {
 
@@ -89,7 +91,8 @@ public class AllHabitsFragment extends Fragment {
                 if (isGroup) {
                     Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
                 } else {
-                    Navigation.findNavController(getView()).navigate(R.id.privateHabitDetailFragment);
+                    NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail().setHabit(habits.get(position));
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
                 }
             }
         };
