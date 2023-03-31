@@ -21,7 +21,6 @@ import ca.lambton.habittracker.databinding.FragmentAllHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragmentDirections;
 
 public class AllHabitsFragment extends Fragment {
 
@@ -49,37 +48,42 @@ public class AllHabitsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentAllHabitsBinding.inflate(LayoutInflater.from(requireContext()));
+        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAllHabitsBinding.inflate(inflater, container, false);
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
         //RecyclerView groupRecyclerView = binding.groupOngoingHabitsList;
-
-        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
-        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
-            this.privateHabits.clear();
-            this.privateHabits.addAll(result);
-            privateOngoingHabitListAdapter.notifyDataSetChanged();
-        });
 
         privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(privateHabits, getOnCallbackOngoingHabit(privateHabits, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
-
-//        habitViewModel.getAllPublicHabits().observe(getViewLifecycleOwner(), result -> {
-//            this.groupHabits.clear();
-//            this.groupHabits.addAll(result);
-//            groupOngoingHabitListAdapter.notifyDataSetChanged();
-//        });
 
 //        groupOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(groupHabits, getOnCallbackOngoingHabit(groupHabits, true), this.getContext(), true);
 //        groupRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 //        groupRecyclerView.setAdapter(groupOngoingHabitListAdapter);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
+            this.privateHabits.clear();
+            this.privateHabits.addAll(result);
+            privateOngoingHabitListAdapter.notifyDataSetChanged();
+        });
+
+//        habitViewModel.getAllPublicHabits().observe(getViewLifecycleOwner(), result -> {
+//            this.groupHabits.clear();
+//            this.groupHabits.addAll(result);
+//            groupOngoingHabitListAdapter.notifyDataSetChanged();
+//        });
     }
 
     @NonNull
