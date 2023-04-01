@@ -20,7 +20,7 @@
             android:id="@+id/habit_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.10"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
             android:id="@+id/progress_indicator"
             android:layout_width="143dp"
             android:layout_height="143dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp"
             android:progress="73"
             app:indicatorSize="96dp"
@@ -40,6 +40,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/habit_title"
             app:trackColor="@color/card_background_light_color"
+            app:indicatorColor="@color/yellow"
             app:trackCornerRadius="8dp"
             app:trackThickness="8dp" />
 
@@ -61,7 +62,7 @@
             android:layout_width="114dp"
             android:layout_height="36dp"
             android:layout_marginTop="8dp"
-            android:background="@color/md_theme_light_primary"
+            android:background="@drawable/rounded_bg"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="@id/progress_indicator"
             app:layout_constraintStart_toStartOf="@id/progress_indicator"
@@ -71,7 +72,7 @@
                 android:id="@+id/increase_button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@color/material_on_surface_stroke"
+                android:background="@color/transparent"
                 android:src="@drawable/ic_increase" />
 
 
@@ -84,7 +85,7 @@
                 android:id="@+id/decrease_button"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@color/material_on_surface_stroke"
+                android:background="@color/transparent"
                 android:src="@drawable/ic_reduce"
                 tools:text="-" />
 

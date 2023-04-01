@@ -1,22 +1,13 @@
 package ca.lambton.habittracker.view.newhabit;
 
-import android.app.DatePickerDialog;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.RippleDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +17,9 @@ import androidx.lifecycle.ViewModelStore;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointForward;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
@@ -40,7 +35,6 @@ import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
@@ -79,32 +73,70 @@ public class CreateHabitFragment extends Fragment {
 
         EditText editTextStartDate = binding.editTextStartDate;
         editTextStartDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+            Calendar startDate = Calendar.getInstance();
+            Calendar endDate = Calendar.getInstance();
+            endDate.add(Calendar.YEAR, 1);
+            constraintsBuilder.setStart(startDate.getTimeInMillis());
+            constraintsBuilder.setEnd(endDate.getTimeInMillis());
+            constraintsBuilder.setValidator(DateValidatorPointForward.now());
+            CalendarConstraints constraints = constraintsBuilder.build();
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view12, year1, monthOfYear, dayOfMonth) -> {
-                // set the selected date to the EditText
-                editTextStartDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1);
-            }, year, month, day);
+            MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+            builder.setCalendarConstraints(constraints);
+            MaterialDatePicker datePicker = builder.build();
+            datePicker.show(getChildFragmentManager(), "datePicker");
 
-            datePickerDialog.show();
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                selectedDate.setTimeInMillis((Long) selection);
+
+                TimeZone deviceTimeZone = TimeZone.getDefault();
+                int offsetFromUTC = deviceTimeZone.getOffset(selectedDate.getTimeInMillis());
+                selectedDate.add(Calendar.MILLISECOND, offsetFromUTC);
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                String selectedDateStr = dateFormat.format(selectedDate.getTime());
+
+                editTextStartDate.setText(selectedDateStr);
+            });
         });
 
         EditText editTextEndDate = binding.editTextEndDate;
         editTextEndDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Date startDate1;
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view13, year12, monthOfYear, dayOfMonth) -> {
-                // set the selected date to the EditText
-                editTextEndDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year12);
-            }, year, month, day);
+                String startDateTxt = binding.editTextStartDate.getText().toString();
+                startDate1 = simpleDateFormat.parse(startDateTxt);
 
-            datePickerDialog.show();
+                CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+                Calendar startDate = Calendar.getInstance();
+                Calendar endDate = Calendar.getInstance();
+                endDate.add(Calendar.YEAR, 1);
+                constraintsBuilder.setStart(startDate.getTimeInMillis());
+                constraintsBuilder.setEnd(endDate.getTimeInMillis());
+                constraintsBuilder.setValidator(DateValidatorPointForward.from(startDate1.getTime()));
+                CalendarConstraints constraints = constraintsBuilder.build();
+
+                MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+                builder.setCalendarConstraints(constraints);
+                MaterialDatePicker datePicker = builder.build();
+                datePicker.show(getChildFragmentManager(), "datePicker");
+
+                datePicker.addOnPositiveButtonClickListener(selection -> {
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.setTimeInMillis((Long) selection);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    String selectedDateStr = dateFormat.format(selectedDate.getTime());
+
+                    editTextEndDate.setText(selectedDateStr);
+                });
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         binding.createButton.setOnClickListener(this::createHabit);
