@@ -2,8 +2,11 @@ package ca.lambton.habittracker.community.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.community.model.PostComment;
 import ca.lambton.habittracker.community.view.adapter.CommunityAdapter;
 import ca.lambton.habittracker.community.viewmodel.PostViewModel;
@@ -35,6 +39,7 @@ public class CommunityFragment extends Fragment {
     private final List<PostComment> posts = new ArrayList<>();
     private PostViewModel postViewModel;
     private RecyclerView recyclerView;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +84,7 @@ public class CommunityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.btnCompose.setOnClickListener(this::newPost);
-        communityAdapter = new CommunityAdapter(posts);
+        communityAdapter = new CommunityAdapter(posts, this::onMoreOptionCallback);
         recyclerView.setAdapter(communityAdapter);
     }
 
@@ -98,5 +103,26 @@ public class CommunityFragment extends Fragment {
     private void newPost(View view) {
         NavDirections navNewPostDirections = CommunityFragmentDirections.actionNavCommunityToNavCompose();
         Navigation.findNavController(requireView()).navigate(navNewPostDirections);
+    }
+
+    private void onMoreOptionCallback(ImageButton communityButton, int position) {
+        if (firebaseUser.getUid().equals(this.posts.get(position).post.getUser().getAccountId())) {
+            communityButton.setVisibility(View.VISIBLE);
+        }
+        communityButton.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.overflow_post_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+
+                if (item.getItemId() == R.id.delete_post) {
+                    postViewModel.deletePost(this.posts.get(position).post);
+                    communityAdapter.notifyItemRemoved(position);
+                    return true;
+                }
+                return false;
+            });
+            popupMenu.show();
+        });
     }
 }

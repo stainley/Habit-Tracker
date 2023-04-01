@@ -58,7 +58,7 @@ public class ComposeFragment extends Fragment {
         if (mUser != null) {
             User user = new User();
             user.setName(mUser.getDisplayName());
-            user.setPhotoUrl(mUser.getPhotoUrl() != null ? mUser.getPhoneNumber() : "");
+            user.setPhotoUrl(mUser.getPhotoUrl() != null ? mUser.getPhotoUrl().toString() : "");
             user.setAccountId(mUser.getUid());
             user.setEmail(mUser.getEmail());
             post.setUser(user);

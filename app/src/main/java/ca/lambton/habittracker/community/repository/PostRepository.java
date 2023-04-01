@@ -6,6 +6,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,40 +53,51 @@ public class PostRepository {
         Map<String, Post> postComment = new HashMap<>();
         postComment.put("post", post);
 
-        dbFirebase.collection("community")
-                .add(postComment)
-                .addOnSuccessListener(documentReference -> Log.i(TAG, "Document added with ID: " + documentReference.getId()))
-                .addOnFailureListener(failure -> Log.e(TAG, "Error adding document"));
+        dbFirebase.collection("community").add(postComment).addOnSuccessListener(documentReference -> Log.i(TAG, "Document added with ID: " + documentReference.getId())).addOnFailureListener(failure -> Log.e(TAG, "Error adding document"));
 
     }
 
     public void fetchData(DataFetchCallback callback) {
         List<Post> postsResult = new ArrayList<>();
 
-        dbFirebase.collection("community")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    querySnapshot.forEach(queryDocumentSnapshot -> {
-                        Post post = queryDocumentSnapshot.get("post", Post.class);
-                        if (post != null)
-                            post.setPostId(queryDocumentSnapshot.getId());
-                        //AppDatabase.databaseWriterExecutor.execute(() -> postDao.savePost(post));
-                        postsResult.add(post);
-                    });
+        dbFirebase.collection("community").get().addOnSuccessListener(querySnapshot -> {
+            querySnapshot.forEach(queryDocumentSnapshot -> {
+                Post post = queryDocumentSnapshot.get("post", Post.class);
+                if (post != null) post.setPostId(queryDocumentSnapshot.getId());
+                //AppDatabase.databaseWriterExecutor.execute(() -> postDao.savePost(post));
+                postsResult.add(post);
+            });
 
-                    // Save data to Room database
-                    this.saveAllPost(postsResult);
+            // Save data to Room database
+            this.saveAllPost(postsResult);
 
-                    // Notify callback with updated data
-                    callback.onDataFetched(postsResult);
-                })
-                .addOnFailureListener(e -> {
-                    // Handle error
-                });
+            // Notify callback with updated data
+            callback.onDataFetched(postsResult);
+        }).addOnFailureListener(e -> {
+            // Handle error
+        });
     }
 
     public void deletePost(@NonNull Post post) {
         AppDatabase.databaseWriterExecutor.execute(() -> postDao.deletePost(post));
+    }
+
+    public void deletePostCloud(@NotNull Post post) {
+        DocumentReference docRef = dbFirebase.collection("community").document(post.getPostId());
+
+        // Update all other devices to delete the document locally
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("deleted", true);
+        docRef.update(updates);
+
+        docRef.delete().addOnSuccessListener(unused -> {
+            Log.i(TAG, "Post " + post.getPostId() + " successfully deleted!");
+            docRef.delete();
+            deletePost(post);
+
+
+        }).addOnFailureListener(e -> Log.w(TAG, "Error deleting document: " + post.getPostId(), e));
+
     }
 
     public LiveData<List<Post>> fetchAllPost() {
