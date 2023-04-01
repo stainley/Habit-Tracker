@@ -50,7 +50,6 @@ public class TodayReportFragment extends Fragment {
 
         binding = FragmentRecycleViewBinding.inflate(LayoutInflater.from(requireContext()));
         recycleView = binding.recycleView;
-        //habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
         habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
