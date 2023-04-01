@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import ca.lambton.habittracker.R;
@@ -73,6 +74,7 @@ public class CreateHabitFragment extends Fragment {
 
         EditText editTextStartDate = binding.editTextStartDate;
         editTextStartDate.setOnClickListener(v -> {
+            editTextStartDate.setError(null);
             CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
             Calendar startDate = Calendar.getInstance();
             Calendar endDate = Calendar.getInstance();
@@ -82,20 +84,25 @@ public class CreateHabitFragment extends Fragment {
             constraintsBuilder.setValidator(DateValidatorPointForward.now());
             CalendarConstraints constraints = constraintsBuilder.build();
 
-            MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+            // Here is the problem with TimeZone
+            MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
             builder.setCalendarConstraints(constraints);
-            MaterialDatePicker datePicker = builder.build();
+
+            MaterialDatePicker<Long> datePicker = builder.build();
             datePicker.show(getChildFragmentManager(), "datePicker");
 
             datePicker.addOnPositiveButtonClickListener(selection -> {
-                Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-                selectedDate.setTimeInMillis((Long) selection);
 
-                TimeZone deviceTimeZone = TimeZone.getDefault();
-                int offsetFromUTC = deviceTimeZone.getOffset(selectedDate.getTimeInMillis());
+                Calendar selectedDate = Calendar.getInstance(Locale.CANADA);
+                selectedDate.setTimeInMillis(selection);
+
+
+                TimeZone deviceTimeZone = TimeZone.getTimeZone("UTC");
+                int offsetFromUTC = deviceTimeZone.getOffset(selection);
                 selectedDate.add(Calendar.MILLISECOND, offsetFromUTC);
+                selectedDate.add(Calendar.HOUR, 4);
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String selectedDateStr = dateFormat.format(selectedDate.getTime());
 
                 editTextStartDate.setText(selectedDateStr);
@@ -105,11 +112,14 @@ public class CreateHabitFragment extends Fragment {
         EditText editTextEndDate = binding.editTextEndDate;
         editTextEndDate.setOnClickListener(v -> {
             try {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                Date startDate1;
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
                 String startDateTxt = binding.editTextStartDate.getText().toString();
-                startDate1 = simpleDateFormat.parse(startDateTxt);
+                if (startDateTxt.equals("")) {
+                    binding.editTextStartDate.setError("This field is required");
+                    return;
+                }
+                Date startDate1 = simpleDateFormat.parse(startDateTxt);
 
                 CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
                 Calendar startDate = Calendar.getInstance();
@@ -117,19 +127,27 @@ public class CreateHabitFragment extends Fragment {
                 endDate.add(Calendar.YEAR, 1);
                 constraintsBuilder.setStart(startDate.getTimeInMillis());
                 constraintsBuilder.setEnd(endDate.getTimeInMillis());
+                assert startDate1 != null;
                 constraintsBuilder.setValidator(DateValidatorPointForward.from(startDate1.getTime()));
                 CalendarConstraints constraints = constraintsBuilder.build();
 
-                MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
+                MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
                 builder.setCalendarConstraints(constraints);
-                MaterialDatePicker datePicker = builder.build();
+                MaterialDatePicker<Long> datePicker = builder.build();
                 datePicker.show(getChildFragmentManager(), "datePicker");
 
                 datePicker.addOnPositiveButtonClickListener(selection -> {
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.setTimeInMillis((Long) selection);
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+                    Calendar selectedDate = Calendar.getInstance(TimeZone.getTimeZone("UTC"), Locale.getDefault());
+                    selectedDate.setTimeInMillis(selection);
+
+                    TimeZone deviceTimeZone = TimeZone.getTimeZone("UTC");
+                    int offsetFromUTC = deviceTimeZone.getOffset(selection);
+                    selectedDate.add(Calendar.MILLISECOND, offsetFromUTC);
+                    selectedDate.add(Calendar.HOUR, 4);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     String selectedDateStr = dateFormat.format(selectedDate.getTime());
 
                     editTextEndDate.setText(selectedDateStr);
@@ -161,7 +179,7 @@ public class CreateHabitFragment extends Fragment {
             }
         });
 
-        categoryViewModel = new ViewModelProvider(new ViewModelStore(), new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
+        categoryViewModel = new ViewModelProvider(new ViewModelStore(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
 
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), result -> {
             String[] newCategories = new String[categories.length + result.size()];
@@ -171,16 +189,15 @@ public class CreateHabitFragment extends Fragment {
             }
             categories = newCategories;
 
-            categoryDropDownAdapter = new ArrayAdapter<>(getContext(), R.layout.categories_dropdown_items, categories);
+            categoryDropDownAdapter = new ArrayAdapter<>(requireContext(), R.layout.categories_dropdown_items, categories);
             AutoCompleteTextView autoCompleteTextView = binding.autoCompleteTxt;
             autoCompleteTextView.setAdapter(categoryDropDownAdapter);
 
             autoCompleteTextView.setOnItemClickListener((adapterView, view1, position1, id) -> {
                 String category = adapterView.getItemAtPosition(position1).toString();
+                binding.autoCompleteTxt.setError(null);
 
-                categoryViewModel.getCategoryByName(category).observe(getViewLifecycleOwner(), result1 -> {
-                    categoryId = result1.getId();
-                });
+                categoryViewModel.getCategoryByName(category).observe(getViewLifecycleOwner(), result1 -> categoryId = result1.getId());
             });
         });
 
@@ -197,11 +214,11 @@ public class CreateHabitFragment extends Fragment {
         ColorStateList selectedTextColorBlack = ColorStateList.valueOf(getResources().getColor(R.color.black, getResources().newTheme()));
         ColorStateList selectedTextColorWhite = ColorStateList.valueOf(getResources().getColor(R.color.white, getResources().newTheme()));
 
-        ColorStateList colorStateListDark = ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_primary));
+        ColorStateList colorStateListDark = ColorStateList.valueOf(getResources().getColor(R.color.md_theme_light_primary, requireContext().getTheme()));
 
         if (view.getId() == R.id.personalHabitType) {
-            personalHabitType.setBackgroundColor(getContext().getColor(R.color.md_theme_light_primary));
-            publicHabitType.setBackgroundColor(getContext().getColor(R.color.md_theme_light_onPrimary));
+            personalHabitType.setBackgroundColor(requireContext().getColor(R.color.md_theme_light_primary));
+            publicHabitType.setBackgroundColor(requireContext().getColor(R.color.md_theme_light_onPrimary));
             personalHabitType.setTextColor(selectedTextColorWhite);
             publicHabitType.setTextColor(selectedTextColorBlack);
             publicHabitType.setEnabled(true);
@@ -210,8 +227,8 @@ public class CreateHabitFragment extends Fragment {
             habitType = HabitType.PERSONAL;
 
         } else {
-            personalHabitType.setBackgroundColor(getContext().getColor(R.color.md_theme_light_onPrimary));
-            publicHabitType.setBackgroundColor(getContext().getColor(R.color.md_theme_light_primary));
+            personalHabitType.setBackgroundColor(requireContext().getColor(R.color.md_theme_light_onPrimary));
+            publicHabitType.setBackgroundColor(requireActivity().getColor(R.color.md_theme_light_primary));
             publicHabitType.setTextColor(selectedTextColorWhite);
             personalHabitType.setTextColor(selectedTextColorBlack);
             personalHabitType.setEnabled(true);
@@ -222,24 +239,40 @@ public class CreateHabitFragment extends Fragment {
     }
 
     private void createHabit(View view) {
+        boolean emptyField = false;
 
-        if (binding.titleHabit.getText().toString().equals("") || binding.frequencyText.getText().toString().equals("") || binding.editTextStartDate.getText().toString().equals("") || binding.editTextEndDate.getText().toString().equals("") || binding.autoCompleteTxt.getText().toString().equals("")) {
-
-            Toast.makeText(requireContext(), "Some fields are required", Toast.LENGTH_SHORT).show();
+        if (binding.titleHabit.getText().toString().equals("")) {
             binding.titleHabit.setError("This field is required");
-            binding.frequencyText.setError("This field is required");
-            binding.editTextStartDate.setError("This field is required");
-            binding.editTextEndDate.setError("This field is required");
-            binding.autoCompleteTxt.setError("This field is required");
-
-            return;
+            emptyField = true;
         }
+
+        if (binding.autoCompleteTxt.getText().toString().equals("")) {
+            binding.autoCompleteTxt.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.editTextEndDate.getText().toString().equals("")) {
+            binding.editTextEndDate.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.editTextStartDate.getText().toString().equals("")) {
+            binding.editTextStartDate.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.frequencyText.getText().toString().equals("")) {
+            binding.frequencyText.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (emptyField) return;
 
 
         Habit newHabit = new Habit();
         newHabit.setUserId(mUser != null ? mUser.getUid() : "");
         newHabit.setName(binding.titleHabit.getText().toString());
-        newHabit.setDescription(binding.description.getText().toString());
+        newHabit.setDescription(binding.description.getText() != null ? binding.description.getText().toString() : "");
         int duration = binding.durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
         newHabit.setDuration(duration);
         newHabit.setDurationUnit(durationUnit.name());
@@ -251,7 +284,7 @@ public class CreateHabitFragment extends Fragment {
         newHabit.setHabitType(habitType.name());
         newHabit.setCategoryId(categoryId);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         Date startDate;
         Date endDate;
 

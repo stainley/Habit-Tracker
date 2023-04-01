@@ -22,14 +22,13 @@ import ca.lambton.habittracker.databinding.FragmentPublicChallengesBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-
+import ca.lambton.habittracker.view.ongoingHabits.adapter.OngoingHabitPublicAdapter;
 
 public class PublicChallengesFragment extends Fragment {
     private FragmentPublicChallengesBinding binding;
     private HabitViewModel habitViewModel;
-    private OngoingHabitsRecycleAdapter privateOngoingHabitListAdapter;
+    private OngoingHabitPublicAdapter ongoingHabitPublicAdapter;
     private final List<Habit> habits = new ArrayList<>();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,20 +43,15 @@ public class PublicChallengesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView recyclerView = binding.publicOngoingHabitsList;
 
-        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setAdapter(privateOngoingHabitListAdapter);
-
-        return binding.getRoot();
-    }
-
-    @NonNull
-    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
-        return (position, isGroup1) -> {
-
+        ongoingHabitPublicAdapter = new OngoingHabitPublicAdapter(habits, position -> {
             NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(habits.get(position));
             Navigation.findNavController(requireView()).navigate(navDirections);
-        };
+        });
+
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerView.setAdapter(ongoingHabitPublicAdapter);
+
+        return binding.getRoot();
     }
 
     @Override
@@ -66,10 +60,8 @@ public class PublicChallengesFragment extends Fragment {
 
         habitViewModel.getAllHabitCloud().observe(getViewLifecycleOwner(), habitResult -> {
             this.habits.clear();
-
-
             this.habits.addAll(habitResult);
-            privateOngoingHabitListAdapter.notifyItemRangeChanged(0, habitResult.size());
+            ongoingHabitPublicAdapter.notifyItemRangeChanged(0, habitResult.size());
         });
     }
 }
