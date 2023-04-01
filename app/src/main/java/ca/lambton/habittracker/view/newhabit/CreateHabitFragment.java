@@ -190,18 +190,34 @@ public class CreateHabitFragment extends Fragment {
     }
 
     private void createHabit(View view) {
+        boolean emptyField = false;
 
-        if (binding.titleHabit.getText().toString().equals("") || binding.frequencyText.getText().toString().equals("") || binding.editTextStartDate.getText().toString().equals("") || binding.editTextEndDate.getText().toString().equals("") || binding.autoCompleteTxt.getText().toString().equals("")) {
-
-            Toast.makeText(requireContext(), "Some fields are required", Toast.LENGTH_SHORT).show();
+        if (binding.titleHabit.getText().toString().equals("")) {
             binding.titleHabit.setError("This field is required");
-            binding.frequencyText.setError("This field is required");
-            binding.editTextStartDate.setError("This field is required");
-            binding.editTextEndDate.setError("This field is required");
-            binding.autoCompleteTxt.setError("This field is required");
-
-            return;
+            emptyField = true;
         }
+
+        if (binding.autoCompleteTxt.getText().toString().equals("")) {
+            binding.autoCompleteTxt.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.editTextEndDate.getText().toString().equals("")) {
+            binding.editTextEndDate.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.editTextStartDate.getText().toString().equals("")) {
+            binding.editTextStartDate.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.frequencyText.getText().toString().equals("")) {
+            binding.frequencyText.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (emptyField) return;
 
 
         Habit newHabit = new Habit();

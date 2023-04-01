@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ongoingHabitCard"
+    style="@style/MaterialCardView.NoColour"
+    android:layout_width="180dp"
+    android:layout_height="200dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:minWidth="180dp"
+    android:minHeight="300dp"
+    android:padding="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/habitNameLabel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/mulish_semi_bold"
+            android:maxEms="25"
+            android:maxLines="4"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/frequency_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.25"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Add Veggie" />
+
+        <TextView
+            android:id="@+id/duration_label"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/duration"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel" />
+
+        <TextView
+            android:id="@+id/duration_time"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toTopOf="@id/duration_value"
+            app:layout_constraintEnd_toEndOf="@id/duration_label"
+            app:layout_constraintStart_toStartOf="@id/duration_label"
+            app:layout_constraintTop_toBottomOf="@id/duration_label"
+            tools:text="8" />
+
+
+        <TextView
+            android:id="@+id/duration_value"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/author_text"
+            app:layout_constraintEnd_toEndOf="@id/duration_time"
+            app:layout_constraintStart_toStartOf="@id/duration_time"
+            app:layout_constraintTop_toBottomOf="@id/duration_time"
+            tools:text="Hours" />
+
+
+        <TextView
+            android:id="@+id/frequency_label"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="Frequency"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/duration_label"
+            app:layout_constraintBottom_toTopOf="@id/duration_label"
+            app:layout_constraintEnd_toStartOf="@id/frequency_unit"
+            app:layout_constraintStart_toEndOf="@id/duration_label"
+            app:layout_constraintTop_toTopOf="@id/duration_label" />
+
+        <TextView
+            android:id="@+id/frequency"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@id/duration_time"
+            app:layout_constraintEnd_toEndOf="@id/frequency_label"
+            app:layout_constraintStart_toStartOf="@id/frequency_label"
+            app:layout_constraintTop_toTopOf="@id/duration_time"
+            tools:text="Daily" />
+
+
+        <TextView
+            android:id="@+id/frequency_unit"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/frequency_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel"
+            app:layout_constraintTop_toTopOf="@id/frequency_label"
+            tools:text="Daily" />
+
+        <TextView
+            android:id="@+id/frequency_unit_value"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="@id/duration_time"
+            app:layout_constraintEnd_toEndOf="@id/frequency_unit"
+            app:layout_constraintStart_toStartOf="@id/frequency_unit"
+            app:layout_constraintTop_toTopOf="@id/duration_time"
+            tools:text="8" />
+
+        <TextView
+            android:id="@+id/author_text"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="By Juan" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
