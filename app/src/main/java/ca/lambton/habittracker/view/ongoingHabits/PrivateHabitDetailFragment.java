@@ -76,7 +76,6 @@ public class PrivateHabitDetailFragment extends Fragment {
         ongoingHabitDetailGridInfo = (GridView) binding.ongoingHabitDetailGridView;
         ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList = new ArrayList<OngoingHabitDetailGridInfo>();
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", "0"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/100"));
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", "0"));
 
         if (habit != null) {
@@ -92,7 +91,8 @@ public class PrivateHabitDetailFragment extends Fragment {
             if (habit.getFrequencyUnit().equals("DAILY")) {
                 totalTimesToComplete = frequencyValue * (int) daysBetween;
                 getProgressList(totalTimesToComplete, habit);
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", "0/3"));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", "0/" + habit.getFrequency()));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysBetween));
             } else if (habit.getFrequencyUnit().equals("WEEKLY")) {
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
                 getProgressList(totalTimesToComplete, habit);
