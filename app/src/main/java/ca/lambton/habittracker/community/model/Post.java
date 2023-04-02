@@ -3,6 +3,7 @@ package ca.lambton.habittracker.community.model;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -27,6 +28,9 @@ public class Post implements Serializable {
     private int visible;
     @Embedded
     private User user;
+
+    @Ignore
+    private PostImage postImage;
 
     public String getPostId() {
         return postId;
@@ -66,6 +70,14 @@ public class Post implements Serializable {
 
     public void setVisible(int visible) {
         this.visible = visible;
+    }
+
+    public PostImage getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(PostImage postImage) {
+        this.postImage = postImage;
     }
 
     @Override

@@ -11,15 +11,21 @@
     <EditText
         android:id="@+id/postEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
+        android:gravity="top|start"
         android:hint="What's happening?"
+        android:inputType="textImeMultiLine|textMultiLine|textUri"
+        android:scrollbars="vertical"
+        android:textIsSelectable="true"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/postButton"
 
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.1" />
 
     <!-- Image thumbnail -->
@@ -30,6 +36,7 @@
         android:layout_below="@+id/postEditText"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:visibility="invisible"
         android:scaleType="centerCrop"
         android:src="@drawable/add_image"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,6 +70,7 @@
         android:layout_marginRight="16dp"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
+        android:visibility="invisible"
         android:src="@drawable/add_image"
         app:layout_constraintEnd_toEndOf="@id/imageThumbnailImageView"
         app:layout_constraintTop_toBottomOf="@id/imageThumbnailImageView"

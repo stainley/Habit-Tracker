@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,6 +62,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         }
 
         communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
+        if (posts.get(position).getPostImage() != null && !posts.get(position).getPostImage().getPath().equals("")) {
+            Picasso.get().load(posts.get(position).getPostImage().getPath()).resize(500, 600).into(holder.postImage);
+        }
+
     }
 
     @Override
@@ -75,8 +80,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private final TextView postText;
         private final TextView dayPostedTxt;
         private final CircleImageView profilePhoto;
-
         private final ImageButton moreOptionButton;
+        private final ImageView postImage;
 
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +91,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             dayPostedTxt = itemView.findViewById(R.id.day_posted);
             profilePhoto = itemView.findViewById(R.id.profile_picture);
             moreOptionButton = itemView.findViewById(R.id.more_options_button);
+            postImage = itemView.findViewById(R.id.post_picture);
         }
     }
 
