@@ -10,6 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
@@ -47,8 +53,33 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        int totalTimesToComplete = 0;
+        String frequencyUnit = habits.get(position).getFrequencyUnit();
+        int frequencyValue = habits.get(position).getFrequency();
+        long startDateMillis = habits.get(position).getStartDate();
+        long endDateMillis = habits.get(position).getEndDate();
+
+        LocalDate startDate = Instant.ofEpochMilli(startDateMillis).atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = Instant.ofEpochMilli(endDateMillis).atZone(ZoneId.systemDefault()).toLocalDate();
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+
+        if (frequencyUnit.equals("DAILY")) {
+            totalTimesToComplete = frequencyValue * (int) daysBetween;
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
+        } else if (frequencyUnit.equals("WEEKLY")) {
+            totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
+        } else {
+            if (daysBetween == 30) {
+                totalTimesToComplete = frequencyValue * 30;
+            }
+            else {
+                totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
+            }
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
+        }
+
         holder.habitNameLabel.setText(habits.get(position).getName());
-        holder.habitPercentageNumText.setText("73%");
         holder.ongoingHabitCard.setOnClickListener(view -> {
             onOngoingHabitsCallback.onRowClicked(position, isGroup);
         });
@@ -72,6 +103,8 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
 
         private final TextView habitPercentageNumText;
 
+        private final CircularProgressIndicator habitProgressbar;
+
         private final CardView ongoingHabitCard;
 
         public ViewHolder(@NonNull View itemView) {
@@ -81,10 +114,13 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
             memberCountLabel = itemView.findViewById(R.id.memberCountLabel);
             habitPercentageNumText = itemView.findViewById(R.id.habitPercentageNumText);
             ongoingHabitCard = itemView.findViewById(R.id.ongoingHabitCard);
+            habitProgressbar = itemView.findViewById(R.id.habitProgressbar);
         }
     }
 
     public interface OnOngoingHabitsCallback {
         void onRowClicked(int position, boolean isGroup);
+
+        void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position);
     }
 }
