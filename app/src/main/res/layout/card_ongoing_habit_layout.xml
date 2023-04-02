@@ -60,7 +60,7 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="12dp"
-            android:progress="73"
+            android:progress="0"
             app:indicatorColor="@color/yellow"
             app:indicatorSize="60dp"
             app:layout_constraintBottom_toBottomOf="parent"
