@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +10,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_update"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
 
         <androidx.core.widget.NestedScrollView
@@ -23,6 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -44,33 +45,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/mulish_bold"
-                            android:text="Hi Stainley,"
                             android:textColor="@color/neutral_black"
-                            android:textSize="20sp" />
+                            android:textSize="20sp"
+                            tools:text="Hello Stainley," />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:fontFamily="@font/mulish_semi_bold"
-                            android:text="Welcome to the community !"
+                            android:text="@string/welcome_to_the_community"
                             android:textColor="@color/neutral_black"
                             android:textSize="16sp" />
 
                     </LinearLayout>
 
-
-                    <Button
-                        android:id="@+id/btnCompose"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/mulish_semi_bold"
-                        android:text="@string/compose"
-                        android:textSize="16sp" />
-
-
                 </LinearLayout>
 
+                <!-- TODO: Change this card view search by Material Design 3 Search -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,9 +119,21 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
+        android:id="@+id/btnCompose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:elevation="8dp"
+        android:text="@string/compose"
+        app:icon="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
