@@ -29,6 +29,6 @@ public class PostViewModel extends ViewModel {
     }
 
     public void deletePost(@NonNull Post post) {
-        this.postRepository.deletePostCloud(post);
+        this.postRepository.hidePostCloud(post);
     }
 }

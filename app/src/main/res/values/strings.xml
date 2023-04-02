@@ -60,4 +60,5 @@
     <string name="overall_progress">Overall Progress</string>
     <string name="consistency">Consistency</string>
     <string name="_0">0%</string>
+    <string name="delete">Delete</string>
 </resources>

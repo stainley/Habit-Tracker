@@ -22,9 +22,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.community.model.Post;
 import ca.lambton.habittracker.community.model.PostComment;
 import ca.lambton.habittracker.community.view.adapter.CommunityAdapter;
 import ca.lambton.habittracker.community.viewmodel.PostViewModel;
@@ -36,7 +39,7 @@ public class CommunityFragment extends Fragment {
     private FragmentCommunityBinding binding;
     private FirebaseUser firebaseUser;
     private CommunityAdapter communityAdapter;
-    private final List<PostComment> posts = new ArrayList<>();
+    private final List<Post> posts = new ArrayList<>();
     private PostViewModel postViewModel;
     private RecyclerView recyclerView;
 
@@ -53,12 +56,18 @@ public class CommunityFragment extends Fragment {
         SwipeRefreshLayout swipeUpdate = binding.swipeUpdate;
 
         swipeUpdate.setOnRefreshListener(() -> {
+            posts.clear();
 
             postViewModel.fetchAllPostWithComments().observe(getViewLifecycleOwner(), postComments -> {
                 posts.clear();
-                posts.addAll(postComments);
-                communityAdapter.notifyItemRangeChanged(0, postComments.size());
 
+                List<Post> postOrdered = postComments.stream()
+                        .map(postComment -> postComment.post)
+                        .sorted(Comparator.comparing(Post::getCreationDate).reversed())
+                        .collect(Collectors.toList());
+
+                posts.addAll(postOrdered);
+                communityAdapter.notifyDataSetChanged();
             });
             // stop refresh animation
             swipeUpdate.setRefreshing(false);
@@ -75,7 +84,8 @@ public class CommunityFragment extends Fragment {
             firebaseUser.getDisplayName();
             binding.userProfile.setText(firebaseUser.getDisplayName() == null ? "" : firebaseUser.getDisplayName());
         }
-
+        communityAdapter = new CommunityAdapter(posts, this::onMoreOptionCallback);
+        recyclerView.setAdapter(communityAdapter);
         return binding.getRoot();
     }
 
@@ -84,8 +94,7 @@ public class CommunityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.btnCompose.setOnClickListener(this::newPost);
-        communityAdapter = new CommunityAdapter(posts, this::onMoreOptionCallback);
-        recyclerView.setAdapter(communityAdapter);
+
     }
 
     @Override
@@ -94,8 +103,17 @@ public class CommunityFragment extends Fragment {
 
         postViewModel.fetchAllPostWithComments().observe(getViewLifecycleOwner(), postComments -> {
             posts.clear();
-            posts.addAll(postComments);
-            communityAdapter.notifyItemRangeChanged(0, postComments.size());
+            List<PostComment> filterVisiblePost = postComments.stream().filter(post -> post.post.getVisible() == 1).collect(Collectors.toList());
+
+
+            List<Post> postOrdered = filterVisiblePost.stream()
+                    .map(postComment -> postComment.post)
+                    .sorted(Comparator.comparing(Post::getCreationDate).reversed())
+                    .collect(Collectors.toList());
+
+
+            posts.addAll(postOrdered);
+            communityAdapter.notifyItemRangeChanged(0, postOrdered.size());
 
         });
     }
@@ -106,8 +124,11 @@ public class CommunityFragment extends Fragment {
     }
 
     private void onMoreOptionCallback(ImageButton communityButton, int position) {
-        if (firebaseUser.getUid().equals(this.posts.get(position).post.getUser().getAccountId())) {
+
+        if (firebaseUser.getUid().equals(this.posts.get(position).getUser().getAccountId())) {
             communityButton.setVisibility(View.VISIBLE);
+        } else {
+            communityButton.setVisibility(View.INVISIBLE);
         }
         communityButton.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(requireContext(), v);
@@ -116,7 +137,8 @@ public class CommunityFragment extends Fragment {
             popupMenu.setOnMenuItemClickListener(item -> {
 
                 if (item.getItemId() == R.id.delete_post) {
-                    postViewModel.deletePost(this.posts.get(position).post);
+                    postViewModel.deletePost(this.posts.get(position));
+                    this.posts.remove(position);
                     communityAdapter.notifyItemRemoved(position);
                     return true;
                 }

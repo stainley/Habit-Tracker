@@ -50,6 +50,7 @@ public class ComposeFragment extends Fragment {
 
     private void composeNewPost(View view) {
         Post post = new Post();
+        post.setVisible(1);
         LocalDateTime today = LocalDateTime.now();
         String message = binding.postEditText.getText().toString();
         if (!message.equals(""))
