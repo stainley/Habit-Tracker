@@ -26,31 +26,40 @@ import ca.lambton.habittracker.databinding.FragmentPublicChallengesBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-
+import ca.lambton.habittracker.view.ongoingHabits.adapter.OngoingHabitPublicAdapter;
 
 public class PublicChallengesFragment extends Fragment {
     private FragmentPublicChallengesBinding binding;
     private HabitViewModel habitViewModel;
-    private OngoingHabitsRecycleAdapter privateOngoingHabitListAdapter;
+    private OngoingHabitPublicAdapter ongoingHabitPublicAdapter;
     private final List<Habit> habits = new ArrayList<>();
-
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentPublicChallengesBinding.inflate(LayoutInflater.from(requireContext()));
+        recyclerView = binding.publicOngoingHabitsList;
 
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
 
+        ongoingHabitPublicAdapter = new OngoingHabitPublicAdapter(habits, position -> {
+            NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(habits.get(position));
+            Navigation.findNavController(requireView()).navigate(navDirections);
+        });
+
+        habitViewModel.getAllHabitCloud().observe(this, habitResult -> {
+            this.habits.clear();
+            this.habits.addAll(habitResult);
+            ongoingHabitPublicAdapter.notifyItemRangeChanged(0, habitResult.size());
+        });
+
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerView.setAdapter(ongoingHabitPublicAdapter);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView recyclerView = binding.publicOngoingHabitsList;
-
-        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setAdapter(privateOngoingHabitListAdapter);
 
         return binding.getRoot();
     }
@@ -79,12 +88,5 @@ public class PublicChallengesFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        habitViewModel.getAllHabitCloud().observe(getViewLifecycleOwner(), habitResult -> {
-            this.habits.clear();
-
-
-            this.habits.addAll(habitResult);
-            privateOngoingHabitListAdapter.notifyItemRangeChanged(0, habitResult.size());
-        });
     }
 }

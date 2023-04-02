@@ -31,7 +31,7 @@ public abstract class PostDao {
     public abstract LiveData<List<Post>> getAllMyPost(String userId);
 
     @Transaction
-    @Query(value = "SELECT * FROM POST_TABLE")
+    @Query(value = "SELECT * FROM POST_TABLE ORDER BY POST_CREATION_DATE DESC")
     public abstract LiveData<List<PostComment>> getAllPostWithComments();
 
 }

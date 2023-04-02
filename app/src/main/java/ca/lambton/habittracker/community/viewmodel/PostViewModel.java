@@ -2,6 +2,7 @@ package ca.lambton.habittracker.community.viewmodel;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -25,5 +26,9 @@ public class PostViewModel extends ViewModel {
 
     public LiveData<List<PostComment>> fetchAllPostWithComments() {
         return this.postRepository.fetchAllPostWithComment();
+    }
+
+    public void deletePost(@NonNull Post post) {
+        this.postRepository.hidePostCloud(post);
     }
 }

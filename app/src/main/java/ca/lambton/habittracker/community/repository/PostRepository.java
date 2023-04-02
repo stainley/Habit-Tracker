@@ -5,11 +5,17 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Source;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +33,7 @@ import ca.lambton.habittracker.community.model.PostComment;
 
 public class PostRepository {
     private static final String TAG = PostRepository.class.getName();
+    MutableLiveData<List<PostComment>> postCommentMutable = new MutableLiveData<>();
     private final PostDao postDao;
     private final CommentDao commentDao;
     private final FirebaseFirestore dbFirebase;
@@ -36,15 +43,19 @@ public class PostRepository {
         commentDao = db.commentDao();
         postDao = db.postDao();
         dbFirebase = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        dbFirebase.setFirestoreSettings(settings);
     }
 
     public void createPost(@NonNull Post post) {
-        //AppDatabase.databaseWriterExecutor.execute(() -> postDao.savePost(post));
         createPostCloud(post);
     }
 
     public void saveAllPost(List<Post> posts) {
-        AppDatabase.databaseWriterExecutor.execute(() -> postDao.saveAllPost(posts));
+        //AppDatabase.databaseWriterExecutor.execute(() -> postDao.saveAllPost(posts));
     }
 
 
@@ -60,37 +71,108 @@ public class PostRepository {
 
     }
 
+
     public void fetchData(DataFetchCallback callback) {
-        List<Post> postsResult = new ArrayList<>();
+        List<PostComment> postsResult = new ArrayList<>();
 
-        dbFirebase.collection("community")
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    querySnapshot.forEach(queryDocumentSnapshot -> {
-                        Post post = queryDocumentSnapshot.get("post", Post.class);
-                        if (post != null)
-                            post.setPostId(queryDocumentSnapshot.getId());
-                        //AppDatabase.databaseWriterExecutor.execute(() -> postDao.savePost(post));
-                        postsResult.add(post);
-                    });
+        Query query = dbFirebase.collection("community").where(Filter.equalTo("post.visible", 1));
+        query.orderBy("post.creationDate", Query.Direction.DESCENDING);
+        query.get().addOnSuccessListener(querySnapshot -> {
+            querySnapshot.forEach(queryDocumentSnapshot -> {
+                Post post = queryDocumentSnapshot.get("post", Post.class);
+                if (post != null) post.setPostId(queryDocumentSnapshot.getId());
 
-                    // Save data to Room database
-                    this.saveAllPost(postsResult);
+                PostComment postComment = new PostComment();
+                postComment.post = post;
 
-                    // Notify callback with updated data
-                    callback.onDataFetched(postsResult);
-                })
-                .addOnFailureListener(e -> {
-                    // Handle error
-                });
+                postsResult.add(postComment);
+            });
+
+            callback.onDataFetched(postsResult);
+        }).addOnFailureListener(e -> {
+            // Handle error
+        });
     }
 
     public void deletePost(@NonNull Post post) {
         AppDatabase.databaseWriterExecutor.execute(() -> postDao.deletePost(post));
     }
 
+
+    public void hidePostCloud(Post post) {
+        post.setVisible(0);
+
+        DocumentReference docRef = dbFirebase.collection("community").document(post.getPostId());
+        // Update all other devices to delete the document locally
+        Map<String, Post> updates = new HashMap<>();
+        updates.put("post", post);
+
+        docRef.set(updates, SetOptions.merge()).addOnSuccessListener(unused -> {
+            Log.i(TAG, "Post " + post.getPostId() + " successfully deleted!");
+            docRef.delete();
+            this.fetchData(postData -> fetchAllFromCacheDB());
+        }).addOnFailureListener(e -> Log.w(TAG, "Error deleting document: " + post.getPostId(), e));
+
+    }
+
+    /**
+     * Hide the
+     *
+     * @param post
+     */
+    public void deletePostCloud(@NotNull Post post) {
+        DocumentReference docRef = dbFirebase.collection("community").document(post.getPostId());
+
+        // Update all other devices to delete the document locally
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("deleted", true);
+        docRef.update(updates);
+
+        docRef.delete().addOnSuccessListener(unused -> {
+            Log.i(TAG, "Post " + post.getPostId() + " successfully deleted!");
+            docRef.delete();
+            deletePost(post);
+
+
+        }).addOnFailureListener(e -> Log.w(TAG, "Error deleting document: " + post.getPostId(), e));
+
+    }
+
     public LiveData<List<Post>> fetchAllPost() {
         return postDao.getAllPost();
+    }
+
+    public LiveData<List<PostComment>> fetchAllFromCacheDB() {
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference colRef = db.collection("community");
+
+        colRef.orderBy("post.creationDate", Query.Direction.DESCENDING)
+                .get(Source.CACHE)
+                .addOnSuccessListener(querySnapshot -> {
+                    List<PostComment> posts = new ArrayList<>();
+
+
+                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                        if (documentSnapshot.exists()) {
+                            // Document data is available in the local cache
+                            Post post = documentSnapshot.get("post", Post.class);
+                            if (post != null) post.setPostId(documentSnapshot.getId());
+
+                            PostComment postComment = new PostComment();
+                            if (post != null && post.getVisible() == 1) {
+                                postComment.post = post;
+                                posts.add(postComment);
+                            }
+
+                        }
+                    }
+                    postCommentMutable.postValue(posts);
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error getting documents from cache", e));
+
+        return postCommentMutable;
     }
 
     public LiveData<List<Post>> fetchAllMyPost(String userId) {
@@ -99,8 +181,8 @@ public class PostRepository {
 
     public LiveData<List<PostComment>> fetchAllPostWithComment() {
         // fetch locally then from the server
-        this.fetchData(postData -> postDao.getAllPostWithComments());
-        return postDao.getAllPostWithComments();
+        this.fetchData(postCommentMutable::postValue);
+        return postCommentMutable;
     }
 
     public void saveComment(@NonNull Comment comment) {
@@ -112,6 +194,6 @@ public class PostRepository {
     }
 
     public interface DataFetchCallback {
-        void onDataFetched(List<Post> postData);
+        void onDataFetched(List<PostComment> postData);
     }
 }

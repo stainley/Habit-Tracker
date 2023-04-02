@@ -12,9 +12,7 @@ import java.io.Serializable;
 
 import ca.lambton.habittracker.habit.model.User;
 
-@Entity(tableName = "POST_TABLE",
-        indices = @Index(name = "POST_IDX", value = {"POST_ID", "NAME"})
-)
+@Entity(tableName = "POST_TABLE", indices = @Index(name = "POST_IDX", value = {"POST_ID", "NAME"}))
 public class Post implements Serializable {
     @PrimaryKey
     @NotNull
@@ -25,6 +23,8 @@ public class Post implements Serializable {
     @ColumnInfo(name = "POST_CREATION_DATE")
     private String creationDate;
 
+    @ColumnInfo(name = "VISIBLE")
+    private int visible;
     @Embedded
     private User user;
 
@@ -60,13 +60,16 @@ public class Post implements Serializable {
         this.creationDate = creationDate;
     }
 
+    public int getVisible() {
+        return visible;
+    }
+
+    public void setVisible(int visible) {
+        this.visible = visible;
+    }
+
     @Override
     public String toString() {
-        return "Post{" +
-                "postId='" + postId + '\'' +
-                ", message='" + message + '\'' +
-                ", creationDate='" + creationDate + '\'' +
-                ", user=" + user +
-                '}';
+        return "Post{" + "postId='" + postId + '\'' + ", message='" + message + '\'' + ", creationDate='" + creationDate + '\'' + ", isVisible=" + visible + ", user=" + user + '}';
     }
 }
