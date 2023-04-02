@@ -1,6 +1,8 @@
 package ca.lambton.habittracker.community.view;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -14,16 +16,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.search.SearchBar;
+import com.google.android.material.search.SearchView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
@@ -40,14 +46,20 @@ public class CommunityFragment extends Fragment {
     private FirebaseUser firebaseUser;
     private CommunityAdapter communityAdapter;
     private final List<Post> posts = new ArrayList<>();
+    private final List<Post> postsFiltered = new ArrayList<>();
     private PostViewModel postViewModel;
     private RecyclerView recyclerView;
+    private SearchBar searchBarPost;
+    private SearchView searchViewPost;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentCommunityBinding.inflate(LayoutInflater.from(requireContext()));
+
+        searchBarPost = binding.searchBar;
+        searchViewPost = binding.searchView;
         postViewModel = new ViewModelProvider(getViewModelStore(), new PostViewModelFactory(requireActivity().getApplication())).get(PostViewModel.class);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -92,6 +104,7 @@ public class CommunityFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        searchViewPost.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
 
         binding.btnCompose.setOnClickListener(this::newPost);
 
@@ -146,5 +159,41 @@ public class CommunityFragment extends Fragment {
             });
             popupMenu.show();
         });
+    }
+
+    // SEARCH BAR
+    @NonNull
+    private Supplier<TextWatcher> getTextWatcherSupplier() {
+
+        RecyclerView postFilterRecycle = binding.resultRecyclePosts;
+        return () -> new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence letter, int start, int before, int count) {
+                postsFiltered.clear();
+                postFilterRecycle.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+
+                // filter category that contain x value
+                List<Post> postResultFiltered = posts.stream().filter(post -> {
+
+                    if (letter.length() == 0) return false;
+                    return post.getUser().getName().toLowerCase().contains(letter.toString().toLowerCase());
+                }).collect(Collectors.toList());
+
+                postsFiltered.addAll(postResultFiltered);
+
+                communityAdapter = new CommunityAdapter(postsFiltered, (communityButton, position) -> {
+                    System.out.println(postsFiltered);
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                postFilterRecycle.setAdapter(communityAdapter);
+            }
+        };
     }
 }
