@@ -66,4 +66,5 @@
     <string name="delete_post_menu">Delete post menu</string>
     <string name="likes_button">Likes button</string>
     <string name="welcome_to_the_community">Welcome to the community !</string>
+    <string name="find_people">Find people</string>
 </resources>
