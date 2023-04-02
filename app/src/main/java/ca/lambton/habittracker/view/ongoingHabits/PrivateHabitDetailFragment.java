@@ -31,6 +31,8 @@ import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.util.Frequency;
+import ca.lambton.habittracker.util.Utils;
 
 public class PrivateHabitDetailFragment extends Fragment {
 
@@ -68,6 +70,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         long startDateMillis = 0;
         long endDateMillis = 0;
         long daysBetween = 0;
+
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
         assert getArguments() != null;
@@ -93,15 +96,20 @@ public class PrivateHabitDetailFragment extends Fragment {
                 getProgressList(totalTimesToComplete, habit);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", "0/" + habit.getFrequency()));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysBetween));
+
             } else if (habit.getFrequencyUnit().equals("WEEKLY")) {
+                double totalDays = (daysBetween / 7) * frequencyValue;
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
                 getProgressList(totalTimesToComplete, habit);
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "0/3"));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "0/" + habit.getFrequency()));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
             }
             else {
+                double totalDays = (daysBetween / 30) * frequencyValue;
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
                 getProgressList(totalTimesToComplete, habit);
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "0/15"));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "0/" + habit.getFrequency()));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
             }
         }
 
@@ -142,7 +150,11 @@ public class PrivateHabitDetailFragment extends Fragment {
     }
 
     private void getProgressList(int count, Habit habit) {
+        AtomicInteger todayProgress = new AtomicInteger();
         AtomicInteger totalProgress = new AtomicInteger();
+        AtomicInteger index = new AtomicInteger();
+        LocalDate todayDate = LocalDate.now();
+
         habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
             List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
 
@@ -158,7 +170,26 @@ public class PrivateHabitDetailFragment extends Fragment {
                     binding.percentTextGoalAchieved.setVisibility(View.VISIBLE);
                     binding.percentTextGoalAchieved.setText(totalProgress.get() * 100 / count + "% of your goal is achieved");
                 }
+
+                String startDateString = Utils.parseDate(hp.getHabit().getStartDate());
+                String endDateString = Utils.parseDate(hp.getHabit().getEndDate());
+
+                LocalDate startDate = LocalDate.parse(startDateString);
+                LocalDate endDate = LocalDate.parse(endDateString);
+
+                if (todayDate.isEqual(startDate) || todayDate.isAfter(startDate) && (todayDate.isEqual(endDate) || (todayDate.isBefore(endDate)))) {
+                    if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.DAILY.name())) {
+                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId() && progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                    } else if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.WEEKLY.name())) {
+                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                    } else if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.MONTHLY.name())) {
+                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                    }
+                }
+                index.set(index.get() + 1);
             }
+
+            System.out.println("todayProgress: " + todayProgress.get());
         });
     }
 }
