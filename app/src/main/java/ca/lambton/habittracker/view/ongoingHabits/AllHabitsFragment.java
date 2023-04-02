@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -107,7 +108,7 @@ public class AllHabitsFragment extends Fragment {
             }
 
             @Override
-            public int getProgressList(TextView habitPercentageNumText, int totalTimesToComplete, int position) {
+            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
                 AtomicInteger totalProgress = new AtomicInteger();
                 habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
                     List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
@@ -119,11 +120,10 @@ public class AllHabitsFragment extends Fragment {
                             habitPercentageNumText.setText("0%");
                         } else {
                             habitPercentageNumText.setText((totalProgress.get() * 100 / totalTimesToComplete) + "%");
+                            habitProgressbar.setProgress(totalProgress.get() * 100 / totalTimesToComplete);
                         }
                     }
                 });
-
-                return totalProgress.get();
             }
         };
     }
