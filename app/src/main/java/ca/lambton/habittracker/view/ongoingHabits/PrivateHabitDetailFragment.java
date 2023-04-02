@@ -108,7 +108,12 @@ public class PrivateHabitDetailFragment extends Fragment {
             }
             else {
                 double totalDays = (daysBetween / 30) * frequencyValue;
-                totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
+                if (daysBetween == 30) {
+                    totalTimesToComplete = frequencyValue * 30;
+                }
+                else {
+                    totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
+                }
                 getProgressList(totalTimesToComplete, habit, (int) daysBetween);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "0/" + habit.getFrequency()));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
@@ -183,9 +188,9 @@ public class PrivateHabitDetailFragment extends Fragment {
                     if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.DAILY.name())) {
                         todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId() && progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
                     } else if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.WEEKLY.name())) {
-                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId() && progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
                     } else if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.MONTHLY.name())) {
-                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                        todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId() && progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
                     }
                 }
 
