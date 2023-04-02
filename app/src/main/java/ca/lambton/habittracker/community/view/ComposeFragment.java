@@ -1,7 +1,6 @@
 package ca.lambton.habittracker.community.view;
 
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Spannable;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -34,13 +33,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,9 +48,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.community.model.Post;
@@ -71,12 +69,17 @@ public class ComposeFragment extends Fragment {
     private FirebaseUser currentUser;
     private StorageReference storageRef;
     private ImageView imageView;
+    private LinearProgressIndicator postProgress;
+    int progressStatus = 0;
+    private Handler handler = new Handler();
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentComposeBinding.inflate(LayoutInflater.from(requireContext()));
 
+        postProgress = binding.postProgress;
 
         binding.postButton.setOnClickListener(this::composeNewPost);
         editText = binding.postEditText;
@@ -99,9 +102,7 @@ public class ComposeFragment extends Fragment {
                 // Disable the default "paste" menu item
                 menu.removeItem(android.R.id.paste);
                 // Add a custom "paste image" menu item
-                menu.add("Paste Image")
-                        .setIcon(android.R.drawable.ic_menu_gallery)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                menu.add("Paste Image").setIcon(android.R.drawable.ic_menu_gallery).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
                 return true;
             }
 
@@ -138,13 +139,13 @@ public class ComposeFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void composeNewPost(View view) {
+    private void executePost(OnTaskFinishedListener onTaskFinishedListener) {
+
         Post post = new Post();
         post.setVisible(1);
         LocalDateTime today = LocalDateTime.now();
         String message = binding.postEditText.getText().toString();
-        if (!message.equals(""))
-            post.setMessage(message);
+        if (!message.equals("")) post.setMessage(message);
 
         if (mUser != null) {
             User user = new User();
@@ -155,20 +156,35 @@ public class ComposeFragment extends Fragment {
             post.setUser(user);
         }
 
+        // Upload image to Fire storage
+        postProgress.setProgress(progressStatus, true);
         uploadImage(imageView, path -> {
-            PostImage postImage = new PostImage();
+            final PostImage postImage = new PostImage();
+
             postImage.setPath(path);
-            post.setPostImage(postImage);
             System.out.println(path);
 
+            post.setPostImage(postImage);
             post.setCreationDate(today.toString());
+
             postViewModel.createPost(post);
+            onTaskFinishedListener.onCompleted(true);
         });
+    }
 
+    // Compose a new post
+    private void composeNewPost(View view) {
+        postProgress.setIndeterminate(true);
+        postProgress.setVisibility(View.VISIBLE);
+        executePost(isCompleted -> {
 
+            if (isCompleted) {
+                postProgress.setVisibility(View.INVISIBLE);
+                // Stop the progress bar
+                NavHostFragment.findNavController(requireParentFragment()).popBackStack(R.id.nav_community, false);
+            }
 
-        NavHostFragment.findNavController(this).popBackStack(R.id.nav_community, false);
-
+        });
     }
 
     private void insertImageIntoEditText(EditText editText, Uri imageUri) {
@@ -190,8 +206,8 @@ public class ComposeFragment extends Fragment {
             imageView.setImageDrawable(image);
 
 
-            DownloadImageTask downloadImageTask = new DownloadImageTask();
-            downloadImageTask.execute(imageUri.toString());
+            //DownloadImageTask downloadImageTask = new DownloadImageTask();
+            //downloadImageTask.execute(imageUri.toString());
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -200,56 +216,57 @@ public class ComposeFragment extends Fragment {
         editText.setText(builder);
     }
 
-    private void uploadImage(ImageView image, OnPostImageUploaded onPostImageUploaded) {
-        //Picasso.get().load(picturePath).resize(300, 300).centerInside().into(image);
+    private void uploadImage(ImageView image, OnUploadingImageAction onUploadingImageAction) {
         image.setDrawingCacheEnabled(true);
         image.buildDrawingCache(true);
 
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
+        if (image.getDrawable() != null) {
 
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
 
-            if (image.getDrawable() != null) {
-                Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                byte[] data = outputStream.toByteArray();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
 
-                StorageReference photosRef = storageRef.child("pictures/" + currentUser.getUid());
-                UploadTask uploadTask = photosRef.putBytes(data);
+            Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            byte[] data = outputStream.toByteArray();
 
-                uploadTask.addOnFailureListener(exception -> {
-                    // Handle unsuccessful uploads
-                    Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
-                }).addOnSuccessListener(taskSnapshot -> {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    //Toast.makeText(requireContext(), "Photo uploaded", Toast.LENGTH_SHORT).show();
-                });
+            StorageReference photosRef = storageRef.child("pictures/" + currentUser.getUid() + "_" + UUID.randomUUID());
+            UploadTask uploadTask = photosRef.putBytes(data);
 
-                // Get the URI of the photo
-                uploadTask.continueWithTask(task -> {
-                    if (!task.isSuccessful()) {
-                        throw Objects.requireNonNull(task.getException());
-                    }
-                    // Continue with the task to get the download URL
-                    return photosRef.getDownloadUrl();
-                }).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Uri pictureDownloadUri = task.getResult();
-                        System.out.println(TAG + ": " + pictureDownloadUri);
-                        onPostImageUploaded.onFinished(pictureDownloadUri.toString());
-                    } else {
-                        // Handle failures
-                        Log.e(TAG, "Error fetching the photo URL");
-                    }
-                });
-            }
+            uploadTask.addOnFailureListener(exception -> {
+                // Handle unsuccessful uploads
+                Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
+            }).addOnSuccessListener(taskSnapshot -> {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                //Toast.makeText(requireContext(), "Photo uploaded", Toast.LENGTH_SHORT).show();
+            });
 
-        }).start();
+            // Get the URI of the photo
+            uploadTask.continueWithTask(task -> {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+                // Continue with the task to get the download URL
+                return photosRef.getDownloadUrl();
+            }).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Uri pictureDownloadUri = task.getResult();
+                    System.out.println(TAG + ": " + pictureDownloadUri);
+                    onUploadingImageAction.onFinished(pictureDownloadUri.toString());
+                } else {
+                    // Handle failures
+                    Log.e(TAG, "Error fetching the photo URL");
+                }
+            });
+        } else {
+            onUploadingImageAction.onFinished("");
+        }
 
     }
 
@@ -263,6 +280,27 @@ public class ComposeFragment extends Fragment {
         // Create an ImageSpan from the scaled bitmap
         return new ImageSpan(requireContext(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
     }
+
+    private class UploadImageTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+        }
+    }
+
 
     private class DownloadImageTask extends AsyncTask<String, Void, String> {
         @Override
@@ -299,7 +337,12 @@ public class ComposeFragment extends Fragment {
         }
     }
 
-    public interface OnPostImageUploaded {
+    public interface OnUploadingImageAction {
         void onFinished(String path);
     }
+
+    public interface OnTaskFinishedListener {
+        void onCompleted(boolean isCompleted);
+    }
+
 }

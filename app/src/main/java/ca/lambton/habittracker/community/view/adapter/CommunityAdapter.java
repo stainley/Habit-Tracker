@@ -73,6 +73,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             Picasso.get().load(posts.get(position).getPostImage().getPath()).resize(500, 600).into(holder.postImage);
         } else {
             holder.postImage.setVisibility(View.GONE);
+            holder.postPictureFrame.setVisibility(View.GONE);
         }
 
     }
