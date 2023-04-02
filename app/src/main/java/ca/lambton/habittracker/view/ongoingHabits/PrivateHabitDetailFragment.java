@@ -45,6 +45,8 @@ public class PrivateHabitDetailFragment extends Fragment {
 
     private FirebaseUser mUser;
 
+    ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList;
+
     public PrivateHabitDetailFragment() {
     }
 
@@ -77,7 +79,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         Habit habit = (Habit) getArguments().getSerializable("habit");
 
         ongoingHabitDetailGridInfo = (GridView) binding.ongoingHabitDetailGridView;
-        ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList = new ArrayList<OngoingHabitDetailGridInfo>();
+        ongoingHabitDetailGridInfoModelArrayList = new ArrayList<OngoingHabitDetailGridInfo>();
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", "0"));
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", "0"));
 
@@ -93,21 +95,21 @@ public class PrivateHabitDetailFragment extends Fragment {
 
             if (habit.getFrequencyUnit().equals("DAILY")) {
                 totalTimesToComplete = frequencyValue * (int) daysBetween;
-                getProgressList(totalTimesToComplete, habit);
+                getProgressList(totalTimesToComplete, habit, (int) daysBetween);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", "0/" + habit.getFrequency()));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysBetween));
 
             } else if (habit.getFrequencyUnit().equals("WEEKLY")) {
                 double totalDays = (daysBetween / 7) * frequencyValue;
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
-                getProgressList(totalTimesToComplete, habit);
+                getProgressList(totalTimesToComplete, habit, (int) daysBetween);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "0/" + habit.getFrequency()));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
             }
             else {
                 double totalDays = (daysBetween / 30) * frequencyValue;
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
-                getProgressList(totalTimesToComplete, habit);
+                getProgressList(totalTimesToComplete, habit, (int) daysBetween);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "0/" + habit.getFrequency()));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
             }
@@ -149,7 +151,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void getProgressList(int count, Habit habit) {
+    private void getProgressList(int count, Habit habit, int daysBetween) {
         AtomicInteger todayProgress = new AtomicInteger();
         AtomicInteger totalProgress = new AtomicInteger();
         AtomicInteger index = new AtomicInteger();
@@ -186,10 +188,13 @@ public class PrivateHabitDetailFragment extends Fragment {
                         todayProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
                     }
                 }
+
                 index.set(index.get() + 1);
             }
 
-            System.out.println("todayProgress: " + todayProgress.get());
+            ongoingHabitDetailGridInfoModelArrayList.set(2, new OngoingHabitDetailGridInfo("This day’s target", todayProgress.get() + "/" + habit.getFrequency()));
+            ongoingHabitDetailGridInfoModelArrayList.set(3, new OngoingHabitDetailGridInfo("Days completed", (totalProgress.get() / habit.getFrequency()) + "/" + daysBetween));
+            ongoingHabitDetailGridInfo.setAdapter(new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList));
         });
     }
 }
