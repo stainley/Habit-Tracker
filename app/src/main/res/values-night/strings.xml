@@ -34,4 +34,8 @@
     <string name="consistency">Consistency</string>
     <string name="_0">0%</string>
     <string name="delete">Delete</string>
+    <string name="creation_time">Creation time</string>
+    <string name="post_picture">Post picture</string>
+    <string name="delete_post_menu">Delete post menu</string>
+    <string name="likes_button">Likes button</string>
 </resources>

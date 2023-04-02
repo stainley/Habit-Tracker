@@ -3,6 +3,7 @@ package ca.lambton.habittracker.community.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,14 +57,21 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             String photoUrl = user.getPhotoUrl();
             if (photoUrl != null) {
                 if (!photoUrl.equals("")) {
-                    Picasso.get().load(photoUrl).fit().into(holder.profilePhoto);
+                    Picasso.get()
+                            .load(photoUrl)
+                            .fit().into(holder.profilePhoto);
                 }
             }
         }
 
         communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
         if (posts.get(position).getPostImage() != null && !posts.get(position).getPostImage().getPath().equals("")) {
+            holder.postImage.setVisibility(View.VISIBLE);
+            holder.postImage.setClipToOutline(true);
+            holder.postPictureFrame.setClipToOutline(true);
             Picasso.get().load(posts.get(position).getPostImage().getPath()).resize(500, 600).into(holder.postImage);
+        } else {
+            holder.postImage.setVisibility(View.GONE);
         }
 
     }
@@ -82,6 +90,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private final CircleImageView profilePhoto;
         private final ImageButton moreOptionButton;
         private final ImageView postImage;
+        private final FrameLayout postPictureFrame;
 
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,7 +100,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             dayPostedTxt = itemView.findViewById(R.id.day_posted);
             profilePhoto = itemView.findViewById(R.id.profile_picture);
             moreOptionButton = itemView.findViewById(R.id.more_options_button);
+
             postImage = itemView.findViewById(R.id.post_picture);
+            postPictureFrame = itemView.findViewById(R.id.post_picture_frame);
         }
     }
 
