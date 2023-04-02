@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,9 +16,12 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPublicChallengesBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -53,10 +57,21 @@ public class PublicChallengesFragment extends Fragment {
 
     @NonNull
     private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
-        return (position, isGroup1) -> {
+        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
+            @Override
+            public void onRowClicked(int position, boolean isGroup) {
+                if (isGroup) {
+                    Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
+                } else {
+                    NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail(null).setHabit(habits.get(position));
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                }
+            }
 
-            NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(habits.get(position));
-            Navigation.findNavController(requireView()).navigate(navDirections);
+            @Override
+            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
+
+            }
         };
     }
 
