@@ -4,19 +4,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.Habit;
@@ -65,13 +65,13 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
 
         if (frequencyUnit.equals("DAILY")) {
             totalTimesToComplete = frequencyValue * (int) daysBetween;
-            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, totalTimesToComplete, position);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         } else if (frequencyUnit.equals("WEEKLY")) {
             totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
-            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, totalTimesToComplete, position);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         } else {
             totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
-            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, totalTimesToComplete, position);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         }
 
         holder.habitNameLabel.setText(habits.get(position).getName());
@@ -98,6 +98,8 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
 
         private final TextView habitPercentageNumText;
 
+        private final CircularProgressIndicator habitProgressbar;
+
         private final CardView ongoingHabitCard;
 
         public ViewHolder(@NonNull View itemView) {
@@ -107,12 +109,13 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
             memberCountLabel = itemView.findViewById(R.id.memberCountLabel);
             habitPercentageNumText = itemView.findViewById(R.id.habitPercentageNumText);
             ongoingHabitCard = itemView.findViewById(R.id.ongoingHabitCard);
+            habitProgressbar = itemView.findViewById(R.id.habitProgressbar);
         }
     }
 
     public interface OnOngoingHabitsCallback {
         void onRowClicked(int position, boolean isGroup);
 
-        int getProgressList(TextView habitPercentageNumText, int totalTimesToComplete, int position);
+        void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position);
     }
 }
