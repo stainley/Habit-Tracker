@@ -54,6 +54,8 @@ public class HabitDetailFragment extends Fragment {
                 int drawable = requireContext().getResources().getIdentifier(habit.getImagePath(), "drawable", packageName);
                 if (drawable > 0) {
                     Picasso.get().load(drawable).into(binding.detailImage);
+                } else {
+                    Picasso.get().load(habit.getImagePath()).into(binding.detailImage);
                 }
             }
 

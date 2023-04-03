@@ -29,6 +29,18 @@
                 app:srcCompat="@drawable/default_image" />
         </xyz.sahildave.arclayout.ArcLayout>
 
+        <ImageButton
+            android:id="@+id/overflow_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:background="@color/transparent"
+            android:contentDescription="@string/replace_image"
+            android:src="@drawable/ic_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
             android:id="@+id/titleHabit"
             android:layout_width="wrap_content"

@@ -69,7 +69,12 @@ public class CompleteHabitCollectionFragment extends Fragment {
                 Picasso.get().load(R.drawable.default_image).fit().into(circleImageView);
             } else {
                 //TODO: change this implementation don't obtain the image by name on drawable
-                Picasso.get().load(getResources().getIdentifier(imagePath, "drawable", packageName)).fit().into(circleImageView);
+                int imagePredefine = getResources().getIdentifier(imagePath, "drawable", packageName);
+                if (imagePredefine > 0) {
+                    Picasso.get().load(imagePredefine).fit().into(circleImageView);
+                } else {
+                    Picasso.get().load(imagePath).fit().into(circleImageView);
+                }
             }
 
             completeHabitCard.setOnClickListener(view -> {
