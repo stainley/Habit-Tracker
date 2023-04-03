@@ -6,20 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".community.view.ComposeFragment">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/post_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:progress="0"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:progress="75" />
+
 
     <!-- Post text input -->
     <EditText
         android:id="@+id/postEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:hint="What's happening?"
+        android:background="@color/transparent"
+        android:gravity="top|start"
+        android:hint="@string/what_s_happening"
+        android:inputType="textImeMultiLine|textMultiLine|textUri"
+        android:scrollbars="vertical"
+        android:textIsSelectable="true"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintBottom_toTopOf="@id/postButton"
-
+        app:layout_constraintTop_toBottomOf="@id/post_progress"
         app:layout_constraintVertical_bias="0.1" />
 
     <!-- Image thumbnail -->
@@ -31,7 +48,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/add_image"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -46,6 +63,7 @@
         android:layout_alignRight="@+id/imageThumbnailImageView"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_delete_habit"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/imageThumbnailImageView"
         app:layout_constraintStart_toEndOf="@id/imageThumbnailImageView"
         app:layout_constraintTop_toTopOf="@id/imageThumbnailImageView" />
@@ -64,6 +82,7 @@
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
         android:src="@drawable/add_image"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/imageThumbnailImageView"
         app:layout_constraintTop_toBottomOf="@id/imageThumbnailImageView"
 
