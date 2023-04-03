@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/complete_habit_card"
+    style="@style/MaterialCardView.NoColour"
+    android:layout_width="match_parent"
+    android:layout_height="128dp"
+    android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:padding="16dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_habit"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/default_image" />
+
+        <TextView
+            android:id="@+id/habitNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/mulish_semi_bold"
+            android:maxEms="4"
+            android:maxLines="2"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/image_habit"
+            app:layout_constraintTop_toTopOf="@id/image_habit"
+            tools:text="Add Veggie" />
+
+        <TextView
+            android:id="@+id/memberCountLabel"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="start"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/habitNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel"
+            tools:text="4 Members" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/habit_progressbar"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="12dp"
+            android:progress="5"
+            app:indicatorColor="@color/yellow"
+            app:indicatorSize="68dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:trackColor="@color/card_background_light_color"
+            app:trackCornerRadius="8dp"
+            app:trackThickness="8dp" />
+
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mulish_bold"
+            android:textColor="#DD5001"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/habit_progressbar"
+            app:layout_constraintEnd_toEndOf="@id/habit_progressbar"
+            app:layout_constraintStart_toStartOf="@id/habit_progressbar"
+            app:layout_constraintTop_toTopOf="@id/habit_progressbar"
+            tools:text="73%" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

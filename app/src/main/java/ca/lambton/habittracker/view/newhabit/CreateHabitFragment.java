@@ -305,6 +305,10 @@ public class CreateHabitFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
+        if (newHabit.getImagePath() == null) {
+            newHabit.setImagePath("default_image");
+        }
+
         habitViewModel.saveHabit(newHabit);
 
         if (newHabit.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.toString())) {
