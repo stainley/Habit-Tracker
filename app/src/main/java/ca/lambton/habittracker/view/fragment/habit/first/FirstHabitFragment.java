@@ -41,11 +41,11 @@ public class FirstHabitFragment extends Fragment {
         habitsPager = binding.habitsPager;
         configureAnimationPager();
         PredifinedHabitAdapter predifinedHabitAdapter = new PredifinedHabitAdapter(habitDetails);
-
+        String packageName = requireContext().getPackageName();
         categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
         categoryViewModel.getAllCategories().observe(requireActivity(), categories -> {
             categories.forEach(category -> {
-                habitDetails.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", requireContext().getPackageName())));
+                habitDetails.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", packageName)));
             });
 
             predifinedHabitAdapter.notifyItemChanged(0, categories.size());

@@ -43,6 +43,8 @@ public class CompleteHabitCollectionFragment extends Fragment {
     private HabitViewModel habitViewModel;
     private CompleteHabitAdapter completeHabitAdapter;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
+    private String packageName = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +58,7 @@ public class CompleteHabitCollectionFragment extends Fragment {
         completeHabitAdapter = new CompleteHabitAdapter(habitProgresses, getOnCompleteListener());
 
         recycleCompleteHabit.setAdapter(completeHabitAdapter);
-
+        packageName = requireContext().getPackageName();
     }
 
     @NonNull
@@ -67,7 +69,12 @@ public class CompleteHabitCollectionFragment extends Fragment {
                 Picasso.get().load(R.drawable.default_image).fit().into(circleImageView);
             } else {
                 //TODO: change this implementation don't obtain the image by name on drawable
-                Picasso.get().load(getResources().getIdentifier(imagePath, "drawable", requireContext().getPackageName())).fit().into(circleImageView);
+                int imagePredefine = getResources().getIdentifier(imagePath, "drawable", packageName);
+                if (imagePredefine > 0) {
+                    Picasso.get().load(imagePredefine).fit().into(circleImageView);
+                } else {
+                    Picasso.get().load(imagePath).fit().into(circleImageView);
+                }
             }
 
             completeHabitCard.setOnClickListener(view -> {
