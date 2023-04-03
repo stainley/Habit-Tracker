@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-   <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
@@ -9,7 +9,7 @@
         android:id="@+id/nav_home"
         android:name="ca.lambton.habittracker.view.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_nav_home_to_profile_fragment"
             app:destination="@id/profile_fragment" />
@@ -43,7 +43,7 @@
         android:id="@+id/nav_my_habits"
         android:name="ca.lambton.habittracker.view.myhabits.MyHabitsFragment"
         android:label="My Habits"
-        tools:layout="@layout/fragment_my_habits" >
+        tools:layout="@layout/fragment_my_habits">
         <action
             android:id="@+id/action_nav_my_habits_to_newHabitFragment"
             app:destination="@id/newHabitFragment" />
@@ -53,6 +53,9 @@
         <action
             android:id="@+id/action_nav_my_habits_to_ongoingHabitFragment"
             app:destination="@id/ongoingHabitFragment" />
+        <action
+            android:id="@+id/action_nav_my_habits_to_completeHabitCollectionFragment"
+            app:destination="@id/completeHabitCollectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_defined_habit"
@@ -183,7 +186,7 @@
         android:id="@+id/groupHabitDetailFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitDetailFragment"
         android:label="Group Habit Detail"
-        tools:layout="@layout/fragment_public_challenges"/>
+        tools:layout="@layout/fragment_public_challenges" />
 
 
     <activity
@@ -202,5 +205,25 @@
         android:name="ca.lambton.habittracker.view.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/completeHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.CompleteHabitFragment"
+        android:label="Complete Detail"
+        tools:layout="@layout/fragment_complete_habit">
+        <argument
+            android:name="habitProgress"
+            android:defaultValue="@null"
+            app:argType="ca.lambton.habittracker.habit.model.HabitProgress"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/completeHabitCollectionFragment"
+        android:name="ca.lambton.habittracker.habit.view.CompleteHabitCollectionFragment"
+        android:label="Complete Habit"
+        tools:layout="@layout/fragment_complete_habit_collection">
+        <action
+            android:id="@+id/action_completeHabitCollectionFragment_to_completeHabitFragment"
+            app:destination="@id/completeHabitFragment" />
+    </fragment>
 
 </navigation>

@@ -103,9 +103,9 @@ public class HabitDetailFragment extends Fragment {
                 int fragmentBackCount = getParentFragmentManager().getBackStackEntryCount();
 
                 for (int i = 1; i < fragmentBackCount; i++) {
-                    Navigation.findNavController(v).popBackStack();
                 }
 
+                requireActivity().finish();
                 Toast.makeText(requireContext(), "Habit has been added", Toast.LENGTH_SHORT).show();
             });
         }

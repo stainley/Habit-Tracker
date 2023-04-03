@@ -160,6 +160,9 @@ public class MyHabitsFragment extends Fragment {
                 case 2:
                     Navigation.findNavController(requireView()).navigate(R.id.ongoingHabitFragment);
                     break;
+                case 3:
+                    Navigation.findNavController(requireView()).navigate(R.id.completeHabitCollectionFragment);
+                    break;
             }
         };
     }
