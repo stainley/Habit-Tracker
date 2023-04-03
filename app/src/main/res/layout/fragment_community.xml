@@ -5,72 +5,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".community.view.CommunityFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/searchAppBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:nestedScrollingEnabled="false">
+        android:layout_height="0dp"
+        android:nestedScrollingEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_update"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="72dp">
+            android:layout_marginTop="72dp"
+            android:fillViewport="true">
 
-            <androidx.core.widget.NestedScrollView
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:overScrollMode="never"
-                android:scrollbars="none">
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <TextView
+                    android:id="@+id/user_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:fontFamily="@font/mulish_bold"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Stainley Lebron" />
+
+                <TextView
+                    android:id="@+id/welcome_message_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/mulish_semi_bold"
+                    android:text="@string/welcome_to_the_community"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="@id/user_profile"
+                    app:layout_constraintTop_toBottomOf="@id/user_profile" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclePosts"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin">
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/welcome_message_label"
+                    tools:listitem="@layout/row_card_community" />
 
-                    <TextView
-                        android:id="@+id/user_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:fontFamily="@font/mulish_bold"
-                        android:textColor="@color/neutral_black"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Hello Stainley," />
 
-                    <TextView
-                        android:id="@+id/welcome_message_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/mulish_semi_bold"
-                        android:text="@string/welcome_to_the_community"
-                        android:textColor="@color/neutral_black"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="@id/user_profile"
-                        app:layout_constraintTop_toBottomOf="@id/user_profile" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclePosts"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="10dp"
-                        android:orientation="vertical"
-                        android:overScrollMode="never"
-                        android:scrollbars="none"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/welcome_message_label"
-                        tools:listitem="@layout/row_card_community" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -93,7 +89,6 @@
             android:layout_height="match_parent"
             android:hint="@string/search"
             app:layout_anchor="@id/search_bar">
-            <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/result_recycle_posts"
@@ -101,7 +96,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:overScrollMode="never"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/welcome_message_label"

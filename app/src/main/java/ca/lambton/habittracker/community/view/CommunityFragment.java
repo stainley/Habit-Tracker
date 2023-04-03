@@ -104,8 +104,8 @@ public class CommunityFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        searchViewPost.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
 
+        searchViewPost.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
         binding.btnCompose.setOnClickListener(this::newPost);
 
     }
@@ -114,7 +114,7 @@ public class CommunityFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        postViewModel.fetchAllPostWithComments().observe(getViewLifecycleOwner(), postComments -> {
+        postViewModel.fetchAllPostWithComments().observe(requireActivity(), postComments -> {
             posts.clear();
             List<PostComment> filterVisiblePost = postComments.stream().filter(post -> post.post.getVisible() == 1).collect(Collectors.toList());
 
@@ -126,7 +126,7 @@ public class CommunityFragment extends Fragment {
 
 
             posts.addAll(postOrdered);
-            communityAdapter.notifyItemRangeChanged(0, postOrdered.size());
+            communityAdapter.notifyDataSetChanged();
 
         });
     }
@@ -152,7 +152,8 @@ public class CommunityFragment extends Fragment {
                 if (item.getItemId() == R.id.delete_post) {
                     postViewModel.deletePost(this.posts.get(position));
                     this.posts.remove(position);
-                    communityAdapter.notifyItemRemoved(position);
+                    //communityAdapter.notifyItemRemoved(position);
+                    communityAdapter.notifyDataSetChanged();
                     return true;
                 }
                 return false;
@@ -185,14 +186,16 @@ public class CommunityFragment extends Fragment {
 
                 postsFiltered.addAll(postResultFiltered);
 
-                communityAdapter = new CommunityAdapter(postsFiltered, (communityButton, position) -> {
+                CommunityAdapter communityAdapter = new CommunityAdapter(postsFiltered, (communityButton, position) -> {
                     System.out.println(postsFiltered);
                 });
+
+                postFilterRecycle.setAdapter(communityAdapter);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                postFilterRecycle.setAdapter(communityAdapter);
+
             }
         };
     }

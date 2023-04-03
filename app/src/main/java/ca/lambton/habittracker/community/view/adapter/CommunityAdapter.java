@@ -66,14 +66,14 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         }
 
         communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
-        if (posts.get(position).getPostImage() != null && !posts.get(position).getPostImage().getPath().equals("")) {
+        System.out.println(posts.get(position).getPostImage() != null && !posts.get(position).getPostImage().getPath().equals(""));
+        if (!posts.get(position).getPostImage().getPath().equals("")) {
             holder.postImage.setVisibility(View.VISIBLE);
             holder.postImage.setClipToOutline(true);
             holder.postPictureFrame.setClipToOutline(true);
             Picasso.get().load(posts.get(position).getPostImage().getPath()).resize(500, 600).into(holder.postImage);
         } else {
             holder.postImage.setVisibility(View.GONE);
-            holder.postPictureFrame.setVisibility(View.GONE);
         }
 
     }

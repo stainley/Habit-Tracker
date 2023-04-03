@@ -281,62 +281,6 @@ public class ComposeFragment extends Fragment {
         return new ImageSpan(requireContext(), scaledBitmap, ImageSpan.ALIGN_BASELINE);
     }
 
-    private class UploadImageTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void unused) {
-            super.onPostExecute(unused);
-        }
-    }
-
-
-    private class DownloadImageTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            String path = "";
-            try {
-                URL url = new URL(urls[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                // Read the input stream into a byte array
-                InputStream input = connection.getInputStream();
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = input.read(buffer)) != -1) {
-                    output.write(buffer, 0, bytesRead);
-                }
-                byte[] imageBytes = output.toByteArray();
-
-                // Save the image to external storage
-                String fileName = "my_image.jpg";
-                File file = new File(requireContext().getFilesDir(), fileName);
-
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(imageBytes);
-                fos.close();
-                path = file.getAbsolutePath();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return path;
-        }
-    }
-
     public interface OnUploadingImageAction {
         void onFinished(String path);
     }
