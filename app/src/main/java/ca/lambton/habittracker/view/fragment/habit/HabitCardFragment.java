@@ -27,28 +27,39 @@ public class HabitCardFragment extends Fragment {
     FragmentRecycleViewCarouselBinding binding;
     private CategoryViewModel categoryViewModel;
     private final List<HabitCard> habitCardList = new ArrayList<>();
+    private HabitCardAdapter habitCardAdapter;
+    private String packageName;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = FragmentRecycleViewCarouselBinding.inflate(LayoutInflater.from(requireContext()));
+        RecyclerView recycleHabitCarousel = binding.recycleCarousel;
+        recycleHabitCarousel.setLayoutManager(new GridLayoutManager(requireContext(), 1, LinearLayoutManager.HORIZONTAL, false));
+        habitCardAdapter = new HabitCardAdapter(habitCardList);
+
+        categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
+        packageName = requireContext().getPackageName();
+
+        recycleHabitCarousel.setAdapter(habitCardAdapter);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentRecycleViewCarouselBinding.inflate(inflater);
-
-        RecyclerView recycleHabitCarousel = binding.recycleCarousel;
-        recycleHabitCarousel.setLayoutManager(new GridLayoutManager(requireContext(), 1, LinearLayoutManager.HORIZONTAL, false));
-        HabitCardAdapter habitCardAdapter = new HabitCardAdapter(habitCardList);
-
-        categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
-        categoryViewModel.getAllCategories().observe(requireActivity(), categories -> {
-            categories.forEach(category -> {
-                habitCardList.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", requireContext().getPackageName())));
-            });
-            habitCardAdapter.notifyItemChanged(0, categories.size());
-        });
-
-
-        recycleHabitCarousel.setAdapter(habitCardAdapter);
 
         return binding.getRoot();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        categoryViewModel.getAllCategories().observe(requireActivity(), categories -> {
+            categories.forEach(category -> {
+                habitCardList.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", packageName)));
+            });
+            habitCardAdapter.notifyItemChanged(0, categories.size());
+        });
+
+    }
 }

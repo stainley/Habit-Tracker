@@ -1,7 +1,5 @@
 package ca.lambton.habittracker.view.fragment.habit;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,7 @@ import ca.lambton.habittracker.R;
 public class PredifinedHabitAdapter extends RecyclerView.Adapter<PredifinedHabitAdapter.HabitViewHolder> {
 
     private final List<HabitCard> habitDetails;
-    private Context context;
+
 
     public PredifinedHabitAdapter(List<HabitCard> habitDetails) {
         this.habitDetails = habitDetails;
@@ -29,7 +27,6 @@ public class PredifinedHabitAdapter extends RecyclerView.Adapter<PredifinedHabit
     @NonNull
     @Override
     public HabitViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        this.context = parent.getContext();
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_stack_category_item, parent, false);
         return new HabitViewHolder(view);
     }

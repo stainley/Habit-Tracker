@@ -81,7 +81,8 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                 if (habits.size() > 0) {
                     List<String> habitsTitle = habits.stream()
                             .filter(Habit::isPredefined)
-                            .map(Habit::getName).collect(Collectors.toList());
+                            .map(Habit::getName)
+                            .collect(Collectors.toList());
 
                     this.categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
 
