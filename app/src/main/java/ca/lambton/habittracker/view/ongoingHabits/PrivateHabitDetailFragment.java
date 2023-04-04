@@ -93,23 +93,23 @@ public class PrivateHabitDetailFragment extends Fragment {
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysBetween));
 
             } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
-                double totalDays = (daysBetween / 7) * frequencyValue;
+                double totalDays = (daysBetween / 7);
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
                 getProgressList(totalTimesToComplete, habitProgress.getHabit(), (int) daysBetween);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", "0/" + habitProgress.getHabit().getFrequency()));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + (int) totalDays));
             }
             else {
-                double totalDays = (daysBetween / 30) * frequencyValue;
-                if (daysBetween == 30) {
-                    totalTimesToComplete = frequencyValue * 30;
+                double totalDays = (daysBetween / 30);
+                if (daysBetween < 30 || daysBetween == 30) {
+                    totalTimesToComplete = frequencyValue * 1;
                 }
                 else {
-                    totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
+                    totalTimesToComplete = frequencyValue * (int) totalDays;
                 }
                 getProgressList(totalTimesToComplete, habitProgress.getHabit(), (int) daysBetween);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", "0/" + habitProgress.getHabit().getFrequency()));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + totalDays));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + (int) totalDays));
             }
         }
 
