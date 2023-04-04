@@ -72,7 +72,7 @@ public class PublicChallengesFragment extends Fragment {
                 if (isGroup) {
                     Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
                 } else {
-                    NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail(null).setHabit(habits.get(position));
+                    NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabit(habits.get(position));
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
                 }
             }

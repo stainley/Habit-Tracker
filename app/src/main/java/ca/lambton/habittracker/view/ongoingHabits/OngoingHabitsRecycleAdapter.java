@@ -20,21 +20,22 @@ import java.util.List;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.HabitProgress;
 
 public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHabitsRecycleAdapter.ViewHolder> {
 
     private final OnOngoingHabitsCallback onOngoingHabitsCallback;
-    private final List<Habit> habits;
+    private final List<HabitProgress> habits;
     private Context context;
 
     private Boolean isGroup;
 
-    public OngoingHabitsRecycleAdapter(List<Habit> habits, OnOngoingHabitsCallback onCallback) {
+    public OngoingHabitsRecycleAdapter(List<HabitProgress> habits, OnOngoingHabitsCallback onCallback) {
         this.habits = habits;
         this.onOngoingHabitsCallback = onCallback;
     }
 
-    public OngoingHabitsRecycleAdapter(List<Habit> habits, OnOngoingHabitsCallback onCallback, Context context, Boolean isGroup) {
+    public OngoingHabitsRecycleAdapter(List<HabitProgress> habits, OnOngoingHabitsCallback onCallback, Context context, Boolean isGroup) {
         this.habits = habits;
         this.onOngoingHabitsCallback = onCallback;
         this.context = context;
@@ -54,10 +55,10 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         int totalTimesToComplete = 0;
-        String frequencyUnit = habits.get(position).getFrequencyUnit();
-        int frequencyValue = habits.get(position).getFrequency();
-        long startDateMillis = habits.get(position).getStartDate();
-        long endDateMillis = habits.get(position).getEndDate();
+        String frequencyUnit = habits.get(position).getHabit().getFrequencyUnit();
+        int frequencyValue = habits.get(position).getHabit().getFrequency();
+        long startDateMillis = habits.get(position).getHabit().getStartDate();
+        long endDateMillis = habits.get(position).getHabit().getEndDate();
 
         LocalDate startDate = Instant.ofEpochMilli(startDateMillis).atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endDate = Instant.ofEpochMilli(endDateMillis).atZone(ZoneId.systemDefault()).toLocalDate();
@@ -79,7 +80,7 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
             onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         }
 
-        holder.habitNameLabel.setText(habits.get(position).getName());
+        holder.habitNameLabel.setText(habits.get(position).getHabit().getName());
         holder.ongoingHabitCard.setOnClickListener(view -> {
             onOngoingHabitsCallback.onRowClicked(position, isGroup);
         });

@@ -15,13 +15,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 
 public class PrivateHabitsFragment extends Fragment {
@@ -31,21 +35,23 @@ public class PrivateHabitsFragment extends Fragment {
 
     HabitViewModel habitViewModel;
 
-    private final List<Habit> habits = new ArrayList<>();
+    private FirebaseUser mUser;
+
+    private final List<HabitProgress> habitProgresses = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentPrivateHabitsBinding.inflate(LayoutInflater.from(requireContext()));
         habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
 
-        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habits, getOnCallbackOngoingHabit(habits, false), this.getContext(), false);
+        privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habitProgresses, getOnCallbackOngoingHabit(habitProgresses, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
 
@@ -53,14 +59,14 @@ public class PrivateHabitsFragment extends Fragment {
     }
 
     @NonNull
-    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
+    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<HabitProgress> habits, boolean isGroup) {
         return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
             @Override
             public void onRowClicked(int position, boolean isGroup) {
                 if (isGroup) {
                     Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
                 } else {
-                    NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail(null).setHabit(habits.get(position));
+                    NavDirections navDirections = PrivateHabitsFragmentDirections.actionPrivateHabitsFragmentToPrivateHabitDetailFragment(null).setHabitProgress(habitProgresses.get(position));
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
                 }
             }
@@ -76,10 +82,15 @@ public class PrivateHabitsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        this.habitProgresses.clear();
 
-        habitViewModel.getAllPersonalHabit().observe(getViewLifecycleOwner(), result -> {
-            this.habits.clear();
-            this.habits.addAll(result);
+        habitViewModel.getAllProgress().observe(this, habitProgressResult -> {
+
+            List<HabitProgress> resultData = habitProgressResult.stream()
+                    .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()))
+                    .collect(Collectors.toList());
+
+            habitProgresses.addAll(resultData);
             privateOngoingHabitListAdapter.notifyDataSetChanged();
         });
     }
