@@ -15,6 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +26,28 @@ import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentTodayDetailProgressBinding;
+import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 
 
 public class TodayDetailProgressFragment extends Fragment {
-
     FragmentTodayDetailProgressBinding binding;
     private HabitViewModel habitViewModel;
     private TodayDetailProgressAdapter progressAdapter;
     private final List<DailyProgressData> progressDataList = new ArrayList<>();
+    private FirebaseUser mUser;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = FragmentTodayDetailProgressBinding.inflate(LayoutInflater.from(requireContext()));
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentTodayDetailProgressBinding.inflate(inflater);
 
         RecyclerView recycleDetailedProgress = binding.recycleDetailedProgress;
 
@@ -46,7 +56,6 @@ public class TodayDetailProgressFragment extends Fragment {
 
         recycleDetailedProgress.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
-        obtainProgressByHabit();
         recycleDetailedProgress.setAdapter(progressAdapter);
 
         return binding.getRoot();
@@ -57,7 +66,11 @@ public class TodayDetailProgressFragment extends Fragment {
 
         habitViewModel.getAllProgress().observe(getViewLifecycleOwner(), habitProgressResult -> {
 
-            habitProgressResult.forEach(habitProgress -> {
+            List<HabitProgress> myHabitProgressFiltered = habitProgressResult.stream()
+                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()))
+                    .collect(Collectors.toList());
+
+            myHabitProgressFiltered.forEach(habitProgress -> {
 
                 Map<Long, Integer> progressGroupBy = habitProgress.getProgressList().stream()
                         .filter(oldDate -> LocalDate.parse(oldDate.getDate()).isEqual(today) || LocalDate.parse(oldDate.getDate()).isAfter(today))
@@ -77,7 +90,7 @@ public class TodayDetailProgressFragment extends Fragment {
                 });
             });
 
-            progressAdapter.notifyItemRangeChanged(0, habitProgressResult.size());
+            progressAdapter.notifyItemRangeChanged(0, myHabitProgressFiltered.size());
         });
     }
 
@@ -99,6 +112,11 @@ public class TodayDetailProgressFragment extends Fragment {
         return icon;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        obtainProgressByHabit();
+    }
 
     static class DailyProgressData {
 

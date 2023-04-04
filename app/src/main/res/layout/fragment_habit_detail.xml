@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.habit.HabitDetailFragment"
-    >
+    tools:context=".view.fragment.habit.HabitDetailFragment">
 
     <TextView
         android:id="@+id/titleHabit"
@@ -14,10 +13,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/mulish_bold"
-        android:text="Drink Fruit Juice"
         android:textSize="32sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Drink Fruit Juice" />
 
     <xyz.sahildave.arclayout.ArcLayout
         android:id="@+id/image_arc"
@@ -34,7 +33,7 @@
             android:layout_marginTop="16dp"
             android:cropToPadding="true"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/food_habits_full" />
+            app:srcCompat="@drawable/default_image" />
     </xyz.sahildave.arclayout.ArcLayout>
 
 
@@ -61,11 +60,11 @@
         android:gravity="center_horizontal"
         android:maxLines="3"
         android:minLines="1"
-        android:text="10 mins a day"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/duration_label"
         app:layout_constraintStart_toStartOf="@id/duration_label"
-        app:layout_constraintTop_toBottomOf="@id/duration_label" />
+        app:layout_constraintTop_toBottomOf="@id/duration_label"
+        tools:text="10 mins a day" />
 
     <TextView
         android:id="@id/frequency_label"
@@ -90,12 +89,11 @@
         android:lines="2"
         android:maxLines="3"
         android:minLines="1"
-
-        android:text="Daily"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/frequency_label"
         app:layout_constraintStart_toStartOf="@id/frequency_label"
-        app:layout_constraintTop_toBottomOf="@id/frequency_label" />
+        app:layout_constraintTop_toBottomOf="@id/frequency_label"
+        tools:text="Daily" />
 
 
     <TextView
@@ -120,11 +118,11 @@
         android:gravity="center_horizontal"
         android:maxLines="3"
         android:minLines="1"
-        android:text="45"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/days_label"
         app:layout_constraintStart_toStartOf="@id/days_label"
-        app:layout_constraintTop_toBottomOf="@id/days_label" />
+        app:layout_constraintTop_toBottomOf="@id/days_label"
+        tools:text="45" />
 
     <ImageView
         android:id="@+id/separator"
@@ -147,14 +145,15 @@
         android:lineSpacingExtra="8dp"
         android:maxLines="6"
         android:minLines="2"
-        android:text="@string/message_info"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/days_label"
         app:layout_constraintStart_toStartOf="@id/duration_label"
-        app:layout_constraintTop_toBottomOf="@id/separator" />
+        app:layout_constraintTop_toBottomOf="@id/separator"
+        tools:text="@string/message_info" />
 
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/take_habit"
         android:layout_width="0dp"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginStart="32dp"

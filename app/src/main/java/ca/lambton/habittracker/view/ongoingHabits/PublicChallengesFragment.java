@@ -1,66 +1,92 @@
 package ca.lambton.habittracker.view.ongoingHabits;
 
+import static ca.lambton.habittracker.view.ongoingHabits.PublicChallengesFragmentDirections.actionPublicChallengesFragmentToNavHabitDetail;
+
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.databinding.FragmentPublicChallengesBinding;
+import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.view.ongoingHabits.adapter.OngoingHabitPublicAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PublicChallengesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PublicChallengesFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public PublicChallengesFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PublicChallengesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PublicChallengesFragment newInstance(String param1, String param2) {
-        PublicChallengesFragment fragment = new PublicChallengesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private FragmentPublicChallengesBinding binding;
+    private HabitViewModel habitViewModel;
+    private OngoingHabitPublicAdapter ongoingHabitPublicAdapter;
+    private final List<Habit> habits = new ArrayList<>();
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        binding = FragmentPublicChallengesBinding.inflate(LayoutInflater.from(requireContext()));
+        recyclerView = binding.publicOngoingHabitsList;
+
+        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+
+        ongoingHabitPublicAdapter = new OngoingHabitPublicAdapter(habits, position -> {
+            NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(habits.get(position));
+            Navigation.findNavController(requireView()).navigate(navDirections);
+        });
+
+        habitViewModel.getAllHabitCloud().observe(this, habitResult -> {
+            this.habits.clear();
+            this.habits.addAll(habitResult);
+            ongoingHabitPublicAdapter.notifyItemRangeChanged(0, habitResult.size());
+        });
+
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerView.setAdapter(ongoingHabitPublicAdapter);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_public_challenges, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        return binding.getRoot();
+    }
+
+    @NonNull
+    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
+        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
+            @Override
+            public void onRowClicked(int position, boolean isGroup) {
+                if (isGroup) {
+                    Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
+                } else {
+                    NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabit(habits.get(position));
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                }
+            }
+
+            @Override
+            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
+
+            }
+        };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 }

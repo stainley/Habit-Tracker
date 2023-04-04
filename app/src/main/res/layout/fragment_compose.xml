@@ -1,76 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.community.ComposeFragment">
+    tools:context=".community.view.ComposeFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/post_progress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="25dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="5dp">
-
-                <ImageView
-                    android:id="@+id/ivSelectImage"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/add_image" />
-
-            </androidx.cardview.widget.CardView>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etDescriptionLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="25dp"
-                app:hintEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/mulish_regular"
-                    android:gravity="top"
-                    android:hint="Description"
-                    android:lines="5"
-                    android:maxLines="5"
-                    android:textColor="@color/neutral_black"
-                    android:textColorHint="@color/neutral_grey" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCompose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/login_button"
-                android:text="Compose"
-                android:textSize="20sp" />
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:progress="0"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:progress="75" />
 
 
-        </LinearLayout>
+    <!-- Post text input -->
+    <EditText
+        android:id="@+id/postEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/transparent"
+        android:gravity="top|start"
+        android:hint="@string/what_s_happening"
+        android:inputType="textImeMultiLine|textMultiLine|textUri"
+        android:scrollbars="vertical"
+        android:textIsSelectable="true"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/postButton"
+        app:layout_constraintTop_toBottomOf="@id/post_progress"
+        app:layout_constraintVertical_bias="0.1" />
 
-    </androidx.core.widget.NestedScrollView>
+    <!-- Image thumbnail -->
+    <ImageView
+        android:id="@+id/imageThumbnailImageView"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_below="@+id/postEditText"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <!-- Remove image button -->
+    <ImageButton
+        android:id="@+id/removeImageButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignTop="@+id/imageThumbnailImageView"
+        android:layout_alignEnd="@+id/imageThumbnailImageView"
+        android:layout_alignRight="@+id/imageThumbnailImageView"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_delete_habit"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/imageThumbnailImageView"
+        app:layout_constraintStart_toEndOf="@id/imageThumbnailImageView"
+        app:layout_constraintTop_toTopOf="@id/imageThumbnailImageView" />
+
+    <!-- Add image button -->
+    <ImageButton
+        android:id="@+id/addImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@+id/postEditText"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/add_image"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/imageThumbnailImageView"
+        app:layout_constraintTop_toBottomOf="@id/imageThumbnailImageView"
+
+        app:layout_goneMarginTop="16dp" />
+
+    <!-- Post button -->
+    <Button
+        android:id="@+id/postButton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/imageThumbnailImageView"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Post"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

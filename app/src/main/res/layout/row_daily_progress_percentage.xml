@@ -9,13 +9,15 @@
         android:id="@+id/habit_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:fontFamily="@font/mulish_regular"
         android:gravity="center_vertical"
+        android:maxEms="8"
         android:minLines="2"
         app:layout_constraintBottom_toBottomOf="@id/habit_progress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/habit_progress"
-        tools:text="Meditation" />
+        tools:text="Set your Work Schedule" />
 
     <ImageView
         android:id="@+id/habit_progress"

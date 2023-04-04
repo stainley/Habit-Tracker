@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,31 +17,29 @@ public class QuoteFragment extends Fragment {
     FragmentDayQuoteBinding binding;
     private QuoteViewModel quoteViewModel;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = FragmentDayQuoteBinding.inflate(LayoutInflater.from(requireContext()));
+
+        quoteViewModel = new ViewModelProvider(requireActivity(), new QuoteViewModelFactory(requireActivity().getApplication())).get(QuoteViewModel.class);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        binding = FragmentDayQuoteBinding.inflate(inflater);
-
-        CardView quoteDayCard = binding.quoteDayCard;
-        quoteDayCard.setOnClickListener(this::changeCardQuote);
-        quoteViewModel = new ViewModelProvider(requireActivity(), new QuoteViewModelFactory(requireActivity().getApplication())).get(QuoteViewModel.class);
 
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onStart() {
+        super.onStart();
         int randomQuote = (int) (Math.random() * 36);
         quoteViewModel.getQuote(randomQuote).observe(requireActivity(), quote -> {
             if (quote != null)
                 binding.quoteDayMessageText.setText(quote.getDescription());
         });
-
-    }
-
-    private void changeCardQuote(View view) {
-
     }
 }

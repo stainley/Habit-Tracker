@@ -26,6 +26,10 @@ import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.common.dao.PictureDao;
 import ca.lambton.habittracker.common.helper.Converters;
 import ca.lambton.habittracker.common.model.Picture;
+import ca.lambton.habittracker.community.dao.CommentDao;
+import ca.lambton.habittracker.community.dao.PostDao;
+import ca.lambton.habittracker.community.model.Comment;
+import ca.lambton.habittracker.community.model.Post;
 import ca.lambton.habittracker.habit.dao.HabitDao;
 import ca.lambton.habittracker.habit.dao.ProgressDao;
 import ca.lambton.habittracker.habit.dao.QuoteDao;
@@ -41,7 +45,9 @@ import ca.lambton.habittracker.habit.model.User;
         Quote.class,
         Habit.class,
         Progress.class,
-        User.class
+        User.class,
+        Post.class,
+        Comment.class
 }, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -66,13 +72,10 @@ public abstract class AppDatabase extends RoomDatabase {
                     @Override
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
-                        Executors.newSingleThreadScheduledExecutor().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                getInstance(context).populateQuote(context);
-                                getInstance(context).populateHabit(context);
-                                getInstance(context).populateCategory(context);
-                            }
+                        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                            getInstance(context).populateQuote(context);
+                            getInstance(context).populateHabit(context);
+                            getInstance(context).populateCategory(context);
                         });
                     }
                 }).build();
@@ -92,6 +95,10 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ProgressDao progressDao();
 
     public abstract UserDao userDao();
+
+    public abstract PostDao postDao();
+
+    public abstract CommentDao commentDao();
 
     public void populateQuote(Context context) {
         List<Quote> quotes = readQuoteFromFile(context);
@@ -149,14 +156,14 @@ public abstract class AppDatabase extends RoomDatabase {
                 habit.setDescription(parts[1]);
                 habit.setCreationDate(Long.parseLong(parts[2]));
                 habit.setPredefined(Boolean.parseBoolean(parts[3]));
-                habit.setUserId(Long.parseLong(parts[4]));
+                habit.setUserId(parts[4]);
                 habit.setDuration(Integer.parseInt(parts[5]));
                 habit.setDurationUnit(parts[6]);
                 habit.setFrequency(Integer.parseInt(parts[7]));
                 habit.setFrequencyUnit(parts[8]);
                 habit.setCategoryId(Long.parseLong(parts[9]));
                 habit.setImagePath(parts[10]);
-
+                habit.setHabitType(parts[11]);
                 dataList.add(habit);
             }
         } catch (IOException e) {

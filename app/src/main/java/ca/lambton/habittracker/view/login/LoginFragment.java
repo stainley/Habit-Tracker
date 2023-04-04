@@ -61,7 +61,6 @@ public class LoginFragment extends AppCompatActivity {
 
         binding.forgotPassword.setOnClickListener(this::forgotPassword);
 
-
         mAuth = FirebaseAuth.getInstance();
         oneTapClient = Identity.getSignInClient(this);
 
@@ -73,7 +72,7 @@ public class LoginFragment extends AppCompatActivity {
         String emailAddress = binding.emailLoginText.getText().toString();
 
         if (emailAddress.equals("")) {
-            Toast.makeText(getApplicationContext(), "Email is empty", Toast.LENGTH_SHORT).show();
+            binding.emailLoginText.setError("Email is required");
             return;
         }
 
@@ -100,7 +99,8 @@ public class LoginFragment extends AppCompatActivity {
         String password = binding.passwordLoginText.getText().toString();
 
         if (email.equals("") || password.equals("")) {
-            Toast.makeText(getApplicationContext(), "Email/Password is empty", Toast.LENGTH_SHORT).show();
+            binding.emailLoginText.setError("Email is required.");
+            binding.passwordLoginText.setError("Password is required.");
             return;
         }
         signInEmailAndPassword(email, password);
@@ -137,7 +137,6 @@ public class LoginFragment extends AppCompatActivity {
     }
 
     private void loginWithGoogle(View view) {
-        Toast.makeText(getApplicationContext(), "CLICKCED", Toast.LENGTH_SHORT).show();
 
         oneTapClient.beginSignIn(signInRequest).addOnSuccessListener(LoginFragment.this, result -> {
             try {

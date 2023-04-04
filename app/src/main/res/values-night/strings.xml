@@ -25,4 +25,21 @@
     <string name="_0_0">0/0</string>
     <string name="user_name">User Name</string>
     <string name="already_have_an_account_click_here_to_login">Already have an account? Click here to Login</string>
+    <string name="private_habits">Private Habits</string>
+    <string name="quote_of_the_day">Quote of the day</string>
+    <string name="hello">Hello</string>
+    <string name="public_habits">Public Habits</string>
+    <string name="compose">Compose</string>
+    <string name="overall_progress">Overall Progress</string>
+    <string name="consistency">Consistency</string>
+    <string name="_0">0%</string>
+    <string name="delete">Delete</string>
+    <string name="creation_time">Creation time</string>
+    <string name="post_picture">Post picture</string>
+    <string name="delete_post_menu">Delete post menu</string>
+    <string name="likes_button">Likes button</string>
+    <string name="welcome_to_the_community">Welcome to the community !</string>
+    <string name="find_people">Find people</string>
+    <string name="what_s_happening">What\'s happening?</string>
+    <string name="replace_image">Replace image</string>
 </resources>

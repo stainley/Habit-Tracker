@@ -7,41 +7,48 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentNewHabitBinding;
+import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.util.HabitType;
 
 public class NewHabitFragment extends Fragment {
 
-    FragmentNewHabitBinding binding;
+    private FragmentNewHabitBinding binding;
+    private HabitViewModel habitViewModel;
 
-    public NewHabitFragment() {
-    }
-
-    public static NewHabitFragment newInstance(String param1, String param2) {
-        NewHabitFragment fragment = new NewHabitFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private FirebaseUser mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentNewHabitBinding.inflate(LayoutInflater.from(requireContext()));
+
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        binding.categoriesButton.setOnClickListener(this::exploreCategories);
+        binding.nextButton.setOnClickListener(this::createHabit);
+
 
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentNewHabitBinding.inflate(inflater, container, false);
 
-        binding.categoriesButton.setOnClickListener(this::exploreCategories);
-        binding.nextButton.setOnClickListener(this::createHabit);
 
         return binding.getRoot();
-
     }
 
     // Navigate to explore pre-defined categories
@@ -52,6 +59,26 @@ public class NewHabitFragment extends Fragment {
     }
 
     private void createHabit(View view) {
-        Navigation.findNavController(getView()).navigate(R.id.createHabitFragment);
+        Navigation.findNavController(requireView()).navigate(R.id.createHabitFragment);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mUser != null) {
+            habitViewModel.getAllHabit().observe(requireActivity(), habits -> {
+
+                List<Habit> fetchAllMyPublicHabit = habits.stream()
+                        .filter(uid -> uid.getUserId().equals(mUser.getUid()))
+                        .filter(type -> type.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.getName()))
+                        .collect(Collectors.toList());
+
+                for (Habit habit : fetchAllMyPublicHabit) {
+                    System.out.println(habit);
+                }
+
+            });
+        }
     }
 }

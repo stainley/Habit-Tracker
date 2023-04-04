@@ -1,141 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.community.CommunityFragment">
+    android:fitsSystemWindows="true"
+    tools:context=".community.view.CommunityFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/searchAppBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="0dp"
+        android:nestedScrollingEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_update"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_marginTop="72dp"
+            android:fillViewport="true">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:fontFamily="@font/mulish_bold"
-                android:text="My Community"
-                android:textColor="@color/neutral_black"
-                android:textSize="24sp" />
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/user_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/mulish_bold"
-                        android:text="Hi Stainley,"
-                        android:textColor="@color/neutral_black"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/mulish_semi_bold"
-                        android:text="Welcome to the community !"
-                        android:textColor="@color/neutral_black"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/user_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="10dp"
-                    android:gravity="bottom"
-                    android:orientation="vertical">
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:fontFamily="@font/mulish_bold"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Stainley Lebron" />
 
-                    <Button
-                        android:id="@+id/btnCompose"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/mulish_semi_bold"
-                        android:text="Compose"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/welcome_message_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/mulish_semi_bold"
+                    android:text="@string/welcome_to_the_community"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="@id/user_profile"
+                    app:layout_constraintTop_toBottomOf="@id/user_profile" />
 
-            </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclePosts"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/welcome_message_label"
+                    tools:listitem="@layout/row_card_community" />
 
-            <androidx.cardview.widget.CardView
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            app:hideOnScroll="false">
+
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="25dp"
-                app:cardCornerRadius="5dp"
-                app:cardElevation="10dp">
+                android:hint="@string/find_people" />
+        </com.google.android.material.appbar.MaterialToolbar>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:drawableStart="@drawable/ic_search"
-                        android:drawablePadding="8dp"
-                        android:drawableTint="@color/neutral_grey"
-                        android:fontFamily="@font/mulish_regular"
-                        android:hint="Find people"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="10dp"
-                        android:textColorHint="@color/neutral_grey"
-                        android:textSize="14sp" />
-
-                    <ImageButton
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="Voice search"
-                        android:padding="5dp"
-                        android:src="@drawable/mic"
-                        app:tint="@color/neutral_grey" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
+        <com.google.android.material.search.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search"
+            app:layout_anchor="@id/search_bar">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPosts"
+                android:id="@+id/result_recycle_posts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical"
-                android:overScrollMode="never"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/welcome_message_label"
                 tools:listitem="@layout/row_card_community" />
 
-        </LinearLayout>
+        </com.google.android.material.search.SearchView>
 
-    </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
-</FrameLayout>
+        android:id="@+id/btnCompose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:elevation="8dp"
+        android:text="@string/compose"
+        app:icon="@drawable/ic_edit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

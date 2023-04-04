@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.firebase.perf.FirebasePerformance;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class DefinedHabitFragment extends Fragment {
         binding = FragmentDefinedHabitsBinding.inflate(LayoutInflater.from(requireContext()));
         habitsPager = binding.habitsPager;
         configureAnimationPager();
-
+        String packageName = requireContext().getPackageName();
         categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
 
         predifinedHabitAdapter = new PredifinedHabitAdapter(habitCards);
@@ -54,12 +56,43 @@ public class DefinedHabitFragment extends Fragment {
             this.categories.addAll(categories);
 
             categories.forEach(category -> {
-                habitCards.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", requireContext().getPackageName())));
+                habitCards.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", packageName)));
             });
             predifinedHabitAdapter.notifyItemChanged(0, categories.size());
         });
 
         habitsPager.setAdapter(predifinedHabitAdapter);
+
+        habitsPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            // triggered when you select a new page
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                FirebasePerformance firebasePerformance = FirebasePerformance.getInstance();
+                firebasePerformance.setPerformanceCollectionEnabled(true);
+
+                firebasePerformance.newTrace("Category Carrousel: start");
+
+                Log.i(TAG, "onPageSelected: " + position);
+                HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
+                FragmentManager parentFragmentManager = getParentFragmentManager();
+                parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).addToBackStack(null).commit();
+
+                firebasePerformance.newTrace("Category Carrousel: end");
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                Log.i(TAG, "onPageScrollStateChanged: " + state);
+            }
+        });
     }
 
     @Nullable
@@ -74,29 +107,6 @@ public class DefinedHabitFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        habitsPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-            }
-
-            // triggered when you select a new page
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-
-                Log.i(TAG, "onPageSelected: " + position);
-                HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
-                FragmentManager parentFragmentManager = getParentFragmentManager();
-                parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).commit();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                super.onPageScrollStateChanged(state);
-                Log.i(TAG, "onPageScrollStateChanged: " + state);
-            }
-        });
 
     }
 

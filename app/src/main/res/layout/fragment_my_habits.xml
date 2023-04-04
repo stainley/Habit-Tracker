@@ -19,12 +19,11 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="90"
-            android:contentDescription="Search bar"
             android:hint="@string/search"
             android:verticalSpacing="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <GridView
             android:id="@+id/myHabitsGridView"
@@ -38,7 +37,8 @@
             android:listSelector="@android:color/transparent"
             android:numColumns="3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchCategoryBar" />
+            app:layout_constraintTop_toBottomOf="@+id/searchCategoryBar"
+            tools:listitem="@layout/card_item_my_habbits_buttons" />
 
         <TextView
             android:id="@+id/textView"
@@ -62,13 +62,14 @@
             android:padding="8dp"
             app:layout_constraintLeft_toLeftOf="@+id/myHabitsGridView"
             app:layout_constraintRight_toRightOf="@id/myHabitsGridView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:listitem="@layout/card_category_layout" />
 
         <com.google.android.material.search.SearchView
             android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Search"
+            android:hint="@string/search"
             app:layout_anchor="@id/searchCategoryBar">
 
             <androidx.recyclerview.widget.RecyclerView

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".habit.view.CompleteHabitFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:id="@+id/habitNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_weight="80"
+            android:fontFamily="@font/mulish_bold"
+            android:textSize="32sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Sugar Free" />
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Congrats! Habit formed"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/habitNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel"
+
+            />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/habitProgressbar"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:progress="0"
+            app:indicatorColor="@color/yellow"
+            app:indicatorSize="120dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView2"
+            app:trackColor="@color/card_background_light_color"
+            app:trackCornerRadius="8dp"
+            app:trackThickness="16dp" />
+
+        <TextView
+            android:id="@+id/habitPercentageNumText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="0%"
+            android:textColor="#DD5001"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/habitProgressbar"
+            app:layout_constraintEnd_toEndOf="@id/habitProgressbar"
+            app:layout_constraintStart_toStartOf="@id/habitProgressbar"
+            app:layout_constraintTop_toTopOf="@id/habitProgressbar" />
+
+        <TextView
+            android:id="@+id/congratulation_text"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@id/habitProgressbar"
+            app:layout_constraintStart_toStartOf="@id/habitProgressbar"
+            app:layout_constraintTop_toBottomOf="@id/habitProgressbar"
+            tools:text="You were 98% consistent in your habit" />
+
+        <TextView
+            android:id="@+id/percentTextGoalAchieved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/mulish_semi_bold"
+            android:text="Calendar View"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/congratulation_text" />
+
+        <GridView
+            android:id="@+id/ongoingHabitDetailGridView"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:horizontalSpacing="12dp"
+            android:layoutMode="clipBounds"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            app:flow_wrapMode="aligned"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/percentTextGoalAchieved"
+            tools:listitem="@layout/predefined_category_buttons" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="Calendar view"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ongoingHabitDetailGridView" />
+
+        <ca.lambton.habittracker.view.ongoingHabits.CustomCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView5" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="Graphical Analysis"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/calendarView" />
+
+        <TextView
+            android:id="@+id/achievementsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/mulish_bold"
+            android:text="Achievements"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView6" />
+
+        <GridView
+            android:id="@+id/achievementsGridView"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:horizontalSpacing="24dp"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/achievementsLabel" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/delete_habit_card"
+            style="@style/MaterialCardView.NoColour"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/achievementsGridView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="90"
+                    android:text="@string/deleteHabit"
+                    android:textSize="12sp" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="10"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/ic_delete_habit" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

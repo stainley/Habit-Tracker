@@ -18,10 +18,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentHomeBinding;
-import ca.lambton.habittracker.databinding.HeaderNavigationDrawerBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -34,16 +34,14 @@ import ca.lambton.habittracker.view.fragment.quote.QuoteFragment;
 
 public class HomeFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
     private FragmentManager supportFragmentManager;
     private FragmentHomeBinding binding;
     private HabitViewModel habitViewModel;
     private float finalResult;
-
     private float todayProgress = 0;
     private float totalFrequencies;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
-
 
 
     @Override
@@ -52,7 +50,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(LayoutInflater.from(requireContext()));
 
         supportFragmentManager = getChildFragmentManager();
-        mAuth = FirebaseAuth.getInstance();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
@@ -61,10 +59,6 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        todayCalendarProgress();
 
         Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
         supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
@@ -79,14 +73,13 @@ public class HomeFragment extends Fragment {
         Fragment summarizedProgress = new SummarizedProgressFragment();
         getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
-        FirebaseUser user = mAuth.getCurrentUser();
 
-        if (user != null) {
-            String userDisplay = "Hi " + user.getDisplayName();
+        if (mUser != null) {
+            String userDisplay = getResources().getString(R.string.hello) + " " + mUser.getDisplayName();
             binding.greetingMessageLabel.setText(userDisplay);
         }
 
-        return root;
+        return binding.getRoot();
     }
 
     @Override
@@ -96,15 +89,24 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        todayCalendarProgress();
+    }
+
     public void todayCalendarProgress() {
 
         habitViewModel.getAllProgress().observe(getViewLifecycleOwner(), habitProgresses1 -> {
-            //System.out.println("My Progress: " + habitProgresses1.size());
+
             LocalDate todayDate = LocalDate.now();
             AtomicInteger index = new AtomicInteger();
             habitProgresses.clear();
 
-            for (HabitProgress hp : habitProgresses1) {
+            List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
+                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
+
+            for (HabitProgress hp : myHabitProgressFiltered) {
 
                 String startDateString = Utils.parseDate(hp.getHabit().getStartDate());
                 String endDateString = Utils.parseDate(hp.getHabit().getEndDate());
@@ -134,11 +136,11 @@ public class HomeFragment extends Fragment {
                 LocalDate endDate = LocalDate.parse(endDateString);
 
                 if (todayDate.isEqual(startDate) || todayDate.isAfter(startDate) && (todayDate.isEqual(endDate) || (todayDate.isBefore(endDate)))) {
-                    if (habitProgresses1.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.DAILY.name())) {
+                    if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.DAILY.name())) {
                         todayProgress += habitProgress.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum();
-                    } else if (habitProgresses1.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.WEEKLY.name())) {
+                    } else if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.WEEKLY.name())) {
                         todayProgress += habitProgress.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum();
-                    } else if (habitProgresses1.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.MONTHLY.name())) {
+                    } else if (myHabitProgressFiltered.get(index.get()).getHabit().getFrequencyUnit().equalsIgnoreCase(Frequency.MONTHLY.name())) {
                         todayProgress += habitProgress.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum();
                     }
                 }

@@ -1,7 +1,6 @@
 package ca.lambton.habittracker.view.fragment.habit.description;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,17 +71,18 @@ public class HabitCategoryDescriptionFragment extends Fragment {
         if (getArguments() != null) {
             Category category = (Category) getArguments().getSerializable("category");
 
-            habitFoodTitleText.setText(category.getName());
+            habitFoodTitleText.setText(category != null ? category.getName() : "");
             habitDurationHabitText.setText(String.valueOf(category.getDuration()));
             habitTimeDurationText.setText(String.valueOf(category.getInterval()));
-            // TODO: Add frequency for categories
             habitFrequencyTex.setText(category.getFrequencyUnit());
 
-            // TODO: obtain value from the Database to populate the fields
             HabitViewModel habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
             habitViewModel.getAllHabitByCategory(category.getId()).observe(requireActivity(), habits -> {
                 if (habits.size() > 0) {
-                    List<String> habitsTitle = habits.stream().map(Habit::getName).collect(Collectors.toList());
+                    List<String> habitsTitle = habits.stream()
+                            .filter(Habit::isPredefined)
+                            .map(Habit::getName)
+                            .collect(Collectors.toList());
 
                     this.categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
 

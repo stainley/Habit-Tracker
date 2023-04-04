@@ -29,7 +29,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress_button_container" />
 
-
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/graph_report_container"
             android:layout_width="match_parent"
