@@ -135,10 +135,10 @@
         android:name="ca.lambton.habittracker.view.ongoingHabits.AllHabitsFragment"
         android:label="Ongoing - All Habits"
         tools:layout="@layout/fragment_all_habits">
+
         <action
-            android:id="@+id/action_nav_all_habit_to_nav_private_habit_detail"
-            app:destination="@id/private_habit_detail_fragment"
-            app:popUpTo="@id/allHabitsFragment" />
+            android:id="@+id/action_allHabitsFragment_to_private_habit_detail_fragment"
+            app:destination="@id/private_habit_detail_fragment" />
     </fragment>
 
     <fragment
@@ -181,6 +181,11 @@
             android:name="habit"
             app:argType="ca.lambton.habittracker.habit.model.Habit"
             app:nullable="true" />
+        <argument
+            android:name="habitProgress"
+            app:argType="ca.lambton.habittracker.habit.model.HabitProgress"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/groupHabitDetailFragment"

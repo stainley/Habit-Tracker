@@ -15,13 +15,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentGroupHabitsBinding;
 import ca.lambton.habittracker.habit.model.Habit;
+import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 
 public class GroupHabitsFragment extends Fragment {
@@ -31,14 +35,16 @@ public class GroupHabitsFragment extends Fragment {
 
     HabitViewModel habitViewModel;
 
-    private final List<Habit> habits = new ArrayList<>();
+    private FirebaseUser mUser;
+
+    private final List<HabitProgress> habits = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentGroupHabitsBinding.inflate(LayoutInflater.from(requireContext()));
         habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -54,14 +60,14 @@ public class GroupHabitsFragment extends Fragment {
     }
 
     @NonNull
-    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
+    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<HabitProgress> habits, boolean isGroup) {
         return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
             @Override
             public void onRowClicked(int position, boolean isGroup) {
                 if (isGroup) {
                     Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
                 } else {
-                    NavDirections navDirections = AllHabitsFragmentDirections.actionNavAllHabitToNavPrivateHabitDetail(null).setHabit(habits.get(position));
+                    NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabitProgress(habits.get(position));
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
                 }
             }
@@ -76,11 +82,16 @@ public class GroupHabitsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        this.habits.clear();
 
-        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), result -> {
-            this.habits.clear();
-            this.habits.addAll(result);
-            groupOngoingHabitListAdapter.notifyItemRangeChanged(0, result.size());
+        habitViewModel.getAllProgress().observe(this, habitProgressResult -> {
+
+            List<HabitProgress> resultData = habitProgressResult.stream()
+                    .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()))
+                    .collect(Collectors.toList());
+
+            habits.addAll(resultData);
+            groupOngoingHabitListAdapter.notifyDataSetChanged();
         });
     }
 }
