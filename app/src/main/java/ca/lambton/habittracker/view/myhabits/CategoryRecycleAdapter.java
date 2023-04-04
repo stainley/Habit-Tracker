@@ -21,16 +21,18 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     private final OnCategoryCallback onCategoryCallback;
     private final List<Category> categories;
     private Context context;
+    private String packageName;
 
     public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback) {
         this.categories = categories;
         this.onCategoryCallback = onCallback;
     }
 
-    public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback, Context context) {
+    public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback, @NonNull Context context) {
         this.categories = categories;
         this.onCategoryCallback = onCallback;
         this.context = context;
+        packageName = context.getPackageName();
     }
 
     @NonNull
@@ -59,7 +61,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 break;
         }
 
-        holder.categoryImage.setImageResource(context.getResources().getIdentifier(categories.get(position).getImageName(), "drawable", context.getPackageName()));
+        holder.categoryImage.setImageResource(context.getResources().getIdentifier(categories.get(position).getImageName(), "drawable", packageName));
         holder.categoryName.setText(categories.get(position).getName());
         holder.categoryInterval.setText(categories.get(position).getInterval());
         holder.categoryCard.setOnClickListener(view -> {

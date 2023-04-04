@@ -1,16 +1,30 @@
 package ca.lambton.habittracker.view.newhabit;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
@@ -22,13 +36,21 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
@@ -41,21 +63,24 @@ import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
 
 public class CreateHabitFragment extends Fragment {
-
+    private static final String TAG = CreateHabitFragment.class.getName();
     private HabitViewModel habitViewModel;
     private CategoryViewModel categoryViewModel;
     FragmentCreateHabitLayoutBinding binding;
     private Duration durationUnit = Duration.MINUTES;
     private HabitType habitType = HabitType.PERSONAL;
     private Frequency frequencyUnit = Frequency.DAILY;
-
+    private Uri tempImageUri = null;
     long categoryId = -1;
     String[] categories = new String[0];
     ArrayAdapter<String> categoryDropDownAdapter;
     private MaterialButton personalHabitType;
-    MaterialButton publicHabitType;
-
+    private MaterialButton publicHabitType;
     private FirebaseUser mUser;
+    private ImageView detailImage;
+    private StorageReference storageRef;
+    private FirebaseUser currentUser;
+    private String pathUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +89,40 @@ public class CreateHabitFragment extends Fragment {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+
+        detailImage = binding.detailImage;
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        // Create a Cloud Storage reference from the app
+        storageRef = FirebaseStorage.getInstance().getReference();
+
+        binding.overflowMenu.setOnClickListener(replaceImage());
     }
 
+    @NonNull
+    private View.OnClickListener replaceImage() {
+        return view -> {
+            PopupMenu popupMenu = new PopupMenu(requireContext(), view);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.overflow_habit_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(item -> {
+
+                if (item.getItemId() == R.id.edit_image) {
+                    addPhotoFromLibrary();
+                    Toast.makeText(requireContext(), "Implement delete functionality", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            });
+            popupMenu.show();
+        };
+    }
+
+    public void addPhotoFromLibrary() {
+        System.out.println("ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) " + ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA));
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            selectPictureLauncher.launch(new PickVisualMediaRequest());
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -239,35 +296,7 @@ public class CreateHabitFragment extends Fragment {
     }
 
     private void createHabit(View view) {
-        boolean emptyField = false;
-
-        if (binding.titleHabit.getText().toString().equals("")) {
-            binding.titleHabit.setError("This field is required");
-            emptyField = true;
-        }
-
-        if (binding.autoCompleteTxt.getText().toString().equals("")) {
-            binding.autoCompleteTxt.setError("This field is required");
-            emptyField = true;
-        }
-
-        if (binding.editTextEndDate.getText().toString().equals("")) {
-            binding.editTextEndDate.setError("This field is required");
-            emptyField = true;
-        }
-
-        if (binding.editTextStartDate.getText().toString().equals("")) {
-            binding.editTextStartDate.setError("This field is required");
-            emptyField = true;
-        }
-
-        if (binding.frequencyText.getText().toString().equals("")) {
-            binding.frequencyText.setError("This field is required");
-            emptyField = true;
-        }
-
-        if (emptyField) return;
-
+        if (validateEmptyField()) return;
 
         Habit newHabit = new Habit();
         newHabit.setUserId(mUser != null ? mUser.getUid() : "");
@@ -306,16 +335,128 @@ public class CreateHabitFragment extends Fragment {
         }
 
         if (newHabit.getImagePath() == null) {
-            newHabit.setImagePath("default_image");
+            if (pathUri != null && !pathUri.equals("")) {
+                newHabit.setImagePath(pathUri);
+            } else {
+                newHabit.setImagePath("default_image");
+            }
         }
-
         habitViewModel.saveHabit(newHabit);
 
         if (newHabit.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.toString())) {
-            habitViewModel.saveCloudHabit(newHabit);
+
+            updateImageToCloud(downloadUri -> {
+                if (downloadUri != null && !downloadUri.equals("")) {
+                    newHabit.setImagePath(downloadUri);
+                    habitViewModel.saveCloudHabit(newHabit);
+                }
+            });
         }
 
         Toast.makeText(requireContext(), "New habit registered", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(view).popBackStack(R.id.createHabitFragment, true);
+    }
+
+    private void updateImageToCloud(OnTaskCompleted onTaskCompleted) {
+
+        detailImage.setDrawingCacheEnabled(true);
+        detailImage.buildDrawingCache(true);
+        new Thread(() -> {
+
+            try {
+                Thread.sleep(1000);
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (detailImage.getDrawable() != null) {
+                Bitmap bitmap = ((BitmapDrawable) detailImage.getDrawable()).getBitmap();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                byte[] data = outputStream.toByteArray();
+
+                StorageReference photosRef = storageRef.child("habit/" + currentUser.getUid() + "/" + UUID.randomUUID());
+                UploadTask uploadTask = photosRef.putBytes(data);
+
+                uploadTask.addOnFailureListener(exception -> {
+                    // Handle unsuccessful uploads
+                    //Toast.makeText(getActivity(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
+                }).addOnSuccessListener(taskSnapshot -> {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                });
+
+
+                uploadTask.continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw Objects.requireNonNull(task.getException());
+                    }
+                    // Continue with the task to get the download URL
+                    return photosRef.getDownloadUrl();
+                }).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Uri photoDownloadUri = task.getResult();
+                        onTaskCompleted.onImageUploaded(photoDownloadUri.toString());
+                    } else {
+                        // Handle failures
+                        Log.e(TAG, "Error fetching the photo URL");
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private boolean validateEmptyField() {
+        boolean emptyField = false;
+
+        if (binding.titleHabit.getText().toString().equals("")) {
+            binding.titleHabit.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.autoCompleteTxt.getText().toString().equals("")) {
+            binding.autoCompleteTxt.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.editTextEndDate.getText().toString().equals("")) {
+            binding.editTextEndDate.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.editTextStartDate.getText().toString().equals("")) {
+            binding.editTextStartDate.setError("This field is required");
+            emptyField = true;
+        }
+
+        if (binding.frequencyText.getText().toString().equals("")) {
+            binding.frequencyText.setError("This field is required");
+            emptyField = true;
+        }
+
+        return emptyField;
+    }
+
+    private final ActivityResultLauncher<PickVisualMediaRequest> selectPictureLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), new ActivityResultCallback<>() {
+
+        @Override
+        public void onActivityResult(Uri result) {
+            try {
+                if (result != null) {
+                    tempImageUri = result;
+                    String picturePath = "content://media/" + result.getPath();
+                    pathUri = picturePath;
+                    System.out.println(picturePath);
+
+                    Picasso.get().load(picturePath).fit().into(detailImage);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    });
+
+    private interface OnTaskCompleted {
+        void onImageUploaded(String downloadUri);
     }
 }

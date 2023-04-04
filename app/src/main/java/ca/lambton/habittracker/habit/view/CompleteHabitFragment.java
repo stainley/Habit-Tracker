@@ -77,12 +77,14 @@ public class CompleteHabitFragment extends Fragment {
     }
 
     private int computeProgress(HabitProgress habitProgress) {
-        float progressTotal = 0;
-        float totalFrequencies = habitProgress.getHabit().getFrequency();
 
-        progressTotal += habitProgress.getProgressList().stream().filter(progress -> progress.getHabitId() == habitProgress.getHabit().getId()).map(Progress::getCounter).mapToInt(Integer::intValue).sum();
-        float result = (progressTotal / totalFrequencies) * 100;
+        int frequencies = habitProgress.getHabit().getFrequency();
 
-        return (int) result;
+        int totalCounter = habitProgress.getProgressList().stream()
+                .filter(progress -> progress.getHabitId() == habitProgress.getHabit().getId())
+                .mapToInt(Progress::getCounter)
+                .sum();
+        float progressPercentage = (totalCounter * 100.0f) / frequencies;
+        return Math.round(progressPercentage);
     }
 }

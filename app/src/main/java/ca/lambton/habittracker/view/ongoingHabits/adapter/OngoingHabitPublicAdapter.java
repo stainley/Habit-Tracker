@@ -57,11 +57,11 @@ public class OngoingHabitPublicAdapter extends RecyclerView.Adapter<OngoingHabit
         private final MaterialCardView publicHabitCardView;
         private final TextView frequency;
         private final TextView durationTime;
-
         private final TextView durationUnit;
         /*private final TextView duration;*/
         private final TextView frequencyValue;
         private final TextView frequencyUnit;
+
 
         public OngoingPublicViewHolder(@NonNull View itemView) {
             super(itemView);

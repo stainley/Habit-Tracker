@@ -46,7 +46,7 @@ public class DefinedHabitFragment extends Fragment {
         binding = FragmentDefinedHabitsBinding.inflate(LayoutInflater.from(requireContext()));
         habitsPager = binding.habitsPager;
         configureAnimationPager();
-
+        String packageName = requireContext().getPackageName();
         categoryViewModel = new ViewModelProvider(requireActivity(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
 
         predifinedHabitAdapter = new PredifinedHabitAdapter(habitCards);
@@ -56,7 +56,7 @@ public class DefinedHabitFragment extends Fragment {
             this.categories.addAll(categories);
 
             categories.forEach(category -> {
-                habitCards.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", requireContext().getPackageName())));
+                habitCards.add(new HabitCard(category.getName(), requireContext().getResources().getIdentifier(category.getImageName(), "drawable", packageName)));
             });
             predifinedHabitAdapter.notifyItemChanged(0, categories.size());
         });
