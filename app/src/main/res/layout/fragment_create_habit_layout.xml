@@ -26,7 +26,8 @@
                 android:layout_gravity="top"
                 android:cropToPadding="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/default_image" />
+                app:srcCompat="@drawable/default_image"
+                android:contentDescription="@string/habit_image" />
         </xyz.sahildave.arclayout.ArcLayout>
 
         <ImageButton
@@ -48,7 +49,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:ems="10"
-            android:hint="Habit Title"
+            android:hint="@string/habit_title"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

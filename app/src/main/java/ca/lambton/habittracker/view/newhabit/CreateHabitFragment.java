@@ -61,6 +61,7 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
+import jp.wasabeef.picasso.transformations.CropTransformation;
 
 public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
@@ -446,9 +447,11 @@ public class CreateHabitFragment extends Fragment {
                     tempImageUri = result;
                     String picturePath = "content://media/" + result.getPath();
                     pathUri = picturePath;
-                    System.out.println(picturePath);
 
-                    Picasso.get().load(picturePath).fit().into(detailImage);
+                    Picasso.get().load(picturePath)
+                            .resize(200,300)
+                            .centerInside()
+                            .into(detailImage);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);

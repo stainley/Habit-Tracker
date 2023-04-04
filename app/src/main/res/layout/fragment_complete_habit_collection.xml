@@ -43,14 +43,14 @@
                 android:id="@+id/search_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Find habit" />
+                android:hint="@string/find_habit" />
         </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.search.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Find habit"
+            android:hint="@string/find_habit"
             app:layout_anchor="@id/search_bar">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -62,7 +62,7 @@
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/welcome_message_label"
-                tools:listitem="@layout/row_card_community" />
+                tools:listitem="@layout/card_habit_complete_row" />
 
         </com.google.android.material.search.SearchView>
 
