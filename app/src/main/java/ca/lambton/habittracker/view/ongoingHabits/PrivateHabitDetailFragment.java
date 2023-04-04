@@ -178,21 +178,21 @@ public class PrivateHabitDetailFragment extends Fragment {
                             binding.percentTextGoalAchieved.setText(percentage + "% of your goal is achieved");
                         }
 
-                        LocalDate startDate = convertToLocalDateViaInstant(habitProgress.getHabit().getStartDate());
-                        LocalDate endDate = convertToLocalDateViaInstant(habitProgress.getHabit().getEndDate());
-
-                        if (isDateInRange(todayDate, startDate, endDate)) {
-                            todayProgress.addAndGet(habitProgress.getProgressList().stream()
-                                    .filter(progress -> isProgressForToday(habit, todayDate, progress))
-                                    .mapToInt(Progress::getCounter)
-                                    .sum());
-                        }
+//                        LocalDate startDate = convertToLocalDateViaInstant(habitProgress.getHabit().getStartDate());
+//                        LocalDate endDate = convertToLocalDateViaInstant(habitProgress.getHabit().getEndDate());
+//
+//                        if (isDateInRange(todayDate, startDate, endDate)) {
+//                            todayProgress.addAndGet(habitProgress.getProgressList().stream()
+//                                    .filter(progress -> isProgressForToday(habit, todayDate, progress))
+//                                    .mapToInt(Progress::getCounter)
+//                                    .sum());
+//                        }
                     }
 
-                    int completedDays = totalProgress.get() / habit.getFrequency();
-                    ongoingHabitDetailGridInfoModelArrayList.set(2, new OngoingHabitDetailGridInfo("This day’s target", todayProgress + "/" + habit.getFrequency()));
-                    ongoingHabitDetailGridInfoModelArrayList.set(3, new OngoingHabitDetailGridInfo("Days completed", completedDays + "/" + daysBetween));
-                    ongoingHabitDetailGridInfo.setAdapter(new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList));
+//                    int completedDays = totalProgress.get() / habit.getFrequency();
+//                    ongoingHabitDetailGridInfoModelArrayList.set(2, new OngoingHabitDetailGridInfo("This day’s target", todayProgress + "/" + habit.getFrequency()));
+//                    ongoingHabitDetailGridInfoModelArrayList.set(3, new OngoingHabitDetailGridInfo("Days completed", completedDays + "/" + daysBetween));
+//                    ongoingHabitDetailGridInfo.setAdapter(new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList));
                 });
     }
 
