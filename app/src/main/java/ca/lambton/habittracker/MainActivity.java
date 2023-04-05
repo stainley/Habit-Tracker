@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -83,9 +82,13 @@ public class MainActivity extends AppCompatActivity {
         permissionsList.addAll(Arrays.asList(permissionsStr));
         askForPermissions(permissionsList);
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_my_habits, R.id.menu_logout, R.id.nav_community)
-                .setOpenableLayout(drawerLayout)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_settings,
+                R.id.nav_my_habits,
+                R.id.menu_logout,
+                R.id.nav_community
+        ).setOpenableLayout(drawerLayout)
+         .build();
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
 
