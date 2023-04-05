@@ -16,8 +16,14 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,8 +33,8 @@ import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.view.fragment.graph.LinealProgressGraphFragment;
-import io.cucumber.java.bs.A;
+import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
+import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
 
 public class CompleteHabitFragment extends Fragment {
 
@@ -37,11 +43,15 @@ public class CompleteHabitFragment extends Fragment {
     private HabitProgress habitProgress;
     private HabitViewModel habitViewModel;
     private final List<GraphData> graphDataList = new ArrayList<>();
+    private CustomCalendarView progressCalendarView;
+    private final HashSet<Date> progressDate = new HashSet<>();
+    private final ArrayList<String> progressValue = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         binding = FragmentCompleteHabitBinding.inflate(LayoutInflater.from(requireContext()));
         this.habitNameLabel = binding.habitNameLabel;
+        progressCalendarView = binding.calendarView;
 
         habitProgress = CompleteHabitFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
@@ -90,6 +100,18 @@ public class CompleteHabitFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    // TODO: Calendar progress update into Calendar View
+    private void calendarProgress() {
+        HashSet<Date> events = new HashSet<>();
+        events.add(new Date(2023, 4, 1));
+        events.add(new Date(2023, 4, 2));
+        events.add(new Date(2023, 4, 3));
+        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
+
+
+        //progressCalendarView.updateCalendar(events, habitProgress);
+    }
+
     private int computeProgress(HabitProgress habitProgress) {
 
         int frequencies = habitProgress.getHabit().getFrequency();
@@ -117,6 +139,24 @@ public class CompleteHabitFragment extends Fragment {
             float total = ((float) summarize / (float) frequency) * 100;
             graphDataList.add(new GraphData(Math.round(total), date));
 
+            LocalDate localDate = LocalDate.parse(date);
+
+
+            Calendar calendar = Calendar.getInstance(Locale.CANADA);
+            calendar.set(Calendar.YEAR, localDate.getYear());
+            calendar.set(Calendar.MONTH, localDate.getMonthValue() - 1);
+            calendar.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+
+
+            //Date dayProgress = new Date(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
+            Date dayProgress = calendar.getTime();
+
+
+            progressDate.add(dayProgress);
+            progressValue.add(String.valueOf(Math.round(total)));
         });
+
+        progressCalendarView.updateCalendar(progressDate, progressValue);
+        calendarProgress();
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="248dp"
     android:layout_margin="8dp"
-    tools:context=".view.fragment.graph.LinealProgressGraphFragment">
+    tools:context=".common.fragment.graph.LinealProgressGraphFragment">
 
 
 </com.antgroup.antv.f2.F2CanvasView>

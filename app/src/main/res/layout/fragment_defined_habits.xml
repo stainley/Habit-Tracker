@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragment.habit.DefinedHabitFragment">
+    tools:context=".habit.view.fragment.fragment.habit.DefinedHabitFragment">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/habits_pager"
@@ -21,7 +21,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/habit_category_desc_fragment"
-        android:name="ca.lambton.habittracker.view.fragment.habit.description.HabitCategoryDescriptionFragment"
+        android:name="ca.lambton.habittracker.habit.view.fragment.fragment.habit.description.HabitCategoryDescriptionFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
