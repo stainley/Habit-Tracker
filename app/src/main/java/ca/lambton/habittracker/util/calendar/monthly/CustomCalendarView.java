@@ -130,7 +130,6 @@ public class CustomCalendarView extends LinearLayout {
     /**
      * Display dates correctly in grid
      */
-    //public void updateCalendar(HashSet<Date> events, ArrayList<String> habitProgress) {
     public void updateCalendar(HashSet<Date> events, ArrayList<String> habitProgress) {
         this.events = events;
         this.habitProgress = habitProgress;

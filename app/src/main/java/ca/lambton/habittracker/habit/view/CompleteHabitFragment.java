@@ -100,17 +100,6 @@ public class CompleteHabitFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    // TODO: Calendar progress update into Calendar View
-    private void calendarProgress() {
-        HashSet<Date> events = new HashSet<>();
-        events.add(new Date(2023, 4, 1));
-        events.add(new Date(2023, 4, 2));
-        events.add(new Date(2023, 4, 3));
-        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
-
-
-        //progressCalendarView.updateCalendar(events, habitProgress);
-    }
 
     private int computeProgress(HabitProgress habitProgress) {
 
@@ -147,16 +136,12 @@ public class CompleteHabitFragment extends Fragment {
             calendar.set(Calendar.MONTH, localDate.getMonthValue() - 1);
             calendar.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
 
-
-            //Date dayProgress = new Date(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
             Date dayProgress = calendar.getTime();
-
 
             progressDate.add(dayProgress);
             progressValue.add(String.valueOf(Math.round(total)));
         });
 
         progressCalendarView.updateCalendar(progressDate, progressValue);
-        calendarProgress();
     }
 }

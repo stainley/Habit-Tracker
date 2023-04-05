@@ -19,9 +19,9 @@ import ca.lambton.habittracker.R;
 
 class CustomCalendarAdapter extends ArrayAdapter<Date> {
     private final CustomCalendarView customCalendarView;
-    private HashSet<Date> eventDays;
-    private ArrayList<String> habitProgress;
-    private LayoutInflater inflater;
+    private final HashSet<Date> eventDays;
+    private final ArrayList<String> habitProgress;
+    private final LayoutInflater inflater;
 
     public CustomCalendarAdapter(CustomCalendarView customCalendarView, Context context, ArrayList<Date> days, HashSet<Date> eventDays, ArrayList<String> habitProgress) {
         super(context, R.layout.control_calendar_day, days);

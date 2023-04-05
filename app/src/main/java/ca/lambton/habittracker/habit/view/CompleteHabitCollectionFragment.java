@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
@@ -56,6 +57,7 @@ public class CompleteHabitCollectionFragment extends Fragment {
         recycleCompleteHabit.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+
         completeHabitAdapter = new CompleteHabitAdapter(habitProgresses, getOnCompleteListener());
 
         recycleCompleteHabit.setAdapter(completeHabitAdapter);
@@ -107,7 +109,7 @@ public class CompleteHabitCollectionFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         //TODO: for test  remove the below. remove before release
-       calendar.add(Calendar.WEEK_OF_MONTH, 1);
+        calendar.add(Calendar.WEEK_OF_MONTH, 4);
 
 
         habitViewModel.getAllProgress().observe(this, habitProgressResult -> {
@@ -119,7 +121,7 @@ public class CompleteHabitCollectionFragment extends Fragment {
                     .collect(Collectors.toList());
 
             habitProgresses.addAll(habitPassDueDate);
-            completeHabitAdapter.notifyItemRangeChanged(0, habitProgressResult.size());
+            completeHabitAdapter.notifyItemRangeChanged(0, habitPassDueDate.size());
         });
 
     }
