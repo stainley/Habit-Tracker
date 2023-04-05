@@ -1,6 +1,7 @@
 package ca.lambton.habittracker.view.ongoingHabits;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -23,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.R;
@@ -72,6 +79,9 @@ public class PrivateHabitDetailFragment extends Fragment {
         long daysBetween = 0;
 
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
+
+        binding.imageView.setOnClickListener(this::editHabitName);
+
 
         ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
         ongoingHabitDetailGridInfoModelArrayList = new ArrayList<>();
@@ -153,7 +163,34 @@ public class PrivateHabitDetailFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void editHabitName(View view) {
+        TextInputEditText newHabit = new TextInputEditText(requireContext());
+        newHabit.setInputType(InputType.TYPE_CLASS_TEXT);
+        newHabit.setSingleLine();
+        newHabit.setPadding(50, 0, 50, 32);
+        String habitName = habitProgress.getHabit().getName();
+        newHabit.setText(habitName != null ? habitName : "");
+        newHabit.setHint("New Habit");
+        newHabit.setPadding(75, newHabit.getPaddingTop(), newHabit.getPaddingRight(), newHabit.getPaddingBottom());
+        new MaterialAlertDialogBuilder(requireContext()).setView(newHabit).setMessage("Enter your new habit").setNeutralButton("Cancel", (dialog, which) -> {
+        }).setNegativeButton("Save", (dialog, which) -> {
+            String inputText = Objects.requireNonNull(newHabit.getText()).toString();
+            if (inputText.equals("")) {
+                Toast.makeText(requireContext(), "Couldn't be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                habitProgress.getHabit().setName(newHabit.getText().toString());
+            }
+            binding.habitNameLabel.setText(newHabit.getText().toString());
+            habitViewModel.updateHabit(habitProgress.getHabit());
+            Toast.makeText(requireContext(),
+                    "Habit Name updated.", Toast.LENGTH_SHORT).show();
+
+        }).setCancelable(false).show();
+    }
+    private void getProgressList(int count, Habit habit, int daysBetween) {
+        AtomicInteger todayProgress = new AtomicInteger();
     private void displayPercentageTotal(int count, Habit habit) {
+
         AtomicInteger totalProgress = new AtomicInteger();
 
         totalProgress.addAndGet(habitProgress.getProgressList().stream()
