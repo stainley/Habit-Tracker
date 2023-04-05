@@ -36,7 +36,6 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -61,7 +60,6 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
-import jp.wasabeef.picasso.transformations.CropTransformation;
 
 public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
@@ -71,7 +69,6 @@ public class CreateHabitFragment extends Fragment {
     private Duration durationUnit = Duration.MINUTES;
     private HabitType habitType = HabitType.PERSONAL;
     private Frequency frequencyUnit = Frequency.DAILY;
-    private Uri tempImageUri = null;
     long categoryId = -1;
     String[] categories = new String[0];
     ArrayAdapter<String> categoryDropDownAdapter;
@@ -444,7 +441,6 @@ public class CreateHabitFragment extends Fragment {
         public void onActivityResult(Uri result) {
             try {
                 if (result != null) {
-                    tempImageUri = result;
                     String picturePath = "content://media/" + result.getPath();
                     pathUri = picturePath;
 
