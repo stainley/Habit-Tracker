@@ -42,4 +42,7 @@
     <string name="find_people">Find people</string>
     <string name="what_s_happening">What\'s happening?</string>
     <string name="replace_image">Replace image</string>
+    <string name="habit_image">Habit Image</string>
+    <string name="habit_title">Habit Title</string>
+    <string name="find_habit">Find habit</string>
 </resources>

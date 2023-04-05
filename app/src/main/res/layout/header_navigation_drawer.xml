@@ -38,14 +38,15 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:src="@drawable/ic_profile_custom"
         app:civ_border_color="@color/transparent"
         app:civ_border_width="1dp"
         app:layout_constraintBottom_toBottomOf="@id/email_logged_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintVertical_bias="2.5"
         app:layout_constraintStart_toEndOf="@id/name_logged_label"
         app:layout_constraintTop_toTopOf="@id/name_logged_label" />
 
