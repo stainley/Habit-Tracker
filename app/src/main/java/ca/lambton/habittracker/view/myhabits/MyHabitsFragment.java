@@ -79,14 +79,14 @@ public class MyHabitsFragment extends Fragment {
         MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(requireContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
-        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
+        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), result -> {
             this.categories.clear();
             this.categories.addAll(result);
-            categoryListAdapter.notifyDataSetChanged();
+            categoryListAdapter.notifyItemRangeChanged(0, result.size());
         });
 
-        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories), this.getContext());
+        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories),requireContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         recyclerView.setAdapter(categoryListAdapter);
 
