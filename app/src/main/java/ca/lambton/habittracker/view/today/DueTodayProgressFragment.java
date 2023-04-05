@@ -32,7 +32,7 @@ import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
-import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
+import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
 
 public class DueTodayProgressFragment extends Fragment {
 

@@ -103,14 +103,15 @@ public class CompleteHabitCollectionFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        this.habitProgresses.clear();
+
 
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         //TODO: for test  remove the below. remove before release
-        calendar.add(Calendar.WEEK_OF_MONTH, 1);
+       calendar.add(Calendar.WEEK_OF_MONTH, 1);
 
 
         habitViewModel.getAllProgress().observe(this, habitProgressResult -> {
+            this.habitProgresses.clear();
 
             List<HabitProgress> habitPassDueDate = habitProgressResult.stream()
                     .filter(habitProgress ->

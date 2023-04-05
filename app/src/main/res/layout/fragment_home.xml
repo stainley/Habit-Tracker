@@ -40,7 +40,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/quoteDayFragmentView"
-            android:name="ca.lambton.habittracker.view.fragment.quote.QuoteFragment"
+            android:name="ca.lambton.habittracker.habit.view.fragment.fragment.quote.QuoteFragment"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginStart="8dp"
@@ -53,7 +53,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/home_calendar_view"
-            android:name="ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment"
+            android:name="ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment"
             android:layout_width="match_parent"
             android:layout_height="164dp"
             android:layout_marginTop="16dp"
@@ -65,7 +65,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/daily_habit_progress"
-            android:name="ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment"
+            android:name="ca.lambton.habittracker.habit.view.fragment.fragment.progress.DailyProgressFragment"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="16dp"
@@ -78,7 +78,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/summarizedProgressView"
-            android:name="ca.lambton.habittracker.view.fragment.progress.SummarizedProgressFragment"
+            android:name="ca.lambton.habittracker.habit.view.fragment.fragment.progress.SummarizedProgressFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -106,7 +106,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/carousel_some_habit_frag"
-            android:name="ca.lambton.habittracker.view.fragment.habit.HabitCardFragment"
+            android:name="ca.lambton.habittracker.habit.view.fragment.fragment.habit.HabitCardFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -134,7 +134,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/carousel_popular_habit_frag"
-            android:name="ca.lambton.habittracker.view.fragment.habit.HabitCardFragment"
+            android:name="ca.lambton.habittracker.habit.view.fragment.fragment.habit.HabitCardFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"

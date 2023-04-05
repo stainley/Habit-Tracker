@@ -132,7 +132,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ongoingHabitDetailGridView" />
 
-        <ca.lambton.habittracker.view.ongoingHabits.CustomCalendarView
+        <ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="280dp"

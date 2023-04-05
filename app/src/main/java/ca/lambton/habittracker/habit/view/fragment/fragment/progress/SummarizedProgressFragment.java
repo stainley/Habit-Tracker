@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.view.home;
+package ca.lambton.habittracker.habit.view.fragment.fragment.progress;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,63 +20,38 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
-import ca.lambton.habittracker.databinding.FragmentHomeBinding;
+import ca.lambton.habittracker.databinding.FragmentTodayProgressBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
-import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
-import ca.lambton.habittracker.habit.view.fragment.fragment.progress.DailyProgressFragment;
-import ca.lambton.habittracker.habit.view.fragment.fragment.progress.SummarizedProgressFragment;
-import ca.lambton.habittracker.habit.view.fragment.fragment.quote.QuoteFragment;
 
-public class HomeFragment extends Fragment {
-
-    private FirebaseUser mUser;
-    private FragmentManager supportFragmentManager;
-    private FragmentHomeBinding binding;
+public class SummarizedProgressFragment extends Fragment {
+    private FragmentTodayProgressBinding binding;
     private HabitViewModel habitViewModel;
     private float finalResult;
     private float todayProgress = 0;
     private float totalFrequencies;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
-
-
+    private FirebaseUser mUser;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = FragmentHomeBinding.inflate(LayoutInflater.from(requireContext()));
 
-        supportFragmentManager = getChildFragmentManager();
         mUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
-        supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
+        binding = FragmentTodayProgressBinding.inflate(inflater);
 
-        Fragment quoteDayFragment = new QuoteFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
+        Fragment recycleDetailedProgress = new TodayDetailProgressFragment();
+        getParentFragmentManager().beginTransaction().replace(R.id.fragment_detailed_progress, recycleDetailedProgress).commit();
 
-        DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
-
-
-        Fragment summarizedProgress = new SummarizedProgressFragment();
-        getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
-
-
-        if (mUser != null) {
-            String userDisplay = getResources().getString(R.string.hello) + " " + mUser.getDisplayName();
-            binding.greetingMessageLabel.setText(userDisplay);
-        }
+        habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
 
         return binding.getRoot();
     }
@@ -85,26 +59,15 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        todayCalendarProgress();
-    }
-
-    public void todayCalendarProgress() {
+        LocalDate todayDate = LocalDate.now();
 
         habitViewModel.getAllProgress().observe(getViewLifecycleOwner(), habitProgresses1 -> {
-
-            LocalDate todayDate = LocalDate.now();
             AtomicInteger index = new AtomicInteger();
             habitProgresses.clear();
 
             List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
-                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
+                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()))
+                    .collect(Collectors.toList());
 
             for (HabitProgress hp : myHabitProgressFiltered) {
 
@@ -117,9 +80,6 @@ public class HomeFragment extends Fragment {
                 if (todayDate.isEqual(startDate) || todayDate.isAfter(startDate) && (todayDate.isEqual(endDate) || (todayDate.isBefore(endDate)))) {
                     habitProgresses.add(hp);
                 }
-
-
-                System.out.println(startDate);
             }
 
             totalFrequencies = 0;
@@ -128,7 +88,6 @@ public class HomeFragment extends Fragment {
             habitProgresses.forEach(habitProgress -> {
                 totalFrequencies += habitProgress.getHabit().getFrequency();
 
-                // Filter by daily/weekly
                 String startDateString = Utils.parseDate(habitProgress.getHabit().getStartDate());
                 String endDateString = Utils.parseDate(habitProgress.getHabit().getEndDate());
 
@@ -149,9 +108,9 @@ public class HomeFragment extends Fragment {
 
             });
             finalResult = (todayProgress / totalFrequencies) * 100;
-
-            Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
-            supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
+            String percentageValue = (int) finalResult + "%";
+            binding.percentageNumText.setText(percentageValue);
+            binding.totalDailyProgressbar.setProgress((int) finalResult, true);
         });
     }
 
