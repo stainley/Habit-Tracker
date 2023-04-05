@@ -11,22 +11,21 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.model.Category;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder> {
 
     private final OnCategoryCallback onCategoryCallback;
     private final List<Category> categories;
-    private Context context;
-    private String packageName;
+    private final Context context;
+    private final String packageName;
 
-    public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback) {
-        this.categories = categories;
-        this.onCategoryCallback = onCallback;
-    }
 
     public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback, @NonNull Context context) {
         this.categories = categories;
@@ -38,35 +37,41 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.card_category_layout, parent, false);
-
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_category_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String[] categoryPeriod = context.getResources().getStringArray(R.array.category_period);
+
         switch (categories.get(position).getDuration()) {
-            case 3:
-                holder.categoryDuration.setText("Daily / Weekly /  Monthly");
+
+            case 1:
+                holder.categoryDuration.setText(categoryPeriod[0]);
                 break;
             case 2:
-                holder.categoryDuration.setText("Daily / Weekly");
+                holder.categoryDuration.setText(categoryPeriod[1]);
                 break;
-            case 1:
-                holder.categoryDuration.setText("Daily");
+            case 3:
+                holder.categoryDuration.setText(categoryPeriod[2]);
                 break;
             default:
                 holder.categoryDuration.setText("");
                 break;
         }
 
-        holder.categoryImage.setImageResource(context.getResources().getIdentifier(categories.get(position).getImageName(), "drawable", packageName));
+        int imageId = context.getResources().getIdentifier(categories.get(position).getImageName(), "drawable", packageName);
+
+        Picasso.get()
+                .load(imageId)
+                .transform(new RoundedCornersTransformation(16, 16, RoundedCornersTransformation.CornerType.ALL))
+                .fit()
+                .into(holder.categoryImage);
+
         holder.categoryName.setText(categories.get(position).getName());
         holder.categoryInterval.setText(categories.get(position).getInterval());
-        holder.categoryCard.setOnClickListener(view -> {
-            onCategoryCallback.onRowClicked(position);
-        });
+        holder.categoryCard.setOnClickListener(view -> onCategoryCallback.onRowClicked(position));
     }
 
     @Override
@@ -74,7 +79,7 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         return categories.size();
     }
 
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public final static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView categoryImage;
         private final TextView categoryName;
