@@ -136,7 +136,6 @@ public class TodayReportFragment extends Fragment {
         super.onStart();
 
         LocalDate todayDate = LocalDate.now();
-
         habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses -> {
 
             List<HabitProgress> habitProgressFiltered = habitProgresses.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());

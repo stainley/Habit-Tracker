@@ -3,6 +3,7 @@ package ca.lambton.habittracker.habit.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -73,7 +74,7 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
     public static final class CompleteHabitViewModel extends RecyclerView.ViewHolder {
 
         private final TextView habitName;
-        private final CircleImageView imageHabit;
+        private final ImageView imageHabit;
         private final MaterialCardView completeHabitCard;
         private final CircularProgressIndicator circularProgressIndicator;
         private final TextView progressText;
@@ -89,6 +90,6 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
     }
 
     public interface OnCompleteListener {
-        void onCompleteRowHandler(CircleImageView circleImageView, MaterialCardView completeHabitCard, int position);
+        void onCompleteRowHandler(ImageView circleImageView, MaterialCardView completeHabitCard, int position);
     }
 }

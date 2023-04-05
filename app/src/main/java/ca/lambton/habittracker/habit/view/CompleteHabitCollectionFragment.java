@@ -35,6 +35,7 @@ import ca.lambton.habittracker.habit.view.adapter.CompleteHabitAdapter;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CompleteHabitCollectionFragment extends Fragment {
 
@@ -71,9 +72,17 @@ public class CompleteHabitCollectionFragment extends Fragment {
                 //TODO: change this implementation don't obtain the image by name on drawable
                 int imagePredefine = getResources().getIdentifier(imagePath, "drawable", packageName);
                 if (imagePredefine > 0) {
-                    Picasso.get().load(imagePredefine).fit().into(circleImageView);
+                    Picasso.get()
+                            .load(imagePredefine)
+                            .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
+                            .fit()
+                            .into(circleImageView);
                 } else {
-                    Picasso.get().load(imagePath).fit().into(circleImageView);
+                    Picasso.get()
+                            .load(imagePath)
+                            .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
+                            .fit()
+                            .into(circleImageView);
                 }
             }
 

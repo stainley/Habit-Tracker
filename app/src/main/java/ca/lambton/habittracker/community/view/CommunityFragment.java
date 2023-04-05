@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -136,30 +135,33 @@ public class CommunityFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(navNewPostDirections);
     }
 
-    private void onMoreOptionCallback(ImageButton communityButton, int position) {
+    private void onMoreOptionCallback(View view, int position) {
 
-        if (firebaseUser.getUid().equals(this.posts.get(position).getUser().getAccountId())) {
-            communityButton.setVisibility(View.VISIBLE);
-        } else {
-            communityButton.setVisibility(View.INVISIBLE);
-        }
-        communityButton.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(requireContext(), v);
-            MenuInflater inflater = popupMenu.getMenuInflater();
-            inflater.inflate(R.menu.overflow_post_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(item -> {
+        if (view instanceof ImageView) {
+            ImageView communityButton = (ImageView) view;
+            if (firebaseUser.getUid().equals(this.posts.get(position).getUser().getAccountId())) {
+                communityButton.setVisibility(View.VISIBLE);
+            } else {
+                communityButton.setVisibility(View.INVISIBLE);
+            }
+            communityButton.setOnClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(requireContext(), v);
+                MenuInflater inflater = popupMenu.getMenuInflater();
+                inflater.inflate(R.menu.overflow_post_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(item -> {
 
-                if (item.getItemId() == R.id.delete_post) {
-                    postViewModel.deletePost(this.posts.get(position));
-                    this.posts.remove(position);
-                    //communityAdapter.notifyItemRemoved(position);
-                    communityAdapter.notifyDataSetChanged();
-                    return true;
-                }
-                return false;
+                    if (item.getItemId() == R.id.delete_post) {
+                        postViewModel.deletePost(this.posts.get(position));
+                        this.posts.remove(position);
+                        //communityAdapter.notifyItemRemoved(position);
+                        communityAdapter.notifyDataSetChanged();
+                        return true;
+                    }
+                    return false;
+                });
+                popupMenu.show();
             });
-            popupMenu.show();
-        });
+        }
     }
 
     // SEARCH BAR
