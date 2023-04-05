@@ -23,8 +23,8 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
 
     private final OnCategoryCallback onCategoryCallback;
     private final List<Category> categories;
-    private Context context;
-    private String packageName;
+    private final Context context;
+    private final String packageName;
 
 
     public CategoryRecycleAdapter(List<Category> categories, OnCategoryCallback onCallback, @NonNull Context context) {
@@ -37,39 +37,41 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_category_layout, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_category_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String[] categoryPeriod = context.getResources().getStringArray(R.array.category_period);
+
         switch (categories.get(position).getDuration()) {
-            case 3:
-                holder.categoryDuration.setText("Daily / Weekly /  Monthly");
+
+            case 1:
+                holder.categoryDuration.setText(categoryPeriod[0]);
                 break;
             case 2:
-                holder.categoryDuration.setText("Daily / Weekly");
+                holder.categoryDuration.setText(categoryPeriod[1]);
                 break;
-            case 1:
-                holder.categoryDuration.setText("Daily");
+            case 3:
+                holder.categoryDuration.setText(categoryPeriod[2]);
                 break;
             default:
                 holder.categoryDuration.setText("");
                 break;
         }
+
         int imageId = context.getResources().getIdentifier(categories.get(position).getImageName(), "drawable", packageName);
-        /*holder.categoryImage.setImageResource();*/
+
         Picasso.get()
                 .load(imageId)
-                .transform(new RoundedCornersTransformation(16,16, RoundedCornersTransformation.CornerType.ALL))
+                .transform(new RoundedCornersTransformation(16, 16, RoundedCornersTransformation.CornerType.ALL))
                 .fit()
                 .into(holder.categoryImage);
-        ;
+
         holder.categoryName.setText(categories.get(position).getName());
         holder.categoryInterval.setText(categories.get(position).getInterval());
-        holder.categoryCard.setOnClickListener(view -> {
-            onCategoryCallback.onRowClicked(position);
-        });
+        holder.categoryCard.setOnClickListener(view -> onCategoryCallback.onRowClicked(position));
     }
 
     @Override

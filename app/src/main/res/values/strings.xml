@@ -14,7 +14,14 @@
         <item>S</item>
         <item>S</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string-array name="category_period">
+        <item>Daily</item>
+        <item>Daily / Weekly</item>
+        <item>Daily / Weekly /  Monthly</item>
+    </string-array>
+
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_habits">My Habits</string>
     <string name="don_t_have_an_account">Don\'t have an account? Click here to Sign up</string>
