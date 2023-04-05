@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
@@ -46,24 +42,25 @@ public class PrivateHabitDetailFragment extends Fragment {
 
     HabitViewModel habitViewModel;
 
-    private FirebaseUser mUser;
-
     ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList;
 
     private HabitProgress habitProgress;
     int daysTargetCounter = 0;
     int daysTargetTotal = 0;
 
+    int daysCompletedCounter = 0;
+    int daysCompletedTotal = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
         habitProgress = PrivateHabitDetailFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
 
         if (habitProgress != null) {
             daysTargetTotal = habitProgress.getHabit().getFrequency();
             daysTargetCounter = getDaysTargetCounter(habitProgress.getHabit());
+            daysCompletedCounter = getDaysCompletedCounter(habitProgress.getHabit());
         }
     }
 
@@ -73,9 +70,6 @@ public class PrivateHabitDetailFragment extends Fragment {
         int totalTimesToComplete;
         int frequencyValue = 0;
         long daysBetween = 0;
-
-        int daysCompletedCounter = 0;
-        int daysCompletedTotal = 0;
 
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
@@ -96,7 +90,7 @@ public class PrivateHabitDetailFragment extends Fragment {
                 totalTimesToComplete = frequencyValue * (int) daysBetween;
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", daysTargetCounter + "/" + daysTargetTotal));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysCompletedTotal));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
 
             } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
                 double totalDays = (daysBetween / 7);
@@ -104,7 +98,7 @@ public class PrivateHabitDetailFragment extends Fragment {
                 totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", daysTargetCounter + "/" + daysTargetTotal));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysCompletedTotal));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
             }
             else {
                 double totalDays = (daysBetween / 30);
@@ -118,7 +112,7 @@ public class PrivateHabitDetailFragment extends Fragment {
 
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", daysTargetCounter + "/" + daysTargetTotal));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", "0/" + daysCompletedTotal));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
             }
         }
 
@@ -194,6 +188,17 @@ public class PrivateHabitDetailFragment extends Fragment {
         }
 
         return todayProgress.get();
+    }
+
+    public int getDaysCompletedCounter(Habit habit) {
+        AtomicInteger totalProgress = new AtomicInteger();
+
+        totalProgress.addAndGet(habitProgress.getProgressList().stream()
+                .filter(progress -> progress.getHabitId() == habit.getId())
+                .mapToInt(Progress::getCounter)
+                .sum());
+
+        return totalProgress.get() / habit.getFrequency();
     }
 
 
