@@ -129,8 +129,9 @@ public class ProfileFragment extends Fragment {
                                         .build();
 
                                 currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(taskProfile -> {
-                                    if (taskProfile.isSuccessful()) {
-                                        Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                                    if (task.isSuccessful()) {
+                                        binding.nameProfile.setText(currentUser.getDisplayName());
+                                        Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             } else {
@@ -204,8 +205,9 @@ public class ProfileFragment extends Fragment {
                                             .build();
 
                                     currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(taskProfile -> {
-                                        if (taskProfile.isSuccessful()) {
-                                            Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                                        if (task.isSuccessful()) {
+                                            binding.nameProfile.setText(currentUser.getDisplayName());
+                                            Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } else {
@@ -296,7 +298,8 @@ public class ProfileFragment extends Fragment {
 
                 currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                        binding.nameProfile.setText(currentUser.getDisplayName());
+                        Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
