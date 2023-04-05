@@ -360,6 +360,73 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/reminderCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="12dp"
+            android:focusable="true"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="10dp"
+            app:cardMaxElevation="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dateCardView"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:layout_height="120dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="50dp"
+                        android:text="Get Reminder"
+                        android:textAlignment="center"
+                        android:textSize="23sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/selectTimeBtn"
+                        android:layout_width="200dp"
+                        android:layout_height="70dp"
+                        android:backgroundTint="@color/white"
+                        android:text="Select the time"
+                        android:textAlignment="center"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Switch
+                        android:id="@+id/aSwitch"
+                        android:layout_width="70dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="100dp"
+                        android:layout_gravity="top"
+                        tools:ignore="UseSwitchCompatOrMaterialXml">
+                    </Switch>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/descriptionCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -372,7 +439,7 @@
             app:cardElevation="10dp"
             app:cardMaxElevation="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateCardView">
+            app:layout_constraintTop_toBottomOf="@+id/reminderCardView">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

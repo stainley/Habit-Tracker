@@ -20,12 +20,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitsBinding;
-import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
+import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 
 public class PrivateHabitsFragment extends Fragment {
@@ -73,7 +74,21 @@ public class PrivateHabitsFragment extends Fragment {
 
             @Override
             public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
+                AtomicInteger totalProgress = new AtomicInteger();
+                habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
+                    List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
 
+                    for (HabitProgress hp : myHabitProgressFiltered) {
+                        totalProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId()).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+
+                        if (totalProgress.get() == 0) {
+                            habitPercentageNumText.setText("0%");
+                        } else {
+                            habitPercentageNumText.setText((totalProgress.get() * 100 / totalTimesToComplete) + "%");
+                            habitProgressbar.setProgress(totalProgress.get() * 100 / totalTimesToComplete);
+                        }
+                    }
+                });
             }
         };
     }

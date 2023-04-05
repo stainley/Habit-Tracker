@@ -68,14 +68,16 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
             totalTimesToComplete = frequencyValue * (int) daysBetween;
             onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         } else if (frequencyUnit.equals("WEEKLY")) {
-            totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
+            double totalDays = (daysBetween / 7);
+            totalTimesToComplete = frequencyValue * (int) totalDays;
             onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         } else {
-            if (daysBetween == 30) {
-                totalTimesToComplete = frequencyValue * 30;
+            double totalDays = (daysBetween / 30);
+            if (daysBetween < 30 || daysBetween == 30) {
+                totalTimesToComplete = frequencyValue * 1;
             }
             else {
-                totalTimesToComplete = frequencyValue * ((int) daysBetween / 30);
+                totalTimesToComplete = frequencyValue * (int) totalDays;
             }
             onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
         }
