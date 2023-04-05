@@ -1,19 +1,22 @@
 package ca.lambton.habittracker.view.fragment.graph.adapter;
 
+import androidx.annotation.NonNull;
+
 import com.antgroup.antv.f2.F2CanvasView;
 import com.antgroup.antv.f2.F2Chart;
 import com.antgroup.antv.f2.F2Util;
-
-import ca.lambton.habittracker.habit.model.HabitProgress;
 
 public class LinealProgressGraphAdapter implements F2CanvasView.Adapter {
 
     private F2Chart mChart;
     private final String jsonData;
-    private final HabitProgress habitProgress;
-    public LinealProgressGraphAdapter(String jsonData, HabitProgress habitProgress) {
+
+    /**
+     *
+     * @param jsonData Contain progress percentage by period String for JSON data
+     */
+    public LinealProgressGraphAdapter(@NonNull String jsonData) {
         this.jsonData = jsonData;
-        this.habitProgress = habitProgress;
     }
 
     @Override
@@ -28,14 +31,14 @@ public class LinealProgressGraphAdapter implements F2CanvasView.Adapter {
 
         mChart.source(jsonData);
 
-        mChart.setScale("progress", new F2Chart.ScaleConfigBuilder()
+        mChart.setScale("percentage", new F2Chart.ScaleConfigBuilder()
                 .precision(0)
-                .max(habitProgress.getHabit().getFrequency())
+                //.max(habitProgress.getHabit().getFrequency())
                 .min(0));
-        mChart.setScale("date", new F2Chart.ScaleConfigBuilder().precision(0).tickCount(4).range(new double[]{0.1, 0.9}));
+        mChart.setScale("period", new F2Chart.ScaleConfigBuilder().precision(0).tickCount(4).range(new double[]{0.1, 0.9}));
 
-        //Draw a polyline on the chart. The data mappings of the x-axis and y-axis of the polyline are genre and sold fields respectively.
-        mChart.area().position("date*progress")
+        // Gradient
+        mChart.area().position("period*percentage")
                 //.fixedShape("smooth")
                 .fixedColor(new F2Util.ColorLinearGradient()
                         .addColorStop(1.f, "orange")
@@ -43,12 +46,12 @@ public class LinealProgressGraphAdapter implements F2CanvasView.Adapter {
                         .addColorStop(0.3f, "white")
                         .setPosition(0, 0, 0, canvasView.getHeight()));
 
+        //Draw a polyline on the chart. The data mappings of the x-axis and y-axis of the polyline are genre and sold fields respectively.
         mChart.line()
-
                 .color("type", new String[]{"ORANGE"})
                 .fixedSize(2.f)
                 //.fixedShape("smooth")
-                .position("date*progress");
+                .position("period*percentage");
         //Render and display on canvasView
         mChart.render();
     }
