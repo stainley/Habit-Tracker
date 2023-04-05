@@ -1,6 +1,7 @@
 package ca.lambton.habittracker.view.ongoingHabits;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.R;
@@ -65,13 +73,15 @@ public class PrivateHabitDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int totalTimesToComplete;
         int frequencyValue = 0;
         long daysBetween = 0;
 
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
+
+        binding.imageView.setOnClickListener(this::editHabitName);
+
 
         ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
         ongoingHabitDetailGridInfoModelArrayList = new ArrayList<>();
@@ -82,8 +92,7 @@ public class PrivateHabitDetailFragment extends Fragment {
             binding.habitNameLabel.setText(habitProgress.getHabit().getName());
             frequencyValue = habitProgress.getHabit().getFrequency();
 
-            daysBetween = ChronoUnit.DAYS.between(Instant.ofEpochMilli(habitProgress.getHabit().getStartDate()).atZone(ZoneId.systemDefault()).toLocalDate(),
-                    Instant.ofEpochMilli(habitProgress.getHabit().getEndDate()).atZone(ZoneId.systemDefault()).toLocalDate());
+            daysBetween = ChronoUnit.DAYS.between(Instant.ofEpochMilli(habitProgress.getHabit().getStartDate()).atZone(ZoneId.systemDefault()).toLocalDate(), Instant.ofEpochMilli(habitProgress.getHabit().getEndDate()).atZone(ZoneId.systemDefault()).toLocalDate());
 
             if (habitProgress.getHabit().getFrequencyUnit().equals("DAILY")) {
                 daysCompletedTotal = (int) daysBetween;
@@ -99,14 +108,12 @@ public class PrivateHabitDetailFragment extends Fragment {
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
-            }
-            else {
+            } else {
                 double totalDays = (daysBetween / 30);
                 daysCompletedTotal = (int) totalDays;
                 if (daysBetween < 30 || daysBetween == 30) {
                     totalTimesToComplete = frequencyValue * 1;
-                }
-                else {
+                } else {
                     totalTimesToComplete = frequencyValue * (int) totalDays;
                 }
 
@@ -121,22 +128,12 @@ public class PrivateHabitDetailFragment extends Fragment {
 
         achievementGridInfo = (GridView) binding.achievementsGridView;
         ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<AchievementInfo>();
-        achievementModelArrayList.add(new AchievementInfo("Complete the First\n" +
-                "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" +
-                "your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" +
-                " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" +
-                " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" +
-                " your Habit Duration\n" +
-                "+\n" +
-                "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" +
-                " your Habit Duration\n" +
-                "+\n" +
-                "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete the First\n" + "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" + "your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
 
@@ -153,13 +150,35 @@ public class PrivateHabitDetailFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void editHabitName(View view) {
+        TextInputEditText newHabit = new TextInputEditText(requireContext());
+        newHabit.setInputType(InputType.TYPE_CLASS_TEXT);
+        newHabit.setSingleLine();
+        newHabit.setPadding(50, 0, 50, 32);
+        String habitName = habitProgress.getHabit().getName();
+        newHabit.setText(habitName != null ? habitName : "");
+        newHabit.setHint("New Habit");
+        newHabit.setPadding(75, newHabit.getPaddingTop(), newHabit.getPaddingRight(), newHabit.getPaddingBottom());
+        new MaterialAlertDialogBuilder(requireContext()).setView(newHabit).setMessage("Enter your new habit").setNeutralButton("Cancel", (dialog, which) -> {
+        }).setNegativeButton("Save", (dialog, which) -> {
+            String inputText = Objects.requireNonNull(newHabit.getText()).toString();
+            if (inputText.equals("")) {
+                Toast.makeText(requireContext(), "Couldn't be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                habitProgress.getHabit().setName(newHabit.getText().toString());
+            }
+            binding.habitNameLabel.setText(newHabit.getText().toString());
+            habitViewModel.updateHabit(habitProgress.getHabit());
+            Toast.makeText(requireContext(), "Habit Name updated.", Toast.LENGTH_SHORT).show();
+
+        }).setCancelable(false).show();
+    }
+
     private void displayPercentageTotal(int count, Habit habit) {
+
         AtomicInteger totalProgress = new AtomicInteger();
 
-        totalProgress.addAndGet(habitProgress.getProgressList().stream()
-                .filter(progress -> progress.getHabitId() == habit.getId())
-                .mapToInt(Progress::getCounter)
-                .sum());
+        totalProgress.addAndGet(habitProgress.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId()).mapToInt(Progress::getCounter).sum());
 
         if (totalProgress.get() == 0) {
             binding.habitPercentageNumText.setText("0%");
@@ -181,10 +200,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         LocalDate endDate = convertToLocalDateViaInstant(habitProgress.getHabit().getEndDate());
 
         if (isDateInRange(todayDate, startDate, endDate)) {
-            todayProgress.addAndGet(habitProgress.getProgressList().stream()
-                    .filter(progress -> isProgressForToday(habit, todayDate, progress))
-                    .mapToInt(Progress::getCounter)
-                    .sum());
+            todayProgress.addAndGet(habitProgress.getProgressList().stream().filter(progress -> isProgressForToday(habit, todayDate, progress)).mapToInt(Progress::getCounter).sum());
         }
 
         return todayProgress.get();
@@ -193,10 +209,7 @@ public class PrivateHabitDetailFragment extends Fragment {
     public int getDaysCompletedCounter(Habit habit) {
         AtomicInteger totalProgress = new AtomicInteger();
 
-        totalProgress.addAndGet(habitProgress.getProgressList().stream()
-                .filter(progress -> progress.getHabitId() == habit.getId())
-                .mapToInt(Progress::getCounter)
-                .sum());
+        totalProgress.addAndGet(habitProgress.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId()).mapToInt(Progress::getCounter).sum());
 
         return totalProgress.get() / habit.getFrequency();
     }
@@ -221,12 +234,16 @@ public class PrivateHabitDetailFragment extends Fragment {
     private void deleteHabit(View view) {
         if (habitProgress != null) {
 
-            Snackbar.make(view, "Would you like to delete this habit?", Toast.LENGTH_SHORT)
-                    .setAnchorView(view)
-                    .setAction("Yes", v -> {
-                        habitViewModel.deleteHabit(habitProgress.getHabit());
-                        Navigation.findNavController(view).popBackStack();
-                    }).show();
+            Snackbar.make(view, "Would you like to delete this habit?", Toast.LENGTH_SHORT).setAnchorView(view).setAction("Yes", v -> {
+                habitViewModel.deleteHabit(habitProgress.getHabit());
+                Navigation.findNavController(view).popBackStack();
+            }).show();
         }
+    }
+
+    private void getProgressList(int count, Habit habit, int daysBetween) {
+        AtomicInteger todayProgress = new AtomicInteger();
+
+
     }
 }
