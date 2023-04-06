@@ -28,6 +28,7 @@ import ca.lambton.habittracker.databinding.FragmentPrivateHabitsBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.util.Utils;
 
 public class PrivateHabitsFragment extends Fragment {
 
@@ -65,7 +66,7 @@ public class PrivateHabitsFragment extends Fragment {
             @Override
             public void onRowClicked(int position, boolean isGroup) {
                 if (isGroup) {
-                    Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.groupHabitDetailFragment);
                 } else {
                     NavDirections navDirections = PrivateHabitsFragmentDirections.actionPrivateHabitsFragmentToPrivateHabitDetailFragment(null).setHabitProgress(habitProgresses.get(position));
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);

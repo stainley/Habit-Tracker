@@ -22,16 +22,22 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.GraphData;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Utils;
@@ -43,7 +49,10 @@ public class PrivateHabitDetailFragment extends Fragment {
     private GridView ongoingHabitDetailGridInfo;
 
     private GridView achievementGridInfo;
-
+    private final List<GraphData> graphDataList = new ArrayList<>();
+    private final HashSet<Date> progressDate = new HashSet<>();
+    private final ArrayList<String> progressValue = new ArrayList<>();
+    private CustomCalendarView progressCalendarView;
     HabitViewModel habitViewModel;
 
     ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList;
@@ -57,8 +66,10 @@ public class PrivateHabitDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
+        binding = FragmentPrivateHabitDetailBinding.inflate(LayoutInflater.from(requireContext()));
+        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
         habitProgress = PrivateHabitDetailFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
+        progressCalendarView = binding.calendarView;
 
         if (habitProgress != null) {
             daysTargetTotal = habitProgress.getHabit().getFrequency();
@@ -74,7 +85,6 @@ public class PrivateHabitDetailFragment extends Fragment {
         String maxStreak = String.valueOf(Utils.maxNumbersOfStreak(habitProgress));
         String currentStreak = String.valueOf(Utils.currentNumberOfStreak(habitProgress));
 
-        binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
         binding.imageView.setOnClickListener(this::editHabitName);
 
@@ -131,8 +141,8 @@ public class PrivateHabitDetailFragment extends Fragment {
         events.add(new Date(2023, 3, 21));
         ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
 
-        CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
-        cv.updateCalendar(events, habitProgress);
+        //CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
+        //cv.updateCalendar(events, habitProgress);
 
         binding.deleteButtonCard.setOnClickListener(this::deleteHabit);
         return binding.getRoot();
@@ -164,19 +174,17 @@ public class PrivateHabitDetailFragment extends Fragment {
 
     private void displayPercentageTotal(int count, Habit habit) {
 
-        AtomicInteger totalProgress = new AtomicInteger();
+        int totalProgress = Utils.computeProgress(habitProgress);
 
-        totalProgress.addAndGet(habitProgress.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId()).mapToInt(Progress::getCounter).sum());
-
-        if (totalProgress.get() == 0) {
+        if (totalProgress == 0) {
             binding.habitPercentageNumText.setText("0%");
         } else {
-            int percentage = totalProgress.get() * 100 / count;
-            binding.habitPercentageNumText.setText(percentage + "%");
-            binding.habitProgressbar.setProgress(percentage);
+            //int percentage = totalProgress;
+            binding.habitPercentageNumText.setText(totalProgress + "%");
+            binding.habitProgressbar.setProgress(totalProgress);
             binding.congratulationText.setVisibility(View.VISIBLE);
             binding.percentTextGoalAchieved.setVisibility(View.VISIBLE);
-            binding.percentTextGoalAchieved.setText(percentage + "% of your goal is achieved");
+            binding.percentTextGoalAchieved.setText(totalProgress + "% of your goal is achieved");
         }
     }
 
@@ -227,5 +235,37 @@ public class PrivateHabitDetailFragment extends Fragment {
                 Navigation.findNavController(view).popBackStack();
             }).show();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Get the habit frequency
+        int frequency = habitProgress.getHabit().getFrequency();
+
+        // Group by date and summarize the progress
+        Map<String, Integer> groupByDate = habitProgress.getProgressList()
+                .stream()
+                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+
+        groupByDate.forEach((date, summarize) -> {
+            float total = ((float) summarize / (float) frequency) * 100;
+            graphDataList.add(new GraphData(Math.round(total), date));
+
+            LocalDate localDate = LocalDate.parse(date);
+
+
+            Calendar calendar = Calendar.getInstance(Locale.CANADA);
+            calendar.set(Calendar.YEAR, localDate.getYear());
+            calendar.set(Calendar.MONTH, localDate.getMonthValue() - 1);
+            calendar.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+
+            Date dayProgress = calendar.getTime();
+
+            progressDate.add(dayProgress);
+            progressValue.add(String.valueOf(Math.round(total)));
+        });
+
+        progressCalendarView.updateCalendar(progressDate, progressValue);
     }
 }
