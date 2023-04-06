@@ -71,13 +71,12 @@ public class CompleteHabitFragment extends Fragment {
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
         parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
 
-
+        // Complete Streak info cards
         Fragment completeStreakFragment = new CompleteStreakFragment().newInstance(habitProgress);
         parentFragmentManager.beginTransaction().replace(R.id.complete_information_detailed, completeStreakFragment).commit();
 
 
         binding.deleteHabitCard.setOnClickListener(this::deleteHabit);
-
 
 
         return binding.getRoot();
@@ -97,7 +96,6 @@ public class CompleteHabitFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
 
         if (habitProgress != null) {
             this.habitNameLabel.setText(habitProgress.getHabit().getName());

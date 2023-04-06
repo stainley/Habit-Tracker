@@ -9,7 +9,9 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -34,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
@@ -120,7 +123,7 @@ public class PrivateHabitDetailFragment extends Fragment {
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfWeeks(habitProgress.getHabit())));
             } else {
                 if (Utils.getTotalDays(habitProgress.getHabit()) < 30 || Utils.getTotalDays(habitProgress.getHabit()) == 30) {
-                    totalTimesToComplete = frequencyValue * 1;
+                    totalTimesToComplete = frequencyValue;
                 } else {
                     totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfMonths(habitProgress.getHabit());
                 }
@@ -146,6 +149,16 @@ public class PrivateHabitDetailFragment extends Fragment {
 
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        FragmentManager parentFragmentManager = getParentFragmentManager();
+
+        // Linear chart of percentage by date
+        Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
+        parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
     }
 
     private void editHabitName(View view) {

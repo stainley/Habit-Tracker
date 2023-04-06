@@ -88,10 +88,10 @@
             android:layout_marginTop="180dp"
             android:text="Congratulation !"
             android:textSize="14sp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            android:visibility="invisible"/>
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <TextView
             android:id="@+id/percentTextGoalAchieved"
@@ -102,10 +102,10 @@
             android:layout_marginTop="8dp"
             android:text="73% of your goal is achieved"
             android:textSize="14sp"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/congratulationText"
-            android:visibility="invisible"/>
+            app:layout_constraintTop_toBottomOf="@+id/congratulationText" />
 
         <GridView
             android:id="@+id/ongoingHabitDetailGridView"
@@ -126,6 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
             android:fontFamily="@font/mulish_bold"
             android:text="Calendar view"
             android:textSize="14sp"
@@ -141,7 +142,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/graphic_analysis_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -150,7 +151,18 @@
             android:text="Graphical Analysis"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+            app:layout_constraintTop_toBottomOf="@id/calendarView" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/progress_chart_container"
+            android:layout_width="wrap_content"
+            android:layout_height="360dp"
+            android:minHeight="300dp"
+            app:layout_constraintBottom_toTopOf="@id/achievementsLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/graphic_analysis_label"
+            tools:layout="@layout/fragment_graph_analysis" />
 
         <TextView
             android:id="@+id/achievementsLabel"
@@ -162,7 +174,7 @@
             android:text="Achievements"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/progress_chart_container" />
 
         <GridView
             android:id="@+id/achievementsGridView"
@@ -178,7 +190,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/achievementsLabel" />
 
-        <com.google.android.material.card.MaterialCardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/deleteButtonCard"
             style="@style/MaterialCardView.NoColour"
             android:layout_width="match_parent"
