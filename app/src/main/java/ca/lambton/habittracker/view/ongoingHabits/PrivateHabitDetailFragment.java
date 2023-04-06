@@ -71,6 +71,8 @@ public class PrivateHabitDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int totalTimesToComplete;
         int frequencyValue = 0;
+        String maxStreak = String.valueOf(Utils.maxNumbersOfStreak(habitProgress));
+        String currentStreak = String.valueOf(Utils.currentNumberOfStreak(habitProgress));
 
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
@@ -78,8 +80,8 @@ public class PrivateHabitDetailFragment extends Fragment {
 
         ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
         ongoingHabitDetailGridInfoModelArrayList = new ArrayList<>();
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", String.valueOf(Utils.currentNumberOfStreak(habitProgress))));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", String.valueOf(Utils.maxNumbersOfStreak(habitProgress))));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", currentStreak));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", maxStreak));
 
         if (habitProgress.getHabit() != null) {
             binding.habitNameLabel.setText(habitProgress.getHabit().getName());
