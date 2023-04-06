@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view;
+package ca.lambton.habittracker.habit.view.complete;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,15 +27,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
 import ca.lambton.habittracker.databinding.FragmentCompleteHabitBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.GraphData;
 import ca.lambton.habittracker.habit.view.fragment.complete.CompleteStreakFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
+
 
 public class CompleteHabitFragment extends Fragment {
 
@@ -76,6 +77,7 @@ public class CompleteHabitFragment extends Fragment {
 
 
         binding.deleteHabitCard.setOnClickListener(this::deleteHabit);
+
 
 
         return binding.getRoot();

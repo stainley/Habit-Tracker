@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view;
+package ca.lambton.habittracker.habit.view.complete;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,28 +14,21 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.squareup.picasso.Picasso;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentCompleteHabitCollectionBinding;
-import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
-import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.view.adapter.CompleteHabitAdapter;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CompleteHabitCollectionFragment extends Fragment {
