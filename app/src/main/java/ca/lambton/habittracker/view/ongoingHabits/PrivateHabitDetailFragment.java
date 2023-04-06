@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -67,9 +68,18 @@ public class PrivateHabitDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentPrivateHabitDetailBinding.inflate(LayoutInflater.from(requireContext()));
+
+        progressCalendarView = binding.calendarView;
+        ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
+        achievementGridInfo = binding.achievementsGridView;
+
+        binding.deleteButtonCard.setOnClickListener(this::deleteHabit);
+        binding.imageView.setOnClickListener(this::editHabitName);
+
+
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
         habitProgress = PrivateHabitDetailFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
-        progressCalendarView = binding.calendarView;
+
 
         if (habitProgress != null) {
             daysTargetTotal = habitProgress.getHabit().getFrequency();
@@ -79,16 +89,13 @@ public class PrivateHabitDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int totalTimesToComplete;
         int frequencyValue = 0;
-        String maxStreak = String.valueOf(Utils.maxNumbersOfStreak(habitProgress));
+        String maxStreak = String.valueOf(Math.max(Utils.maxNumbersOfStreak(habitProgress), Utils.currentNumberOfStreak(habitProgress)));
         String currentStreak = String.valueOf(Utils.currentNumberOfStreak(habitProgress));
 
 
-        binding.imageView.setOnClickListener(this::editHabitName);
-
-        ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
         ongoingHabitDetailGridInfoModelArrayList = new ArrayList<>();
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", currentStreak));
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", maxStreak));
@@ -99,13 +106,16 @@ public class PrivateHabitDetailFragment extends Fragment {
 
             if (habitProgress.getHabit().getFrequencyUnit().equals("DAILY")) {
                 totalTimesToComplete = frequencyValue * (int) Utils.getTotalDays(habitProgress.getHabit());
-                displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
+                //displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
+                displayPercentageTotal(habitProgress);
+
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalDays(habitProgress.getHabit())));
 
             } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
                 totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfWeeks(habitProgress.getHabit());
-                displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
+                //displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
+                displayPercentageTotal(habitProgress);
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfWeeks(habitProgress.getHabit())));
             } else {
@@ -114,37 +124,27 @@ public class PrivateHabitDetailFragment extends Fragment {
                 } else {
                     totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfMonths(habitProgress.getHabit());
                 }
-
-                displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
+                displayPercentageTotal(habitProgress);
+                //displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfMonths(habitProgress.getHabit())));
             }
         }
 
-        OngoingHabitDetailGridInfoAdapter adapter = new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList);
+        OngoingHabitDetailGridInfoAdapter adapter = new OngoingHabitDetailGridInfoAdapter(requireContext(), ongoingHabitDetailGridInfoModelArrayList);
         ongoingHabitDetailGridInfo.setAdapter(adapter);
 
-        achievementGridInfo = (GridView) binding.achievementsGridView;
-        ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<AchievementInfo>();
+        ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<>();
         achievementModelArrayList.add(new AchievementInfo("Complete the First\n" + "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" + "your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
+        AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(requireContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
 
-        HashSet<Date> events = new HashSet<>();
-        events.add(new Date(2023, 3, 13));
-        events.add(new Date(2023, 3, 15));
-        events.add(new Date(2023, 3, 21));
-        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
 
-        //CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
-        //cv.updateCalendar(events, habitProgress);
-
-        binding.deleteButtonCard.setOnClickListener(this::deleteHabit);
         return binding.getRoot();
     }
 
@@ -170,6 +170,23 @@ public class PrivateHabitDetailFragment extends Fragment {
             Toast.makeText(requireContext(), "Habit Name updated.", Toast.LENGTH_SHORT).show();
 
         }).setCancelable(false).show();
+    }
+
+
+    private void displayPercentageTotal(HabitProgress habitProgress) {
+
+        int totalProgress = Utils.computeProgress(habitProgress);
+
+        if (totalProgress == 0) {
+            binding.habitPercentageNumText.setText("0%");
+        } else {
+            //int percentage = totalProgress;
+            binding.habitPercentageNumText.setText(totalProgress + "%");
+            binding.habitProgressbar.setProgress(totalProgress);
+            binding.congratulationText.setVisibility(View.VISIBLE);
+            binding.percentTextGoalAchieved.setVisibility(View.VISIBLE);
+            binding.percentTextGoalAchieved.setText(totalProgress + "% of your goal is achieved");
+        }
     }
 
     private void displayPercentageTotal(int count, Habit habit) {
