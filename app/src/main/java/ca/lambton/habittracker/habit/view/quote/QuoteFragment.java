@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view.fragment.fragment.quote;
+package ca.lambton.habittracker.habit.view.quote;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

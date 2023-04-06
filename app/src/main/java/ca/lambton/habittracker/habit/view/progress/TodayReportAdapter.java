@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view.fragment.fragment.progress;
+package ca.lambton.habittracker.habit.view.progress;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +13,10 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.HabitProgress;
-import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.util.Utils;
 
 public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.TodayReportViewHolder> {
 
@@ -40,17 +37,8 @@ public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TodayReportViewHolder holder, int position) {
-        double frequency = habitProgresses.get(position).getHabit().getFrequency();
 
-        Map<String, Integer> progressList = habitProgresses.get(position).getProgressList()
-                .stream()
-                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
-
-        progressList.size();
-        AtomicReference<Double> result = new AtomicReference<>((double) 0);
-        progressList.forEach((date, sum) -> result.updateAndGet(v -> ((double) (v + (sum / frequency) * 100))));
-
-        int percentageValue = (int) (result.get() / progressList.size());
+        int percentageValue = Utils.computeProgress(habitProgresses.get(position));
 
         holder.percentage.setText(String.format(Locale.CANADA, "%d%%", percentageValue));
         holder.progressIndicator.setProgress(percentageValue);

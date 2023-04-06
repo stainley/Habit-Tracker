@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view.fragment.fragment.progress;
+package ca.lambton.habittracker.habit.view.progress;
 
 import android.view.LayoutInflater;
 import android.view.View;

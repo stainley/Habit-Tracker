@@ -19,9 +19,9 @@ import ca.lambton.habittracker.R;
 
 class CustomCalendarAdapter extends ArrayAdapter<Date> {
     private final CustomCalendarView customCalendarView;
-    private HashSet<Date> eventDays;
-    private ArrayList<String> habitProgress;
-    private LayoutInflater inflater;
+    private final HashSet<Date> eventDays;
+    private final ArrayList<String> habitProgress;
+    private final LayoutInflater inflater;
 
     public CustomCalendarAdapter(CustomCalendarView customCalendarView, Context context, ArrayList<Date> days, HashSet<Date> eventDays, ArrayList<String> habitProgress) {
         super(context, R.layout.control_calendar_day, days);
@@ -52,13 +52,15 @@ class CustomCalendarAdapter extends ArrayAdapter<Date> {
 
 
                 if (eventDate.getDate() == day && eventDate.getMonth() == month && eventDate.getYear() == year) {
-
                     view.findViewById(R.id.dateRelativeLayout).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_circle));
+                    int progress = Integer.parseInt(this.habitProgress.get(i));
 
-                    if (this.habitProgress.get(i).equals("100")) {
+                    if (progress > 65 && progress <= 100) {
                         view.findViewById(R.id.dateLinearLayout).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_rec_round));
-                    } else if (this.habitProgress.get(i).equals("50")) {
+                    } else if (progress >= 36 && progress <= 65) {
                         view.findViewById(R.id.dateLinearFirstHalf).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_rec_left_round));
+                    } else if (progress >= 0 && progress <= 35) {
+                        view.findViewById(R.id.dateRelativeLayout).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_circle));
                     }
 
                     break;

@@ -31,9 +31,11 @@ import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentCompleteHabitBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.fragment.complete.CompleteStreakFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
+import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
 
 public class CompleteHabitFragment extends Fragment {
@@ -62,13 +64,20 @@ public class CompleteHabitFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FragmentManager parentFragmentManager = getParentFragmentManager();
 
         // Linear chart of percentage by date
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
-        FragmentManager parentFragmentManager = getParentFragmentManager();
         parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
 
+
+        Fragment completeStreakFragment = new CompleteStreakFragment().newInstance(habitProgress);
+        parentFragmentManager.beginTransaction().replace(R.id.complete_information_detailed, completeStreakFragment).commit();
+
+
         binding.deleteHabitCard.setOnClickListener(this::deleteHabit);
+
+
         return binding.getRoot();
     }
 
@@ -90,7 +99,7 @@ public class CompleteHabitFragment extends Fragment {
 
         if (habitProgress != null) {
             this.habitNameLabel.setText(habitProgress.getHabit().getName());
-            int resultHabitProgress = computeProgress(habitProgress);
+            int resultHabitProgress = Utils.computeProgress(habitProgress);
             binding.habitProgressbar.setProgress(resultHabitProgress);
             binding.habitPercentageNumText.setText(resultHabitProgress + "%");
             String congratulationMessage = "You were " + resultHabitProgress + "% consistent in your habit";
@@ -98,30 +107,6 @@ public class CompleteHabitFragment extends Fragment {
         }
 
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    // TODO: Calendar progress update into Calendar View
-    private void calendarProgress() {
-        HashSet<Date> events = new HashSet<>();
-        events.add(new Date(2023, 4, 1));
-        events.add(new Date(2023, 4, 2));
-        events.add(new Date(2023, 4, 3));
-        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
-
-
-        //progressCalendarView.updateCalendar(events, habitProgress);
-    }
-
-    private int computeProgress(HabitProgress habitProgress) {
-
-        int frequencies = habitProgress.getHabit().getFrequency();
-
-        int totalCounter = habitProgress.getProgressList().stream()
-                .filter(progress -> progress.getHabitId() == habitProgress.getHabit().getId())
-                .mapToInt(Progress::getCounter)
-                .sum();
-        float progressPercentage = (totalCounter * 100.0f) / frequencies;
-        return Math.round(progressPercentage);
     }
 
     @Override
@@ -147,16 +132,12 @@ public class CompleteHabitFragment extends Fragment {
             calendar.set(Calendar.MONTH, localDate.getMonthValue() - 1);
             calendar.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
 
-
-            //Date dayProgress = new Date(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
             Date dayProgress = calendar.getTime();
-
 
             progressDate.add(dayProgress);
             progressValue.add(String.valueOf(Math.round(total)));
         });
 
         progressCalendarView.updateCalendar(progressDate, progressValue);
-        calendarProgress();
     }
 }

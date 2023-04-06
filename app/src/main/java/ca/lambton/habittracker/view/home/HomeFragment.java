@@ -28,9 +28,9 @@ import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
-import ca.lambton.habittracker.habit.view.fragment.fragment.progress.DailyProgressFragment;
-import ca.lambton.habittracker.habit.view.fragment.fragment.progress.SummarizedProgressFragment;
-import ca.lambton.habittracker.habit.view.fragment.fragment.quote.QuoteFragment;
+import ca.lambton.habittracker.habit.view.progress.DailyProgressFragment;
+import ca.lambton.habittracker.habit.view.progress.SummarizedProgressFragment;
+import ca.lambton.habittracker.habit.view.quote.QuoteFragment;
 
 public class HomeFragment extends Fragment {
 
