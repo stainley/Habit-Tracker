@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.search.SearchBar;
@@ -33,33 +35,52 @@ import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
+import ca.lambton.habittracker.databinding.FragmentMyHabitsBinding;
 
 public class MyHabitsFragment extends Fragment {
+    private static final String TAG = MyHabitsFragment.class.getName();
     private GridView myHabitsGridButton;
     private CategoryViewModel categoryViewModel;
+    private FragmentMyHabitsBinding binding;
     private CategoryRecycleAdapter categoryListAdapter;
     RecyclerView categorySearchRecyclerView;
     private SearchBar searchBarCategory;
     private SearchView searchView;
-
+    private RecyclerView recyclerView;
     private final List<Category> categories = new ArrayList<>();
     private List<Category> categoriesFiltered = new ArrayList<>();
+
+    ActivityResultLauncher<Intent> textToSpeakLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    List<String> results = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String spokenText = results.get(0);
+                    searchView.getEditText().setText(spokenText);
+                }
+            });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentMyHabitsBinding.inflate(LayoutInflater.from(requireContext()));
 
+        recyclerView = binding.categoryList;
+        categorySearchRecyclerView = binding.categoryListFiltered;
+        searchBarCategory = binding.searchCategoryBar;
+        searchView = binding.searchView;
+        myHabitsGridButton = binding.myHabitsGridView;
+
+        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
+
+        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories), requireContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(categoryListAdapter);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_my_habits, container, false);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.categoryList);
-        categorySearchRecyclerView = (RecyclerView) view.findViewById(R.id.categoryListFiltered);
-        searchBarCategory = (SearchBar) view.findViewById(R.id.searchCategoryBar);
-        searchView = (SearchView) view.findViewById(R.id.searchView);
+
         searchView.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
 
         searchView.inflateMenu(R.menu.search_bar_menu);
@@ -68,8 +89,8 @@ public class MyHabitsFragment extends Fragment {
             return true;
         });
 
-        myHabitsGridButton = (GridView) view.findViewById(R.id.myHabitsGridView);
-        ArrayList<MyHabitsGridButton> myHabitsGridButtonModelArrayList = new ArrayList<MyHabitsGridButton>();
+
+        ArrayList<MyHabitsGridButton> myHabitsGridButtonModelArrayList = new ArrayList<>();
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Create new habit", R.drawable.ic_new_habit));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Due for today", R.drawable.ic_due_today));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Ongoing habit", R.drawable.ic_ongoing_habit));
@@ -79,29 +100,10 @@ public class MyHabitsFragment extends Fragment {
         MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(requireContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
-        categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(getActivity().getApplication())).get(CategoryViewModel.class);
-        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), result -> {
-            this.categories.clear();
-            this.categories.addAll(result);
-            categoryListAdapter.notifyDataSetChanged();
-        });
 
-        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories), this.getContext());
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-        recyclerView.setAdapter(categoryListAdapter);
-
-        return view;
+        return binding.getRoot();
     }
 
-    ActivityResultLauncher<Intent> textToSpeakLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    List<String> results = result.getData().getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    String spokenText = results.get(0);
-                    searchView.getEditText().setText(spokenText);
-                }
-            });
 
     private void displaySpeechRecognizer() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -126,12 +128,13 @@ public class MyHabitsFragment extends Fragment {
                     return category.getName().toLowerCase().contains(s.toString().toLowerCase());
                 }).collect(Collectors.toList());
 
-                categoryListAdapter = new CategoryRecycleAdapter(categoriesFiltered, getOnCallbackCategory(categoriesFiltered), getContext());
+                CategoryRecycleAdapter categoryListAdapterFiltered = new CategoryRecycleAdapter(categoriesFiltered, getOnCallbackCategory(categoriesFiltered), requireContext());
+                categorySearchRecyclerView.setAdapter(categoryListAdapterFiltered);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                categorySearchRecyclerView.setAdapter(categoryListAdapter);
+
             }
         };
     }
@@ -165,5 +168,25 @@ public class MyHabitsFragment extends Fragment {
                     break;
             }
         };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        this.categories.clear();
+        categoryViewModel.getAllCategories().observe(this, result -> {
+
+            Log.i(TAG, "Habit Categories" + result.size());
+            this.categories.addAll(result);
+            categoryListAdapter.notifyItemRangeChanged(0, result.size());
+        });
+        recyclerView.setAdapter(categoryListAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //categoryListAdapter.notifyDataSetChanged();
     }
 }

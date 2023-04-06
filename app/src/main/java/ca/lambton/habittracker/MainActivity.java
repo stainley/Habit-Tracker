@@ -1,5 +1,6 @@
 package ca.lambton.habittracker;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,13 +9,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -23,6 +27,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.habit.model.User;
@@ -35,8 +43,29 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private AppBarConfiguration mAppBarConfiguration;
     private HabitViewModel habitViewModel;
-
+    private ArrayList<String> permissionsList;
     private NavController navController;
+    private final String[] permissionsStr = {Manifest.permission.CAMERA};
+
+    ActivityResultLauncher<String[]> permissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<>() {
+        @Override
+        public void onActivityResult(Map<String, Boolean> result) {
+            ArrayList<Boolean> list = new ArrayList<>(result.values());
+            permissionsList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
+                    permissionsList.add(permissionsStr[i]);
+                } else {
+                    hasPermission(getBaseContext(), permissionsStr[i]);
+                }
+            }
+            if (permissionsList.size() > 0) {
+                //Some permissions are denied and can be asked again.
+                askForPermissions(permissionsList);
+            }  //Show alert dialog
+
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +78,17 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawerLayout = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
+        permissionsList = new ArrayList<>();
+        permissionsList.addAll(Arrays.asList(permissionsStr));
+        askForPermissions(permissionsList);
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_settings, R.id.nav_my_habits, R.id.menu_logout, R.id.nav_community)
-                .setOpenableLayout(drawerLayout)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_settings,
+                R.id.nav_my_habits,
+                R.id.menu_logout,
+                R.id.nav_community
+        ).setOpenableLayout(drawerLayout)
+         .build();
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
 
@@ -109,6 +145,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
+
+
+        return super.onCreateView(parent, name, context, attrs);
+    }
+
     private void profileScreen(View view) {
         navController.navigate(R.id.profile_fragment);
     }
@@ -121,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
 
 
         return super.onCreateView(name, context, attrs);
+    }
+
+    private void hasPermission(Context context, String permissionStr) {
+        ContextCompat.checkSelfPermission(context, permissionStr);
     }
 
     @Override
@@ -140,5 +188,16 @@ public class MainActivity extends AppCompatActivity {
         Intent loginActivity = new Intent(this, LoginFragment.class);
         startActivity(loginActivity);
     }
+
+    private void askForPermissions(ArrayList<String> permissionsList) {
+        String[] newPermissionStr = new String[permissionsList.size()];
+        for (int i = 0; i < newPermissionStr.length; i++) {
+            newPermissionStr[i] = permissionsList.get(i);
+        }
+        if (newPermissionStr.length > 0) {
+            permissionsLauncher.launch(newPermissionStr);
+        }
+    }
+
 
 }

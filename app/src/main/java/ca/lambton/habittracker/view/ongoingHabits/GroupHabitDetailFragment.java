@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import ca.lambton.habittracker.databinding.FragmentGroupHabitDetailBinding;
+import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
 
 public class GroupHabitDetailFragment extends Fragment {
 

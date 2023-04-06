@@ -23,18 +23,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/mulish_bold"
             android:text="@string/progress"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.05"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress_button_container" />
+
+        <TextView
+            android:id="@+id/period_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/mulish_semi_bold"
+            android:text="Lifetime"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/progress_label"
+            app:layout_constraintTop_toBottomOf="@id/progress_label" />
+
+        <ImageView
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/separator"
+            app:layout_constraintBottom_toBottomOf="@id/period_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/graph_report_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/progress_label"
+            app:layout_constraintTop_toBottomOf="@id/separator"
             tools:layout="@layout/fragment_recycle_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

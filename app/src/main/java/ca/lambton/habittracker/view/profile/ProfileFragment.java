@@ -3,7 +3,6 @@ package ca.lambton.habittracker.view.profile;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -38,9 +37,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 
 import ca.lambton.habittracker.databinding.FragmentProfileBinding;
@@ -51,32 +47,9 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = ProfileFragment.class.getName();
     private FragmentProfileBinding binding;
     private FirebaseUser currentUser;
-    private ArrayList<String> permissionsList;
     private StorageReference storageRef;
     private CircleImageView profileImage;
     private Uri tempImageUri = null;
-
-    private final String[] permissionsStr = {Manifest.permission.CAMERA};
-
-    ActivityResultLauncher<String[]> permissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<>() {
-        @Override
-        public void onActivityResult(Map<String, Boolean> result) {
-            ArrayList<Boolean> list = new ArrayList<>(result.values());
-            permissionsList = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                if (shouldShowRequestPermissionRationale(permissionsStr[i])) {
-                    permissionsList.add(permissionsStr[i]);
-                } else {
-                    hasPermission(requireContext(), permissionsStr[i]);
-                }
-            }
-            if (permissionsList.size() > 0) {
-                //Some permissions are denied and can be asked again.
-                askForPermissions(permissionsList);
-            }  //Show alert dialog
-
-        }
-    });
 
     private final ActivityResultLauncher<Uri> selectCameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
         if (result) {
@@ -129,8 +102,9 @@ public class ProfileFragment extends Fragment {
                                         .build();
 
                                 currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(taskProfile -> {
-                                    if (taskProfile.isSuccessful()) {
-                                        Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                                    if (task.isSuccessful()) {
+                                        binding.nameProfile.setText(currentUser.getDisplayName());
+                                        Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             } else {
@@ -186,7 +160,6 @@ public class ProfileFragment extends Fragment {
                                 Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
                             }).addOnSuccessListener(taskSnapshot -> {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                Toast.makeText(requireContext(), "Photo uploaded", Toast.LENGTH_SHORT).show();
                             });
 
 
@@ -204,8 +177,9 @@ public class ProfileFragment extends Fragment {
                                             .build();
 
                                     currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(taskProfile -> {
-                                        if (taskProfile.isSuccessful()) {
-                                            Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                                        if (task.isSuccessful()) {
+                                            binding.nameProfile.setText(currentUser.getDisplayName());
+                                            Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } else {
@@ -237,7 +211,6 @@ public class ProfileFragment extends Fragment {
 
         binding.changeImageButton.setOnClickListener(this::changeProfilePicture);
         binding.cameraImageButton.setOnClickListener(this::takePhotoProfile);
-
         // Create a Cloud Storage reference from the app
         storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -265,9 +238,6 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        permissionsList = new ArrayList<>();
-        permissionsList.addAll(Arrays.asList(permissionsStr));
-        askForPermissions(permissionsList);
     }
 
     private void editProfileName(View view) {
@@ -296,7 +266,8 @@ public class ProfileFragment extends Fragment {
 
                 currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(requireContext(), "Display name profile updated. Please logout to see changes.", Toast.LENGTH_SHORT).show();
+                        binding.nameProfile.setText(currentUser.getDisplayName());
+                        Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -330,20 +301,6 @@ public class ProfileFragment extends Fragment {
 
             tempImageUri = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             selectCameraLauncher.launch(tempImageUri);
-        }
-    }
-
-    private void hasPermission(Context context, String permissionStr) {
-        ContextCompat.checkSelfPermission(context, permissionStr);
-    }
-
-    private void askForPermissions(ArrayList<String> permissionsList) {
-        String[] newPermissionStr = new String[permissionsList.size()];
-        for (int i = 0; i < newPermissionStr.length; i++) {
-            newPermissionStr[i] = permissionsList.get(i);
-        }
-        if (newPermissionStr.length > 0) {
-            permissionsLauncher.launch(newPermissionStr);
         }
     }
 }

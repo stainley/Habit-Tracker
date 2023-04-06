@@ -58,7 +58,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_detailed_progress"
-            android:name="ca.lambton.habittracker.view.fragment.progress.TodayDetailProgressFragment"
+            android:name="ca.lambton.habittracker.habit.view.progress.TodayDetailProgressFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"

@@ -3,6 +3,7 @@ package ca.lambton.habittracker.habit.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,10 +14,15 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.util.Utils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdapter.CompleteHabitViewModel> {
@@ -45,25 +51,11 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
 
         this.onCompleteListener.onCompleteRowHandler(holder.imageHabit, holder.completeHabitCard, position);
 
-        int progress = computeProgress(habitProgresses.get(position));
+        int progress = Utils.computeProgress(habitProgresses.get(position));
         String progressText = progress + "%";
         holder.progressText.setText(progressText);
         holder.circularProgressIndicator.setProgress(progress);
     }
-
-    private int computeProgress(HabitProgress habitProgress) {
-        float progressTotal = 0;
-        float totalFrequencies = habitProgress.getHabit().getFrequency();
-
-        progressTotal += habitProgress.getProgressList().stream()
-                .filter(progress -> progress.getHabitId() == habitProgress.getHabit().getId())
-                .map(Progress::getCounter)
-                .mapToInt(Integer::intValue).sum();
-        float result = (progressTotal / totalFrequencies) * 100;
-
-        return (int) result;
-    }
-
 
     @Override
     public int getItemCount() {
@@ -73,7 +65,7 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
     public static final class CompleteHabitViewModel extends RecyclerView.ViewHolder {
 
         private final TextView habitName;
-        private final CircleImageView imageHabit;
+        private final ImageView imageHabit;
         private final MaterialCardView completeHabitCard;
         private final CircularProgressIndicator circularProgressIndicator;
         private final TextView progressText;
@@ -89,6 +81,6 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
     }
 
     public interface OnCompleteListener {
-        void onCompleteRowHandler(CircleImageView circleImageView, MaterialCardView completeHabitCard, int position);
+        void onCompleteRowHandler(ImageView circleImageView, MaterialCardView completeHabitCard, int position);
     }
 }

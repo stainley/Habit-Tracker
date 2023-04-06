@@ -27,10 +27,10 @@ import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
-import ca.lambton.habittracker.view.fragment.calendar.ProgressCalendarFragment;
-import ca.lambton.habittracker.view.fragment.progress.DailyProgressFragment;
-import ca.lambton.habittracker.view.fragment.progress.SummarizedProgressFragment;
-import ca.lambton.habittracker.view.fragment.quote.QuoteFragment;
+import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
+import ca.lambton.habittracker.habit.view.progress.DailyProgressFragment;
+import ca.lambton.habittracker.habit.view.progress.SummarizedProgressFragment;
+import ca.lambton.habittracker.habit.view.quote.QuoteFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -75,7 +75,8 @@ public class HomeFragment extends Fragment {
 
 
         if (mUser != null) {
-            String userDisplay = getResources().getString(R.string.hello) + " " + mUser.getDisplayName();
+            String uName = mUser.getDisplayName() != null ? mUser.getDisplayName() : "";
+            String userDisplay = getResources().getString(R.string.hello) + " " + uName;
             binding.greetingMessageLabel.setText(userDisplay);
         }
 

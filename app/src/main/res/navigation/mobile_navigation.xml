@@ -59,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_defined_habit"
-        android:name="ca.lambton.habittracker.view.fragment.habit.DefinedHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.fragment.fragment.habit.DefinedHabitFragment"
         android:label="Habits"
         tools:layout="@layout/fragment_defined_habits">
         <action
@@ -69,7 +69,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_habit_detail"
-        android:name="ca.lambton.habittracker.view.fragment.habit.HabitDetailFragment"
+        android:name="ca.lambton.habittracker.habit.view.fragment.fragment.habit.HabitDetailFragment"
         android:label="Habit Detail"
         tools:layout="@layout/fragment_habit_detail">
         <argument
@@ -97,7 +97,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_first_habit_Fragment"
-        android:name="ca.lambton.habittracker.view.fragment.habit.first.FirstHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.fragment.fragment.habit.first.FirstHabitFragment"
         android:label="First Habit"
         tools:layout="@layout/fragment_first_habit" />
     <fragment
@@ -172,7 +172,7 @@
         android:id="@+id/private_habit_detail_fragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitDetailFragment"
         android:label="Private Habit Detail"
-        tools:layout="@layout/fragment_public_challenges">
+        tools:layout="@layout/fragment_private_habit_detail">
         <argument
             android:name="habitId"
             android:defaultValue="-1L"
@@ -183,9 +183,9 @@
             app:nullable="true" />
         <argument
             android:name="habitProgress"
+            android:defaultValue="@null"
             app:argType="ca.lambton.habittracker.habit.model.HabitProgress"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/groupHabitDetailFragment"
@@ -212,7 +212,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/completeHabitFragment"
-        android:name="ca.lambton.habittracker.habit.view.CompleteHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.complete.CompleteHabitFragment"
         android:label="Complete Detail"
         tools:layout="@layout/fragment_complete_habit">
         <argument
@@ -223,7 +223,7 @@
     </fragment>
     <fragment
         android:id="@+id/completeHabitCollectionFragment"
-        android:name="ca.lambton.habittracker.habit.view.CompleteHabitCollectionFragment"
+        android:name="ca.lambton.habittracker.habit.view.complete.CompleteHabitCollectionFragment"
         android:label="Complete Habit"
         tools:layout="@layout/fragment_complete_habit_collection">
         <action

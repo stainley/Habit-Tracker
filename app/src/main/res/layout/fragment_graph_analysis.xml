@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.antgroup.antv.f2.F2CanvasView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lineal_graph_view"
+    android:layout_width="match_parent"
+    android:layout_height="248dp"
+    android:layout_margin="8dp"
+    tools:context=".common.fragment.graph.LinealProgressGraphFragment">
+
+
+</com.antgroup.antv.f2.F2CanvasView>

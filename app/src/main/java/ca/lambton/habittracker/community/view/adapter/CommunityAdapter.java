@@ -1,14 +1,19 @@
 package ca.lambton.habittracker.community.view.adapter;
 
+import android.content.Context;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -21,11 +26,14 @@ import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.community.model.Post;
 import ca.lambton.habittracker.habit.model.User;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.picasso.transformations.CropTransformation;
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
     private final List<Post> posts;
 
     private final OnCommunityListener communityListener;
+    private Context context;
 
     public CommunityAdapter(List<Post> posts, OnCommunityListener communityListener) {
         this.posts = posts;
@@ -36,6 +44,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     @Override
     public CommunityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_card_community, parent, false);
+        context = parent.getContext();
 
         return new CommunityViewHolder(view);
     }
@@ -66,12 +75,18 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         }
 
         communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
-        System.out.println(posts.get(position).getPostImage() != null && !posts.get(position).getPostImage().getPath().equals(""));
+        communityListener.onMoreOptionCallback(holder.postCardView, position);
+
+
         if (!posts.get(position).getPostImage().getPath().equals("")) {
             holder.postImage.setVisibility(View.VISIBLE);
             holder.postImage.setClipToOutline(true);
-            holder.postPictureFrame.setClipToOutline(true);
-            Picasso.get().load(posts.get(position).getPostImage().getPath()).resize(500, 600).into(holder.postImage);
+            //holder.postPictureFrame.setClipToOutline(true);
+            Picasso.get().load(posts.get(position).getPostImage().getPath())
+                    .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
+                    .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
+                    //.resize(400,300)
+                    .into(holder.postImage);
         } else {
             holder.postImage.setVisibility(View.GONE);
         }
@@ -92,7 +107,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private final CircleImageView profilePhoto;
         private final ImageButton moreOptionButton;
         private final ImageView postImage;
-        private final FrameLayout postPictureFrame;
+        private final CardView postCardView;
 
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -104,11 +119,13 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             moreOptionButton = itemView.findViewById(R.id.more_options_button);
 
             postImage = itemView.findViewById(R.id.post_picture);
-            postPictureFrame = itemView.findViewById(R.id.post_picture_frame);
+            postCardView = postImage.findViewById(R.id.post_card);
         }
     }
 
     public interface OnCommunityListener {
-        void onMoreOptionCallback(ImageButton communityButton, int position);
+        void onMoreOptionCallback(View view, int position);
     }
+
+
 }
