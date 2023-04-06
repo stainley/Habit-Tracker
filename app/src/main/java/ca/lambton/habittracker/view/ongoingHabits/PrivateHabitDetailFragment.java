@@ -14,15 +14,12 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -37,6 +34,7 @@ import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
+import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
 
 public class PrivateHabitDetailFragment extends Fragment {
@@ -55,7 +53,6 @@ public class PrivateHabitDetailFragment extends Fragment {
     int daysTargetTotal = 0;
 
     int daysCompletedCounter = 0;
-    int daysCompletedTotal = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,50 +71,43 @@ public class PrivateHabitDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int totalTimesToComplete;
         int frequencyValue = 0;
-        long daysBetween = 0;
+        String maxStreak = String.valueOf(Utils.maxNumbersOfStreak(habitProgress));
+        String currentStreak = String.valueOf(Utils.currentNumberOfStreak(habitProgress));
 
         binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
         binding.imageView.setOnClickListener(this::editHabitName);
 
-
         ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
         ongoingHabitDetailGridInfoModelArrayList = new ArrayList<>();
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", "0"));
-        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", "0"));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", currentStreak));
+        ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", maxStreak));
 
         if (habitProgress.getHabit() != null) {
             binding.habitNameLabel.setText(habitProgress.getHabit().getName());
             frequencyValue = habitProgress.getHabit().getFrequency();
 
-            daysBetween = ChronoUnit.DAYS.between(Instant.ofEpochMilli(habitProgress.getHabit().getStartDate()).atZone(ZoneId.systemDefault()).toLocalDate(), Instant.ofEpochMilli(habitProgress.getHabit().getEndDate()).atZone(ZoneId.systemDefault()).toLocalDate());
-
             if (habitProgress.getHabit().getFrequencyUnit().equals("DAILY")) {
-                daysCompletedTotal = (int) daysBetween;
-                totalTimesToComplete = frequencyValue * (int) daysBetween;
+                totalTimesToComplete = frequencyValue * (int) Utils.getTotalDays(habitProgress.getHabit());
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", daysTargetCounter + "/" + daysTargetTotal));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalDays(habitProgress.getHabit())));
 
             } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
-                double totalDays = (daysBetween / 7);
-                daysCompletedTotal = (int) totalDays;
-                totalTimesToComplete = frequencyValue * ((int) daysBetween / 7);
+                totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfWeeks(habitProgress.getHabit());
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", daysTargetCounter + "/" + daysTargetTotal));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfWeeks(habitProgress.getHabit())));
             } else {
-                double totalDays = (daysBetween / 30);
-                daysCompletedTotal = (int) totalDays;
-                if (daysBetween < 30 || daysBetween == 30) {
+                if (Utils.getTotalDays(habitProgress.getHabit()) < 30 || Utils.getTotalDays(habitProgress.getHabit()) == 30) {
                     totalTimesToComplete = frequencyValue * 1;
                 } else {
-                    totalTimesToComplete = frequencyValue * (int) totalDays;
+                    totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfMonths(habitProgress.getHabit());
                 }
 
                 displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", daysTargetCounter + "/" + daysTargetTotal));
-                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + daysCompletedTotal));
+                ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfMonths(habitProgress.getHabit())));
             }
         }
 
@@ -237,11 +227,5 @@ public class PrivateHabitDetailFragment extends Fragment {
                 Navigation.findNavController(view).popBackStack();
             }).show();
         }
-    }
-
-    private void getProgressList(int count, Habit habit, int daysBetween) {
-        AtomicInteger todayProgress = new AtomicInteger();
-
-
     }
 }

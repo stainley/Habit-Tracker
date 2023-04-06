@@ -98,7 +98,54 @@ public class Utils {
         }
         return 0;
     }
+    
+    /**
+     * Current number of Streak.
+     *
+     * @param habitProgress HabitProgress
+     * @return int of current streak
+     */
+    public static int currentNumberOfStreak(HabitProgress habitProgress) {
+        Map<String, Integer> countsByDate = new HashMap<>();
 
+        Habit habit = habitProgress.getHabit();
+
+        habitProgress.getProgressList().stream()
+                .filter(progressObj -> progressObj.getDate() != null)
+                .forEach(obj -> {
+                    String date = obj.getDate();
+                    countsByDate.putIfAbsent(date, 0);
+                    countsByDate.computeIfPresent(date, (d, count) -> count + 1);
+                });
+
+        // Iterate over the dates in order and print the counts
+        LocalDate startDate = countsByDate.keySet().stream().map(LocalDate::parse).min(LocalDate::compareTo).orElse(null);
+
+        Instant endDateInstant = Instant.ofEpochMilli(habit.getEndDate());
+        LocalDate endDate = endDateInstant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+        if (startDate != null && endDate != null) {
+            LocalDate currentDate = startDate;
+            int currentValue = -1; // initialize to a value that won't match any count
+            int currentStreak = 0;
+
+            while (!currentDate.isAfter(endDate)) {
+
+                int count = countsByDate.getOrDefault(currentDate.toString(), -9);
+
+                if (count == currentValue && count > 0) {
+                    currentStreak++;
+                } else {
+                    currentValue = count;
+                    currentStreak = 1;
+                }
+                //Move next day
+                currentDate = currentDate.plusDays(1);
+            }
+            return currentStreak;
+        }
+        return 0;
+    }
 
     /**
      * Calculate the numbers of days for a habit to be completed
