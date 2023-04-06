@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentDueForDayScreenBinding;
-import ca.lambton.habittracker.habit.view.fragment.fragment.progress.TodayReportFragment;
+import ca.lambton.habittracker.habit.view.progress.TodayReportFragment;
 
 public class DueTodayFragment extends Fragment {
 

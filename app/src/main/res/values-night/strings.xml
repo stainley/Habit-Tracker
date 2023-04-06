@@ -45,4 +45,5 @@
     <string name="habit_image">Habit Image</string>
     <string name="habit_title">Habit Title</string>
     <string name="find_habit">Find habit</string>
+    <string name="calendar_view">Calendar view</string>
 </resources>

@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view.fragment.fragment.progress;
+package ca.lambton.habittracker.habit.view.progress;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,13 +13,9 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.HabitProgress;
-import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.util.Utils;
 
 public class TodayReportAdapter extends RecyclerView.Adapter<TodayReportAdapter.TodayReportViewHolder> {

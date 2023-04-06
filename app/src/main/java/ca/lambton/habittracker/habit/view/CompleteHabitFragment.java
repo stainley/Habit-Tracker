@@ -31,9 +31,11 @@ import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentCompleteHabitBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.fragment.complete.CompleteStreakFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
+import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
 
 public class CompleteHabitFragment extends Fragment {
@@ -62,13 +64,20 @@ public class CompleteHabitFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FragmentManager parentFragmentManager = getParentFragmentManager();
 
         // Linear chart of percentage by date
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
-        FragmentManager parentFragmentManager = getParentFragmentManager();
         parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
 
+
+        Fragment completeStreakFragment = new CompleteStreakFragment().newInstance(habitProgress);
+        parentFragmentManager.beginTransaction().replace(R.id.complete_information_detailed, completeStreakFragment).commit();
+
+
         binding.deleteHabitCard.setOnClickListener(this::deleteHabit);
+
+
         return binding.getRoot();
     }
 
@@ -90,7 +99,7 @@ public class CompleteHabitFragment extends Fragment {
 
         if (habitProgress != null) {
             this.habitNameLabel.setText(habitProgress.getHabit().getName());
-            int resultHabitProgress = computeProgress(habitProgress);
+            int resultHabitProgress = Utils.computeProgress(habitProgress);
             binding.habitProgressbar.setProgress(resultHabitProgress);
             binding.habitPercentageNumText.setText(resultHabitProgress + "%");
             String congratulationMessage = "You were " + resultHabitProgress + "% consistent in your habit";
@@ -98,19 +107,6 @@ public class CompleteHabitFragment extends Fragment {
         }
 
         super.onViewCreated(view, savedInstanceState);
-    }
-
-
-    private int computeProgress(HabitProgress habitProgress) {
-
-        int frequencies = habitProgress.getHabit().getFrequency();
-
-        int totalCounter = habitProgress.getProgressList().stream()
-                .filter(progress -> progress.getHabitId() == habitProgress.getHabit().getId())
-                .mapToInt(Progress::getCounter)
-                .sum();
-        float progressPercentage = (totalCounter * 100.0f) / frequencies;
-        return Math.round(progressPercentage);
     }
 
     @Override
