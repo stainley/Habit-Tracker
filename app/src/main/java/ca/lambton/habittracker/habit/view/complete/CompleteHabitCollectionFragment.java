@@ -102,7 +102,7 @@ public class CompleteHabitCollectionFragment extends Fragment {
 
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         //TODO: for test  remove the below. remove before release
-        calendar.add(Calendar.WEEK_OF_MONTH, 4);
+        //calendar.add(Calendar.WEEK_OF_MONTH, 4);
 
 
         habitViewModel.getAllProgress().observe(this, habitProgressResult -> {

@@ -18,6 +18,9 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -77,7 +80,9 @@ public class PrivateHabitsFragment extends Fragment {
             public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
                 AtomicInteger totalProgress = new AtomicInteger();
                 habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
-                    List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
+                    List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
+                            .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()))
+                            .collect(Collectors.toList());
 
                     for (HabitProgress hp : myHabitProgressFiltered) {
                         totalProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId()).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
@@ -101,9 +106,15 @@ public class PrivateHabitsFragment extends Fragment {
         this.habitProgresses.clear();
 
         habitViewModel.getAllProgress().observe(this, habitProgressResult -> {
+            LocalDate today = LocalDate.now();
 
             List<HabitProgress> resultData = habitProgressResult.stream()
                     .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()))
+                    .filter(date -> {
+
+                        LocalDate endDate = Instant.ofEpochMilli(date.getHabit().getEndDate()).atZone(ZoneId.systemDefault()).toLocalDate();
+                        return today.isBefore(endDate);
+                    })
                     .collect(Collectors.toList());
 
             habitProgresses.addAll(resultData);

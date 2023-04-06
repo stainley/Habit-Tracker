@@ -19,11 +19,13 @@ import com.google.android.material.snackbar.Snackbar;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
@@ -115,12 +117,22 @@ public class CompleteHabitFragment extends Fragment {
         // Get the habit frequency
         int frequency = habitProgress.getHabit().getFrequency();
 
-        // Group by date and summarize the progress
-        Map<String, Integer> groupByDate = habitProgress.getProgressList()
+        Map<String, Integer> orderedByDate = habitProgress.getProgressList()
                 .stream()
-                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+                .collect(Collectors.groupingBy(
+                        Progress::getDate,
+                        TreeMap::new, // Use a TreeMap as the map implementation
+                        Collectors.summingInt(Progress::getCounter)
+                ));
 
-        groupByDate.forEach((date, summarize) -> {
+        // Create a Comparator that compares the keys in descending order
+        Comparator<String> descendingComparator = Comparator.naturalOrder();
+        // Sort the map by keys in ASC order
+        Map<String, Integer> sortedGroupByDate = new TreeMap<>(descendingComparator);
+        sortedGroupByDate.putAll(orderedByDate);
+
+        progressDate.clear();
+        sortedGroupByDate.forEach((date, summarize) -> {
             float total = ((float) summarize / (float) frequency) * 100;
             graphDataList.add(new GraphData(Math.round(total), date));
 

@@ -26,12 +26,14 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -109,26 +111,23 @@ public class PrivateHabitDetailFragment extends Fragment {
 
             if (habitProgress.getHabit().getFrequencyUnit().equals("DAILY")) {
                 totalTimesToComplete = frequencyValue * (int) Utils.getTotalDays(habitProgress.getHabit());
-                //displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
-                displayPercentageTotal(habitProgress);
-
+                displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This day’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalDays(habitProgress.getHabit())));
 
             } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
                 totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfWeeks(habitProgress.getHabit());
-                //displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
-                displayPercentageTotal(habitProgress);
+                displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This week’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfWeeks(habitProgress.getHabit())));
             } else {
                 if (Utils.getTotalDays(habitProgress.getHabit()) < 30 || Utils.getTotalDays(habitProgress.getHabit()) == 30) {
-                    totalTimesToComplete = frequencyValue;
+                    totalTimesToComplete = frequencyValue * 1;
                 } else {
                     totalTimesToComplete = frequencyValue * (int) Utils.getTotalOfMonths(habitProgress.getHabit());
                 }
-                displayPercentageTotal(habitProgress);
-                //displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
+
+                displayPercentageTotal(totalTimesToComplete, habitProgress.getHabit());
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("This month’s target", daysTargetCounter + "/" + daysTargetTotal));
                 ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Days completed", daysCompletedCounter + "/" + Utils.getTotalOfMonths(habitProgress.getHabit())));
             }
@@ -156,8 +155,10 @@ public class PrivateHabitDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentManager parentFragmentManager = getParentFragmentManager();
 
-        // Linear chart of percentage by date
+
+        // Linear chart graph of percentage by date
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
+        // Comment that line if you have problem displaying the GRAPH, but not commit to the repository
         parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
     }
 
@@ -185,36 +186,21 @@ public class PrivateHabitDetailFragment extends Fragment {
         }).setCancelable(false).show();
     }
 
-
-    private void displayPercentageTotal(HabitProgress habitProgress) {
-
-        int totalProgress = Utils.computeProgress(habitProgress);
-
-        if (totalProgress == 0) {
-            binding.habitPercentageNumText.setText("0%");
-        } else {
-            //int percentage = totalProgress;
-            binding.habitPercentageNumText.setText(totalProgress + "%");
-            binding.habitProgressbar.setProgress(totalProgress);
-            binding.congratulationText.setVisibility(View.VISIBLE);
-            binding.percentTextGoalAchieved.setVisibility(View.VISIBLE);
-            binding.percentTextGoalAchieved.setText(totalProgress + "% of your goal is achieved");
-        }
-    }
-
     private void displayPercentageTotal(int count, Habit habit) {
 
-        int totalProgress = Utils.computeProgress(habitProgress);
+        AtomicInteger totalProgress = new AtomicInteger();
 
-        if (totalProgress == 0) {
+        totalProgress.addAndGet(habitProgress.getProgressList().stream().filter(progress -> progress.getHabitId() == habit.getId()).mapToInt(Progress::getCounter).sum());
+
+        if (totalProgress.get() == 0) {
             binding.habitPercentageNumText.setText("0%");
         } else {
-            //int percentage = totalProgress;
-            binding.habitPercentageNumText.setText(totalProgress + "%");
-            binding.habitProgressbar.setProgress(totalProgress);
+            int percentage = totalProgress.get() * 100 / count;
+            binding.habitPercentageNumText.setText(percentage + "%");
+            binding.habitProgressbar.setProgress(percentage);
             binding.congratulationText.setVisibility(View.VISIBLE);
             binding.percentTextGoalAchieved.setVisibility(View.VISIBLE);
-            binding.percentTextGoalAchieved.setText(totalProgress + "% of your goal is achieved");
+            binding.percentTextGoalAchieved.setText(percentage + "% of your goal is achieved");
         }
     }
 
@@ -273,12 +259,22 @@ public class PrivateHabitDetailFragment extends Fragment {
         // Get the habit frequency
         int frequency = habitProgress.getHabit().getFrequency();
 
-        // Group by date and summarize the progress
-        Map<String, Integer> groupByDate = habitProgress.getProgressList()
+        Map<String, Integer> orderedByDate = habitProgress.getProgressList()
                 .stream()
-                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+                .collect(Collectors.groupingBy(
+                        Progress::getDate,
+                        TreeMap::new, // Use a TreeMap as the map implementation
+                        Collectors.summingInt(Progress::getCounter)
+                ));
 
-        groupByDate.forEach((date, summarize) -> {
+        // Create a Comparator that compares the keys in descending order
+        Comparator<String> descendingComparator = Comparator.naturalOrder();
+        // Sort the map by keys in ASC order
+        Map<String, Integer> sortedGroupByDate = new TreeMap<>(descendingComparator);
+        sortedGroupByDate.putAll(orderedByDate);
+
+        progressDate.clear();
+        sortedGroupByDate.forEach((date, summarize) -> {
             float total = ((float) summarize / (float) frequency) * 100;
             graphDataList.add(new GraphData(Math.round(total), date));
 

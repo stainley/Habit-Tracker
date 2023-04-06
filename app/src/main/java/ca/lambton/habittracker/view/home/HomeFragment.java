@@ -75,7 +75,8 @@ public class HomeFragment extends Fragment {
 
 
         if (mUser != null) {
-            String userDisplay = getResources().getString(R.string.hello) + " " + mUser.getDisplayName();
+            String uName = mUser.getDisplayName() != null ? mUser.getDisplayName() : "";
+            String userDisplay = getResources().getString(R.string.hello) + " " + uName;
             binding.greetingMessageLabel.setText(userDisplay);
         }
 
