@@ -1,4 +1,4 @@
-package ca.lambton.habittracker.habit.view;
+package ca.lambton.habittracker.habit.view.complete;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,25 +18,28 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
 import ca.lambton.habittracker.databinding.FragmentCompleteHabitBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.GraphData;
 import ca.lambton.habittracker.habit.view.fragment.complete.CompleteStreakFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.util.calendar.monthly.CustomCalendarView;
+
 
 public class CompleteHabitFragment extends Fragment {
 
@@ -70,7 +73,7 @@ public class CompleteHabitFragment extends Fragment {
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
         parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
 
-
+        // Complete Streak info cards
         Fragment completeStreakFragment = new CompleteStreakFragment().newInstance(habitProgress);
         parentFragmentManager.beginTransaction().replace(R.id.complete_information_detailed, completeStreakFragment).commit();
 
@@ -96,7 +99,6 @@ public class CompleteHabitFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-
         if (habitProgress != null) {
             this.habitNameLabel.setText(habitProgress.getHabit().getName());
             int resultHabitProgress = Utils.computeProgress(habitProgress);
@@ -115,12 +117,22 @@ public class CompleteHabitFragment extends Fragment {
         // Get the habit frequency
         int frequency = habitProgress.getHabit().getFrequency();
 
-        // Group by date and summarize the progress
-        Map<String, Integer> groupByDate = habitProgress.getProgressList()
+        Map<String, Integer> orderedByDate = habitProgress.getProgressList()
                 .stream()
-                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+                .collect(Collectors.groupingBy(
+                        Progress::getDate,
+                        TreeMap::new, // Use a TreeMap as the map implementation
+                        Collectors.summingInt(Progress::getCounter)
+                ));
 
-        groupByDate.forEach((date, summarize) -> {
+        // Create a Comparator that compares the keys in descending order
+        Comparator<String> descendingComparator = Comparator.naturalOrder();
+        // Sort the map by keys in ASC order
+        Map<String, Integer> sortedGroupByDate = new TreeMap<>(descendingComparator);
+        sortedGroupByDate.putAll(orderedByDate);
+
+        progressDate.clear();
+        sortedGroupByDate.forEach((date, summarize) -> {
             float total = ((float) summarize / (float) frequency) * 100;
             graphDataList.add(new GraphData(Math.round(total), date));
 

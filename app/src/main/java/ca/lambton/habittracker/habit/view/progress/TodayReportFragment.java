@@ -1,5 +1,6 @@
 package ca.lambton.habittracker.habit.view.progress;
 
+import android.icu.util.LocaleData;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +25,15 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import ca.lambton.habittracker.databinding.FragmentRecycleViewBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
@@ -142,6 +148,7 @@ public class TodayReportFragment extends Fragment {
 
             habitProgressList.clear();
             habitProgressFiltered.forEach(habitProgress -> {
+
                 String startDateString = Utils.parseDate(habitProgress.getHabit().getStartDate());
                 String endDateString = Utils.parseDate(habitProgress.getHabit().getEndDate());
 
@@ -153,7 +160,7 @@ public class TodayReportFragment extends Fragment {
                 }
             });
 
-            todayReportAdapter.notifyItemChanged(0, habitProgressFiltered.size());
+            todayReportAdapter.notifyDataSetChanged();
         });
         recycleView.setAdapter(todayReportAdapter);
 

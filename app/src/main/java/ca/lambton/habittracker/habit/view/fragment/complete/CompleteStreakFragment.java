@@ -63,9 +63,11 @@ public class CompleteStreakFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        assert getArguments() != null;
         habitProgress = (HabitProgress) getArguments().getSerializable("habit_progress");
 
         if (habitProgress != null) {
+
             Habit habit = habitProgress.getHabit();
 
             double frequency = habitProgress.getHabit().getFrequency();
@@ -78,17 +80,16 @@ public class CompleteStreakFragment extends Fragment {
 
             binding.numDaysValue.setText(String.valueOf(numbersOfDaysEntered));
 
-            double sumOfPercentages = progressMap.values().stream()
+            /*double sumOfPercentages = progressMap.values().stream()
                     .mapToDouble(sum -> (sum / frequency) * 100)
                     .count();
-
+*/
             long totalDays = Utils.getTotalDays(habit);
 
             long numbersOfDayMissed = totalDays - numbersOfDaysEntered;
             binding.daysMissedValue.setText(String.valueOf(numbersOfDayMissed));
 
-
-            String maxStreak = String.valueOf(Utils.maxNumbersOfStreak(habitProgress));
+            String maxStreak = String.valueOf(Math.max(Utils.maxNumbersOfStreak(habitProgress), Utils.currentNumberOfStreak(habitProgress)));
             binding.highestStreakValue.setText(maxStreak);
         }
     }

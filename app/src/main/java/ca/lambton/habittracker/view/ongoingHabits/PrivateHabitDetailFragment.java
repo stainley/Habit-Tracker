@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -22,16 +25,25 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.common.fragment.graph.LinealProgressGraphFragment;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitDetailBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.GraphData;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Utils;
@@ -43,7 +55,10 @@ public class PrivateHabitDetailFragment extends Fragment {
     private GridView ongoingHabitDetailGridInfo;
 
     private GridView achievementGridInfo;
-
+    private final List<GraphData> graphDataList = new ArrayList<>();
+    private final HashSet<Date> progressDate = new HashSet<>();
+    private final ArrayList<String> progressValue = new ArrayList<>();
+    private CustomCalendarView progressCalendarView;
     HabitViewModel habitViewModel;
 
     ArrayList<OngoingHabitDetailGridInfo> ongoingHabitDetailGridInfoModelArrayList;
@@ -57,8 +72,19 @@ public class PrivateHabitDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
+        binding = FragmentPrivateHabitDetailBinding.inflate(LayoutInflater.from(requireContext()));
+
+        progressCalendarView = binding.calendarView;
+        ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
+        achievementGridInfo = binding.achievementsGridView;
+
+        binding.deleteButtonCard.setOnClickListener(this::deleteHabit);
+        binding.imageView.setOnClickListener(this::editHabitName);
+
+
+        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
         habitProgress = PrivateHabitDetailFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
+
 
         if (habitProgress != null) {
             daysTargetTotal = habitProgress.getHabit().getFrequency();
@@ -68,17 +94,13 @@ public class PrivateHabitDetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         int totalTimesToComplete;
         int frequencyValue = 0;
-        String maxStreak = String.valueOf(Utils.maxNumbersOfStreak(habitProgress));
+        String maxStreak = String.valueOf(Math.max(Utils.maxNumbersOfStreak(habitProgress), Utils.currentNumberOfStreak(habitProgress)));
         String currentStreak = String.valueOf(Utils.currentNumberOfStreak(habitProgress));
 
-        binding = FragmentPrivateHabitDetailBinding.inflate(inflater, container, false);
 
-        binding.imageView.setOnClickListener(this::editHabitName);
-
-        ongoingHabitDetailGridInfo = binding.ongoingHabitDetailGridView;
         ongoingHabitDetailGridInfoModelArrayList = new ArrayList<>();
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your current streak", currentStreak));
         ongoingHabitDetailGridInfoModelArrayList.add(new OngoingHabitDetailGridInfo("Your highest streak", maxStreak));
@@ -111,31 +133,33 @@ public class PrivateHabitDetailFragment extends Fragment {
             }
         }
 
-        OngoingHabitDetailGridInfoAdapter adapter = new OngoingHabitDetailGridInfoAdapter(getContext(), ongoingHabitDetailGridInfoModelArrayList);
+        OngoingHabitDetailGridInfoAdapter adapter = new OngoingHabitDetailGridInfoAdapter(requireContext(), ongoingHabitDetailGridInfoModelArrayList);
         ongoingHabitDetailGridInfo.setAdapter(adapter);
 
-        achievementGridInfo = (GridView) binding.achievementsGridView;
-        ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<AchievementInfo>();
+        ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<>();
         achievementModelArrayList.add(new AchievementInfo("Complete the First\n" + "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" + "your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(getContext(), achievementModelArrayList);
+        AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(requireContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
 
-        HashSet<Date> events = new HashSet<>();
-        events.add(new Date(2023, 3, 13));
-        events.add(new Date(2023, 3, 15));
-        events.add(new Date(2023, 3, 21));
-        ArrayList<String> habitProgress = new ArrayList<String>(Arrays.asList("0", "50", "100"));
 
-        CustomCalendarView cv = (CustomCalendarView) binding.calendarView;
-        cv.updateCalendar(events, habitProgress);
-
-        binding.deleteButtonCard.setOnClickListener(this::deleteHabit);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        FragmentManager parentFragmentManager = getParentFragmentManager();
+
+
+        // Linear chart graph of percentage by date
+        Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
+        // Comment that line if you have problem displaying the GRAPH, but not commit to the repository
+        parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
     }
 
     private void editHabitName(View view) {
@@ -227,5 +251,47 @@ public class PrivateHabitDetailFragment extends Fragment {
                 Navigation.findNavController(view).popBackStack();
             }).show();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Get the habit frequency
+        int frequency = habitProgress.getHabit().getFrequency();
+
+        Map<String, Integer> orderedByDate = habitProgress.getProgressList()
+                .stream()
+                .collect(Collectors.groupingBy(
+                        Progress::getDate,
+                        TreeMap::new, // Use a TreeMap as the map implementation
+                        Collectors.summingInt(Progress::getCounter)
+                ));
+
+        // Create a Comparator that compares the keys in descending order
+        Comparator<String> descendingComparator = Comparator.naturalOrder();
+        // Sort the map by keys in ASC order
+        Map<String, Integer> sortedGroupByDate = new TreeMap<>(descendingComparator);
+        sortedGroupByDate.putAll(orderedByDate);
+
+        progressDate.clear();
+        sortedGroupByDate.forEach((date, summarize) -> {
+            float total = ((float) summarize / (float) frequency) * 100;
+            graphDataList.add(new GraphData(Math.round(total), date));
+
+            LocalDate localDate = LocalDate.parse(date);
+
+
+            Calendar calendar = Calendar.getInstance(Locale.CANADA);
+            calendar.set(Calendar.YEAR, localDate.getYear());
+            calendar.set(Calendar.MONTH, localDate.getMonthValue() - 1);
+            calendar.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
+
+            Date dayProgress = calendar.getTime();
+
+            progressDate.add(dayProgress);
+            progressValue.add(String.valueOf(Math.round(total)));
+        });
+
+        progressCalendarView.updateCalendar(progressDate, progressValue);
     }
 }

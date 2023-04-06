@@ -55,9 +55,9 @@ class CustomCalendarAdapter extends ArrayAdapter<Date> {
                     view.findViewById(R.id.dateRelativeLayout).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_circle));
                     int progress = Integer.parseInt(this.habitProgress.get(i));
 
-                    if (progress > 65 && progress <= 100) {
+                    if (progress > 95 && progress <= 100) {
                         view.findViewById(R.id.dateLinearLayout).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_rec_round));
-                    } else if (progress >= 36 && progress <= 65) {
+                    } else if (progress >= 36 && progress <= 95) {
                         view.findViewById(R.id.dateLinearFirstHalf).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_rec_left_round));
                     } else if (progress >= 0 && progress <= 35) {
                         view.findViewById(R.id.dateRelativeLayout).setBackground(customCalendarView.getResources().getDrawable(R.drawable.shape_circle));

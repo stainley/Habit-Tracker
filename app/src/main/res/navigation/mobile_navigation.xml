@@ -212,7 +212,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/completeHabitFragment"
-        android:name="ca.lambton.habittracker.habit.view.CompleteHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.complete.CompleteHabitFragment"
         android:label="Complete Detail"
         tools:layout="@layout/fragment_complete_habit">
         <argument
@@ -223,7 +223,7 @@
     </fragment>
     <fragment
         android:id="@+id/completeHabitCollectionFragment"
-        android:name="ca.lambton.habittracker.habit.view.CompleteHabitCollectionFragment"
+        android:name="ca.lambton.habittracker.habit.view.complete.CompleteHabitCollectionFragment"
         android:label="Complete Habit"
         tools:layout="@layout/fragment_complete_habit_collection">
         <action
