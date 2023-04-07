@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,13 +54,17 @@ public class LoginFragment extends AppCompatActivity {
         binding = FragmentLoginBinding.inflate(LayoutInflater.from(getApplicationContext()));
         setContentView(binding.getRoot());
 
+
+
         binding.loginGoogle.setOnClickListener(this::loginWithGoogle);
 
         binding.loginBtn.setOnClickListener(this::loginWithEmail);
 
         binding.signupText.setOnClickListener(this::signupView);
 
+        binding.forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
         binding.forgotPassword.setOnClickListener(this::forgotPassword);
+        binding.signupText.setMovementMethod(LinkMovementMethod.getInstance());
 
         mAuth = FirebaseAuth.getInstance();
         oneTapClient = Identity.getSignInClient(this);

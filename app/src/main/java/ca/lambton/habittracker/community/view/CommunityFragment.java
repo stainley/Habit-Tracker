@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,7 +47,6 @@ public class CommunityFragment extends Fragment {
     private final List<Post> postsFiltered = new ArrayList<>();
     private PostViewModel postViewModel;
     private RecyclerView recyclerView;
-    private SearchBar searchBarPost;
     private SearchView searchViewPost;
 
 
@@ -57,7 +55,6 @@ public class CommunityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = FragmentCommunityBinding.inflate(LayoutInflater.from(requireContext()));
 
-        searchBarPost = binding.searchBar;
         searchViewPost = binding.searchView;
         postViewModel = new ViewModelProvider(getViewModelStore(), new PostViewModelFactory(requireActivity().getApplication())).get(PostViewModel.class);
 
@@ -153,7 +150,6 @@ public class CommunityFragment extends Fragment {
                     if (item.getItemId() == R.id.delete_post) {
                         postViewModel.deletePost(this.posts.get(position));
                         this.posts.remove(position);
-                        //communityAdapter.notifyItemRemoved(position);
                         communityAdapter.notifyDataSetChanged();
                         return true;
                     }

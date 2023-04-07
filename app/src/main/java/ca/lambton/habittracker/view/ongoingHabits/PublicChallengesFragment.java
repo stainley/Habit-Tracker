@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,8 +19,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
 
 import java.util.ArrayList;
@@ -29,9 +26,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import ca.lambton.habittracker.R;
-import ca.lambton.habittracker.community.model.Post;
-import ca.lambton.habittracker.community.view.adapter.CommunityAdapter;
 import ca.lambton.habittracker.databinding.FragmentPublicChallengesBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -40,24 +34,20 @@ import ca.lambton.habittracker.view.ongoingHabits.adapter.OngoingHabitPublicAdap
 
 public class PublicChallengesFragment extends Fragment {
     private FragmentPublicChallengesBinding binding;
-    private HabitViewModel habitViewModel;
     private OngoingHabitPublicAdapter ongoingHabitPublicAdapter;
     private final List<Habit> habits = new ArrayList<>();
     private final List<Habit> habitsFiltered = new ArrayList<>();
 
-    private RecyclerView recyclerView;
-    private SearchBar searchBarPost;
     private SearchView searchViewHabit;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentPublicChallengesBinding.inflate(LayoutInflater.from(requireContext()));
-        recyclerView = binding.publicOngoingHabitsList;
-        searchBarPost = binding.searchBar;
+        RecyclerView recyclerView = binding.publicOngoingHabitsList;
         searchViewHabit = binding.searchView;
 
-        habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+        HabitViewModel habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
 
         ongoingHabitPublicAdapter = new OngoingHabitPublicAdapter(habits, position -> {
             NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(habits.get(position));
@@ -85,26 +75,6 @@ public class PublicChallengesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         searchViewHabit.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
-    }
-
-    @NonNull
-    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<Habit> habits, boolean isGroup) {
-        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
-            @Override
-            public void onRowClicked(int position, boolean isGroup) {
-                if (isGroup) {
-                    Navigation.findNavController(getView()).navigate(R.id.groupHabitDetailFragment);
-                } else {
-                    NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabit(habits.get(position));
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
-                }
-            }
-
-            @Override
-            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
-
-            }
-        };
     }
 
     // SEARCH BAR

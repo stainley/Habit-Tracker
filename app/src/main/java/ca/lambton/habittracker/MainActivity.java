@@ -150,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
 
-
         return super.onCreateView(parent, name, context, attrs);
     }
 

@@ -38,7 +38,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_label">
 
-        <ImageButton
+        <!--<ImageButton
             android:id="@+id/login_twitter"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -53,7 +53,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:background="@drawable/facebook"
-            android:contentDescription="@string/facebook_button" />
+            android:contentDescription="@string/facebook_button" />-->
 
         <ImageButton
             android:id="@+id/login_google"
@@ -115,6 +115,7 @@
         android:id="@+id/remember_ckb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@id/lock_icon"
         app:layout_constraintStart_toStartOf="@id/lock_icon"
         app:layout_constraintTop_toBottomOf="@id/password_login_text" />
@@ -125,6 +126,7 @@
         android:paddingStart="4dp"
         android:paddingEnd="0dp"
         android:text="@string/remember_me"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
         app:layout_constraintStart_toEndOf="@id/remember_ckb"
         app:layout_constraintStart_toStartOf="@id/password_login_text"
@@ -137,6 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:text="@string/forgot_password"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/remember_ckb"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/remember_ckb" />
@@ -173,9 +176,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:autoLink="all"
         android:clickable="true"
         android:focusable="true"
         android:text="@string/don_t_have_an_account"
+        android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
