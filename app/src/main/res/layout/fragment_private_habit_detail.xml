@@ -119,7 +119,8 @@
             android:listSelector="@android:color/transparent"
             android:numColumns="2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/percentTextGoalAchieved" />
+            app:layout_constraintTop_toBottomOf="@+id/percentTextGoalAchieved"
+            tools:listitem="@layout/grid_achievement" />
 
         <TextView
             android:id="@+id/textView5"

@@ -110,7 +110,12 @@
         android:id="@+id/nav_due_today"
         android:name="ca.lambton.habittracker.view.today.DueTodayFragment"
         android:label="Due for today"
-        tools:layout="@layout/fragment_due_for_day_screen" />
+        tools:layout="@layout/fragment_due_for_day_screen" >
+        <action
+            android:id="@+id/action_completeHabitFragment_to_collectScoreFragment"
+            app:destination="@id/collectScoreFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/ongoingHabitFragment"
         android:name="ca.lambton.habittracker.view.ongoingHabits.OngoingHabitsFragment"
@@ -231,4 +236,15 @@
             app:destination="@id/completeHabitFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/collectScoreFragment"
+        android:name="ca.lambton.habittracker.habit.view.complete.CollectScoreFragment"
+        android:label="Collect Score"
+        tools:layout="@layout/fragment_collect_score">
+        <argument
+            android:name="habitProgress"
+            android:defaultValue="@null"
+            app:argType="ca.lambton.habittracker.habit.model.HabitProgress"
+            app:nullable="true" />
+    </fragment>
 </navigation>
