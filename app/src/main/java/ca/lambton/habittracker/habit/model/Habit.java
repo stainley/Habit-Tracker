@@ -47,6 +47,9 @@ public class Habit implements Serializable {
     @ColumnInfo(name = "END_DATE")
     private long endDate;
 
+    @ColumnInfo(name = "SCORE")
+    private int score = 0;
+
     public Habit() {
     }
 
@@ -171,6 +174,14 @@ public class Habit implements Serializable {
         this.endDate = endDate;
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     @Override
     public String toString() {
         return "Habit{" +
@@ -189,6 +200,7 @@ public class Habit implements Serializable {
                 ", habitType='" + habitType + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", score=" + score +
                 '}';
     }
 }

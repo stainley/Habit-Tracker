@@ -315,6 +315,7 @@ public class CreateHabitFragment extends Fragment {
         if (validateEmptyField()) return;
 
         Habit newHabit = new Habit();
+        newHabit.setScore(0);
         newHabit.setUserId(mUser != null ? mUser.getUid() : "");
         newHabit.setName(binding.titleHabit.getText().toString());
         newHabit.setDescription(binding.description.getText() != null ? binding.description.getText().toString() : "");
