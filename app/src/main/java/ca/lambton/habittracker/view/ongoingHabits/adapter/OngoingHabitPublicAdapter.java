@@ -3,12 +3,14 @@ package ca.lambton.habittracker.view.ongoingHabits.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +46,16 @@ public class OngoingHabitPublicAdapter extends RecyclerView.Adapter<OngoingHabit
         holder.frequencyUnit.setText(Utils.capitalize(habits.get(position).getFrequencyUnit()));
         holder.frequencyValue.setText(String.valueOf(habits.get(position).getFrequency()));
         holder.frequency.setText(String.valueOf(habits.get(position).getFrequency()));
+
+        String habitImage = habits.get(position).getImagePath();
+        if (habitImage != null) {
+            Picasso.get().load(habitImage)
+                    .fit()
+                    .into(holder.habitImage);
+        }
+
         holder.publicHabitCardView.setOnClickListener(view -> ongoingPublicHabitListener.onCardClicked(position));
+
     }
 
     @Override
@@ -61,6 +72,7 @@ public class OngoingHabitPublicAdapter extends RecyclerView.Adapter<OngoingHabit
         /*private final TextView duration;*/
         private final TextView frequencyValue;
         private final TextView frequencyUnit;
+        private final ImageView habitImage;
 
 
         public OngoingPublicViewHolder(@NonNull View itemView) {
@@ -72,6 +84,7 @@ public class OngoingHabitPublicAdapter extends RecyclerView.Adapter<OngoingHabit
             frequencyValue = itemView.findViewById(R.id.frequency_unit_value);
             frequencyUnit = itemView.findViewById(R.id.frequency_unit);
             durationTime = itemView.findViewById(R.id.duration_time);
+            habitImage = itemView.findViewById(R.id.image_habit);
         }
     }
 
