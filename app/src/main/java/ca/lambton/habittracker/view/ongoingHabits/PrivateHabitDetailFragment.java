@@ -137,15 +137,14 @@ public class PrivateHabitDetailFragment extends Fragment {
         ongoingHabitDetailGridInfo.setAdapter(adapter);
 
         ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<>();
-        achievementModelArrayList.add(new AchievementInfo("Complete the First\n" + "Day of Your Habit", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" + "your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" + " your Habit Duration", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
-        achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete the First\n" + "Day of Your Habit", "30", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" + "your Habit Duration", "50", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" + " your Habit Duration", "100", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" + " your Habit Duration", "150", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", "200", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", "300", R.drawable.ic_achievement_score, R.drawable.ic_achievement_star_disable));
         AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(requireContext(), achievementModelArrayList);
         achievementGridInfo.setAdapter(achievementAdapter);
-
 
         return binding.getRoot();
     }
@@ -159,7 +158,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         // Linear chart graph of percentage by date
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
         // Comment that line if you have problem displaying the GRAPH, but not commit to the repository
-        parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
+        //parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
     }
 
     private void editHabitName(View view) {
