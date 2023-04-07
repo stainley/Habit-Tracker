@@ -46,6 +46,10 @@ public class AchievementGridAdapter extends ArrayAdapter<AchievementInfo> {
         scoreImageView.setImageResource(achievementInfo.getScoreImage());
         starImageView.setImageResource(achievementInfo.getStarImage());
 
+        if (achievementInfo.getScoreImage() == R.drawable.ic_achievement_score_enable) {
+            scoreImageViewLabel.setTextColor(getContext().getResources().getColor(R.color.white));
+        }
+
         return listitemView;
     }
 }
