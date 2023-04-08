@@ -72,7 +72,7 @@ public class MyHabitsFragment extends Fragment {
 
         categoryViewModel = new ViewModelProvider(this, new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
 
-        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories), requireContext());
+        categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(categoryListAdapter);
     }
@@ -128,7 +128,7 @@ public class MyHabitsFragment extends Fragment {
                     return category.getName().toLowerCase().contains(s.toString().toLowerCase());
                 }).collect(Collectors.toList());
 
-                CategoryRecycleAdapter categoryListAdapterFiltered = new CategoryRecycleAdapter(categoriesFiltered, getOnCallbackCategory(categoriesFiltered), requireContext());
+                CategoryRecycleAdapter categoryListAdapterFiltered = new CategoryRecycleAdapter(categoriesFiltered, getOnCallbackCategory(categoriesFiltered));
                 categorySearchRecyclerView.setAdapter(categoryListAdapterFiltered);
             }
 
@@ -141,12 +141,8 @@ public class MyHabitsFragment extends Fragment {
 
     @NonNull
     private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<ca.lambton.habittracker.category.model.Category> categories) {
-        return new CategoryRecycleAdapter.OnCategoryCallback() {
-
-            @Override
-            public void onRowClicked(int position) {
-
-            }
+        return position -> {
+            categories.get(position);
         };
     }
 
