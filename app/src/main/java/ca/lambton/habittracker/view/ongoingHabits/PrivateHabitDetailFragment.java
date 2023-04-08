@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -159,7 +158,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         // Linear chart graph of percentage by date
         Fragment graphFragment = LinealProgressGraphFragment.newInstance(graphDataList);
         // Comment that line if you have problem displaying the GRAPH, but not commit to the repository
-        //parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
+        parentFragmentManager.beginTransaction().replace(R.id.progress_chart_container, graphFragment).commit();
     }
 
     private void editHabitName(View view) {

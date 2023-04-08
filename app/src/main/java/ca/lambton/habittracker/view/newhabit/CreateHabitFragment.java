@@ -1,11 +1,18 @@
 package ca.lambton.habittracker.view.newhabit;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +41,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,6 +67,7 @@ import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.util.AlarmReceiver;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
@@ -79,6 +90,9 @@ public class CreateHabitFragment extends Fragment {
     private StorageReference storageRef;
     private FirebaseUser currentUser;
     private String pathUri;
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent;
+    private Calendar calendar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +108,10 @@ public class CreateHabitFragment extends Fragment {
         storageRef = FirebaseStorage.getInstance().getReference();
 
         binding.overflowMenu.setOnClickListener(replaceImage());
+
+        binding.selectTimeBtn.setOnClickListener(this::showTimePicker);
+
+        notificationChannel();
     }
 
     @NonNull
@@ -352,6 +370,10 @@ public class CreateHabitFragment extends Fragment {
             });
         }
 
+
+        if (binding.reminderSwitch.isChecked()) {
+            setAlarm();
+        }
         Toast.makeText(requireContext(), "New habit registered", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(view).popBackStack(R.id.createHabitFragment, true);
     }
@@ -436,6 +458,74 @@ public class CreateHabitFragment extends Fragment {
         return emptyField;
     }
 
+    private void setAlarm() {
+
+        calendar = Calendar.getInstance();
+
+        alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(requireContext(), AlarmReceiver.class);
+
+        pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        /*alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);*/
+
+        Toast.makeText(requireContext(), "Alarm set Successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showTimePicker(View view) {
+
+        MaterialTimePicker selectReminderTime = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(12)
+                .setMinute(0)
+                .setTitleText("Select Reminder Time")
+                .build();
+
+        selectReminderTime.show(getParentFragmentManager(), "ReminderChannel");
+
+        selectReminderTime.addOnPositiveButtonClickListener(v -> {
+
+            if (selectReminderTime.getHour() > 12) {
+
+                binding.selectTimeBtn.setText(
+                        String.format("%02d", (selectReminderTime.getHour() - 12)) + " : " + String.format("%02d", selectReminderTime.getMinute()) + " PM"
+                );
+
+            } else {
+
+                binding.selectTimeBtn.setText(selectReminderTime.getHour() + " : " + selectReminderTime.getMinute() + " AM");
+
+            }
+
+            calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, selectReminderTime.getHour());
+            calendar.set(Calendar.MINUTE, selectReminderTime.getMinute());
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+
+        });
+    }
+
+    private void notificationChannel() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Habitude Reminder";
+            String description = "Please complete your Habit";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+
     private final ActivityResultLauncher<PickVisualMediaRequest> selectPictureLauncher = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), new ActivityResultCallback<>() {
 
         @Override
@@ -446,7 +536,7 @@ public class CreateHabitFragment extends Fragment {
                     pathUri = picturePath;
 
                     Picasso.get().load(picturePath)
-                            .resize(200,300)
+                            .resize(200, 300)
                             .centerInside()
                             .into(detailImage);
                 }

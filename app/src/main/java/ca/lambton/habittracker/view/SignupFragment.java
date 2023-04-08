@@ -3,6 +3,7 @@ package ca.lambton.habittracker.view;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,8 @@ public class SignupFragment extends FragmentActivity {
 
         binding = FragmentSignupBinding.inflate(LayoutInflater.from(getApplicationContext()));
         setContentView(binding.getRoot());
+
+        binding.forgotPassword.setMovementMethod(LinkMovementMethod.getInstance());
 
         binding.signupBtn.setOnClickListener(this::signup);
 

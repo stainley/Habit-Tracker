@@ -112,6 +112,7 @@
             android:singleLine="true"
             android:textColor="@color/neutral_grey"
             android:textSize="12sp"
+            android:text="0"
             app:layout_constraintBottom_toBottomOf="@+id/btnLike"
             app:layout_constraintStart_toEndOf="@+id/btnLike"
             app:layout_constraintTop_toTopOf="@+id/btnLike"

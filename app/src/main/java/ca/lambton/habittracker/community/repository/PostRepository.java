@@ -9,11 +9,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Source;
 
@@ -28,26 +30,21 @@ import ca.lambton.habittracker.common.db.AppDatabase;
 import ca.lambton.habittracker.community.dao.CommentDao;
 import ca.lambton.habittracker.community.dao.PostDao;
 import ca.lambton.habittracker.community.model.Comment;
+import ca.lambton.habittracker.community.model.Like;
 import ca.lambton.habittracker.community.model.Post;
 import ca.lambton.habittracker.community.model.PostComment;
 
-public class PostRepository {
+public class PostRepository extends CommunityRepository implements IPostRepository {
     private static final String TAG = PostRepository.class.getName();
-    MutableLiveData<List<PostComment>> postCommentMutable = new MutableLiveData<>();
+    private final MutableLiveData<List<PostComment>> postCommentMutable = new MutableLiveData<>();
     private final PostDao postDao;
     private final CommentDao commentDao;
-    private final FirebaseFirestore dbFirebase;
 
     public PostRepository(Application application) {
+        super();
         AppDatabase db = AppDatabase.getDatabase(application);
         commentDao = db.commentDao();
         postDao = db.postDao();
-        dbFirebase = FirebaseFirestore.getInstance();
-
-        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
-                .setPersistenceEnabled(true)
-                .build();
-        dbFirebase.setFirestoreSettings(settings);
     }
 
     public void createPost(@NonNull Post post) {
@@ -58,9 +55,8 @@ public class PostRepository {
         //AppDatabase.databaseWriterExecutor.execute(() -> postDao.saveAllPost(posts));
     }
 
-
+    @Override
     public void createPostCloud(@NotNull Post post) {
-
         Map<String, Post> postComment = new HashMap<>();
         postComment.put("post", post);
 
@@ -71,7 +67,7 @@ public class PostRepository {
 
     }
 
-
+    @Override
     public void fetchData(DataFetchCallback callback) {
         List<PostComment> postsResult = new ArrayList<>();
 
@@ -94,11 +90,13 @@ public class PostRepository {
         });
     }
 
+    @Override
     public void deletePost(@NonNull Post post) {
         AppDatabase.databaseWriterExecutor.execute(() -> postDao.deletePost(post));
     }
 
 
+    @Override
     public void hidePostCloud(Post post) {
         post.setVisible(0);
 
@@ -142,8 +140,8 @@ public class PostRepository {
         return postDao.getAllPost();
     }
 
+    @Override
     public LiveData<List<PostComment>> fetchAllFromCacheDB() {
-
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference colRef = db.collection("community");
@@ -179,6 +177,7 @@ public class PostRepository {
         return postDao.getAllMyPost(userId);
     }
 
+    @Override
     public LiveData<List<PostComment>> fetchAllPostWithComment() {
         // fetch locally then from the server
         this.fetchData(postCommentMutable::postValue);
@@ -192,6 +191,7 @@ public class PostRepository {
     public void deleteComment(@NotNull Comment comment) {
         AppDatabase.databaseWriterExecutor.execute(() -> commentDao.deleteComment(comment));
     }
+
 
     public interface DataFetchCallback {
         void onDataFetched(List<PostComment> postData);

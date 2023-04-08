@@ -3,6 +3,7 @@ package ca.lambton.habittracker;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private HabitViewModel habitViewModel;
     private ArrayList<String> permissionsList;
     private NavController navController;
-    private final String[] permissionsStr = {Manifest.permission.CAMERA};
+    private final String[] permissionsStr = {Manifest.permission.CAMERA, Manifest.permission.POST_NOTIFICATIONS};
 
     ActivityResultLauncher<String[]> permissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<>() {
         @Override
@@ -87,8 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_my_habits,
                 R.id.menu_logout,
                 R.id.nav_community
-        ).setOpenableLayout(drawerLayout)
-         .build();
+        ).setOpenableLayout(drawerLayout).build();
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
 
@@ -149,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
 
-
         return super.onCreateView(parent, name, context, attrs);
     }
 
@@ -198,6 +198,5 @@ public class MainActivity extends AppCompatActivity {
             permissionsLauncher.launch(newPermissionStr);
         }
     }
-
 
 }

@@ -85,6 +85,7 @@ public class PrivateHabitsFragment extends Fragment {
                             .collect(Collectors.toList());
 
                     for (HabitProgress hp : myHabitProgressFiltered) {
+                        //FIXME: error when deleting record java.lang.IndexOutOfBoundsException: Index: 3, Size: 0
                         totalProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId()).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
 
                         if (totalProgress.get() == 0) {

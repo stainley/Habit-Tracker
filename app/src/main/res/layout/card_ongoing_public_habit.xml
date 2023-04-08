@@ -25,14 +25,14 @@
         <TextView
             android:id="@+id/habitNameLabel"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:fontFamily="@font/mulish_semi_bold"
-            android:maxEms="25"
-            android:maxLines="4"
+            android:maxEms="10"
+            android:maxLines="2"
             android:textAlignment="center"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/frequency_label"
@@ -42,6 +42,12 @@
             app:layout_constraintVertical_bias="0.25"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Add Veggie" />
+
+        <ImageView
+            android:id="@+id/image_habit"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel" />
 
         <TextView
             android:id="@+id/duration_label"
@@ -53,7 +59,7 @@
             android:textSize="11sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/habitNameLabel" />
+            app:layout_constraintTop_toBottomOf="@id/image_habit" />
 
         <TextView
             android:id="@+id/duration_time"
@@ -93,11 +99,9 @@
             android:text="Frequency"
             android:textSize="11sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/duration_label"
-            app:layout_constraintBottom_toTopOf="@id/duration_label"
             app:layout_constraintEnd_toStartOf="@id/frequency_unit"
             app:layout_constraintStart_toEndOf="@id/duration_label"
-            app:layout_constraintTop_toTopOf="@id/duration_label" />
+            app:layout_constraintTop_toBottomOf="@id/image_habit" />
 
         <TextView
             android:id="@+id/frequency"

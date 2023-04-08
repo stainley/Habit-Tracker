@@ -24,10 +24,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="top"
+                android:contentDescription="@string/habit_image"
                 android:cropToPadding="true"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/default_image"
-                android:contentDescription="@string/habit_image" />
+                app:srcCompat="@drawable/default_image" />
         </xyz.sahildave.arclayout.ArcLayout>
 
         <ImageButton
@@ -372,8 +372,7 @@
             app:cardElevation="10dp"
             app:cardMaxElevation="12dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dateCardView"
-            >
+            app:layout_constraintTop_toBottomOf="@id/dateCardView">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -410,14 +409,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <Switch
-                        android:id="@+id/aSwitch"
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/reminder_switch"
+                        style="@style/Widget.Material3.CompoundButton.MaterialSwitch"
                         android:layout_width="70dp"
                         android:layout_height="50dp"
-                        android:layout_marginStart="100dp"
                         android:layout_gravity="top"
-                        tools:ignore="UseSwitchCompatOrMaterialXml">
-                    </Switch>
+                        android:layout_marginStart="100dp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                 </LinearLayout>
 
