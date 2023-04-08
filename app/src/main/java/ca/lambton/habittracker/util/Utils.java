@@ -1,17 +1,24 @@
 package ca.lambton.habittracker.util;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,6 +35,31 @@ import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 
 public class Utils {
+
+    public static void shareScreenShot(Activity activity) {
+        // Take a screenshot of the current screen
+        View rootView = activity.getWindow().getDecorView().getRootView();
+        rootView.setDrawingCacheEnabled(true);
+        Bitmap screenshot = Bitmap.createBitmap(rootView.getDrawingCache());
+        rootView.setDrawingCacheEnabled(false);
+
+        // Save the screenshot to a file
+        File screenshotFile = new File(activity.getExternalCacheDir(), "screenshot.png");
+
+        try (OutputStream outputStream = new FileOutputStream(screenshotFile)) {
+            screenshot.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+
+            // Share the screenshot
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/*");
+            Uri screenshotUri = FileProvider.getUriForFile(activity, "ca.lambton.habittracker", screenshotFile);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, screenshotUri);
+            activity.startActivity(Intent.createChooser(shareIntent, "Share screenshot"));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
 
     /**
      * Compute progress of the habit
@@ -98,7 +130,7 @@ public class Utils {
         }
         return 0;
     }
-    
+
     /**
      * Current number of Streak.
      *

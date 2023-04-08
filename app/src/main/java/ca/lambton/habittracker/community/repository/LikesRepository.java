@@ -4,15 +4,14 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import ca.lambton.habittracker.community.model.Like;
 import ca.lambton.habittracker.community.model.Post;
-import ca.lambton.habittracker.community.model.PostComment;
 
 public class LikesRepository extends CommunityRepository {
 
@@ -32,7 +31,7 @@ public class LikesRepository extends CommunityRepository {
                     String postId = queryDocumentSnapshot.get("postId", String.class);
                     String userId = queryDocumentSnapshot.get("userId", String.class);
 
-                    if (post.getPostId().equals(postId) && userId.equals(firebaseUser.getUid())) {
+                    if (userId != null && (post.getPostId().equals(postId) && userId.equals(firebaseUser.getUid()))) {
                         unlikePost(post, queryDocumentSnapshot);
                     }
                 });
@@ -52,7 +51,7 @@ public class LikesRepository extends CommunityRepository {
 
         dbFirebase.runTransaction(transaction -> {
             DocumentSnapshot snapshot = transaction.get(postRef);
-            int likesCount = snapshot.getLong("post.count").intValue() + 1;
+            int likesCount = Objects.requireNonNull(snapshot.getLong("post.count")).intValue() + 1;
             transaction.update(snapshot.getReference(), "post.count", likesCount);
             transaction.update(postRef, "likes_count", likesCount);
             transaction.set(dbFirebase.collection("likes").document(), new Like(post.getPostId(), firebaseUser.getUid()));
@@ -74,7 +73,7 @@ public class LikesRepository extends CommunityRepository {
         dbFirebase.runTransaction(transaction -> {
 
             DocumentSnapshot snapshot = transaction.get(postRef);
-            int likesCount = snapshot.getLong("post.count").intValue() - 1;
+            int likesCount = Objects.requireNonNull(snapshot.getLong("post.count")).intValue() - 1;
             transaction.update(snapshot.getReference(), "post.count", likesCount);
             transaction.update(postRef, "likes_count", likesCount);
             transaction.delete(documentSnapshot.getReference());

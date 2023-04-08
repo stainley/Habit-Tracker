@@ -24,7 +24,6 @@ import ca.lambton.habittracker.community.model.PostComment;
 public abstract class CommunityRepository {
     private final static String TAG = CommunityRepository.class.getName();
     protected FirebaseFirestore dbFirebase;
-    private MutableLiveData<PostComment> postCommentMutable = new MutableLiveData<>();
     protected FirebaseUser firebaseUser;
 
 
@@ -39,38 +38,4 @@ public abstract class CommunityRepository {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
-    public LiveData<PostComment> fetchPostFromCacheDB(String postId) {
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference colRef = db.collection("community");
-
-        colRef.orderBy("post.creationDate", Query.Direction.DESCENDING)
-                .where(Filter.equalTo("post.", ""))
-
-                .get(Source.CACHE)
-                .addOnSuccessListener(querySnapshot -> {
-                    List<PostComment> posts = new ArrayList<>();
-
-
-                    for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
-                        if (documentSnapshot.exists()) {
-                            // Document data is available in the local cache
-                            Post post = documentSnapshot.get("post", Post.class);
-                            if (post != null) post.setPostId(documentSnapshot.getId());
-
-                            PostComment postComment = new PostComment();
-                            if (post != null && post.getVisible() == 1) {
-                                postComment.post = post;
-                                posts.add(postComment);
-                                postCommentMutable.postValue(postComment);
-                            }
-
-                        }
-                    }
-
-                })
-                .addOnFailureListener(e -> Log.w(TAG, "Error getting documents from cache", e));
-
-        return postCommentMutable;
-    }
 }
