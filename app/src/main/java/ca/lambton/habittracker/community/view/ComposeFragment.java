@@ -162,8 +162,7 @@ public class ComposeFragment extends Fragment {
             final PostImage postImage = new PostImage();
 
             postImage.setPath(path);
-            System.out.println(path);
-
+            post.setCount(0);
             post.setPostImage(postImage);
             post.setCreationDate(today.toString());
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +49,6 @@ public class CommunityFragment extends Fragment {
     private PostViewModel postViewModel;
     private RecyclerView recyclerView;
     private SearchView searchViewPost;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,8 +92,10 @@ public class CommunityFragment extends Fragment {
             firebaseUser.getDisplayName();
             binding.userProfile.setText(firebaseUser.getDisplayName() == null ? "" : firebaseUser.getDisplayName());
         }
+
         communityAdapter = new CommunityAdapter(posts, this::onMoreOptionCallback);
         recyclerView.setAdapter(communityAdapter);
+
         return binding.getRoot();
     }
 
@@ -114,7 +116,6 @@ public class CommunityFragment extends Fragment {
             posts.clear();
             List<PostComment> filterVisiblePost = postComments.stream().filter(post -> post.post.getVisible() == 1).collect(Collectors.toList());
 
-
             List<Post> postOrdered = filterVisiblePost.stream()
                     .map(postComment -> postComment.post)
                     .sorted(Comparator.comparing(Post::getCreationDate).reversed())
@@ -125,6 +126,7 @@ public class CommunityFragment extends Fragment {
             communityAdapter.notifyDataSetChanged();
 
         });
+
     }
 
     private void newPost(View view) {
@@ -157,8 +159,16 @@ public class CommunityFragment extends Fragment {
                 });
                 popupMenu.show();
             });
+        } else if (view instanceof TextView) {
+            TextView likeText = (TextView) view;
+            Post post = posts.get(position);
+            postViewModel.likePost(post);
+
+            postViewModel.getLikes().observe(requireActivity(), likeText::setText);
+
         }
     }
+
 
     // SEARCH BAR
     @NonNull

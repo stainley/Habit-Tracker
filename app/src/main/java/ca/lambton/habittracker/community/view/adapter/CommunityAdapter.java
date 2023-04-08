@@ -31,7 +31,6 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
     private final List<Post> posts;
-
     private final OnCommunityListener communityListener;
     private Context context;
 
@@ -53,7 +52,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     public void onBindViewHolder(@NonNull CommunityViewHolder holder, int position) {
         holder.authorText.setText(posts.get(position).getUser().getName());
         holder.postText.setText(posts.get(position).getMessage());
-
 
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
         LocalDateTime dateTime = LocalDateTime.parse(posts.get(position).getCreationDate(), inputFormatter);
@@ -77,11 +75,26 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
         communityListener.onMoreOptionCallback(holder.postCardView, position);
 
+        holder.likesText.setText(String.valueOf(posts.get(position).getCount()));
+
+        final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(@NonNull MotionEvent e) {
+                communityListener.onMoreOptionCallback(holder.likesText, holder.getAdapterPosition());
+                return true;
+            }
+        });
+
+        holder.postCardView.setOnTouchListener((v, event) -> {
+            gestureDetector.onTouchEvent(event);
+            return true;
+        });
+
 
         if (!posts.get(position).getPostImage().getPath().equals("")) {
             holder.postImage.setVisibility(View.VISIBLE);
             holder.postImage.setClipToOutline(true);
-            //holder.postPictureFrame.setClipToOutline(true);
+
             Picasso.get().load(posts.get(position).getPostImage().getPath())
                     .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
                     .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
@@ -108,6 +121,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private final ImageButton moreOptionButton;
         private final ImageView postImage;
         private final CardView postCardView;
+        private final TextView likesText;
 
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,7 +133,8 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             moreOptionButton = itemView.findViewById(R.id.more_options_button);
 
             postImage = itemView.findViewById(R.id.post_picture);
-            postCardView = postImage.findViewById(R.id.post_card);
+            postCardView = itemView.findViewById(R.id.post_card);
+            likesText = itemView.findViewById(R.id.tvLike);
         }
     }
 

@@ -30,6 +30,9 @@ public class Post implements Serializable {
     private User user;
 
     @Ignore
+    @ColumnInfo(name = "LIKES_COUNT")
+    private int count;
+    @Ignore
     private PostImage postImage;
 
     public String getPostId() {
@@ -78,6 +81,14 @@ public class Post implements Serializable {
 
     public void setPostImage(PostImage postImage) {
         this.postImage = postImage;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     @Override
