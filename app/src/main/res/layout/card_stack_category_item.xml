@@ -84,6 +84,7 @@
 
 
     <ImageView
+        android:id="@+id/left_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/left_icon"
@@ -92,6 +93,7 @@
         app:layout_constraintTop_toTopOf="@id/category_card" />
 
     <ImageView
+        android:id="@+id/right_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/right_icon"

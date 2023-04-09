@@ -125,9 +125,6 @@ public class DefinedHabitFragment extends Fragment {
                     throw new RuntimeException(e);
                 }
                 onPageSelect(position);
-                //HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
-                //FragmentManager parentFragmentManager = getParentFragmentManager();
-                //parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).addToBackStack(null).commit();
 
             }).start();
 

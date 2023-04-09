@@ -18,7 +18,6 @@ import ca.lambton.habittracker.category.model.Category;
 public class CategoryCardStackFragment extends Fragment {
 
 
-
     public CategoryCardStackFragment() {
     }
 
@@ -31,7 +30,6 @@ public class CategoryCardStackFragment extends Fragment {
     }
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +38,9 @@ public class CategoryCardStackFragment extends Fragment {
 
 
         ImageView categoryHabitImage = view.findViewById(R.id.category_habit_image);
+        view.findViewById(R.id.left_icon).setVisibility(View.INVISIBLE);
+        view.findViewById(R.id.right_icon).setVisibility(View.INVISIBLE);
+
         if (getArguments() != null) {
             String packageName = requireContext().getPackageName();
 

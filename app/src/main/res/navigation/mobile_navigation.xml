@@ -257,16 +257,16 @@
     <fragment
         android:id="@+id/categoryHabitPredefinedFragment"
         android:name="ca.lambton.habittracker.habit.view.fragment.predefined.CategoryHabitPredefinedFragment"
-        android:label="fragment_category_habit"
-        tools:layout="@layout/fragment_category_habit" >
+        android:label="Category"
+        tools:layout="@layout/fragment_category_habit">
         <action
             android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
             app:destination="@id/nav_habit_detail"
             app:popUpTo="@id/nav_defined_habit" />
         <argument
             android:name="category"
+            android:defaultValue="@null"
             app:argType="ca.lambton.habittracker.category.model.Category"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
 </navigation>

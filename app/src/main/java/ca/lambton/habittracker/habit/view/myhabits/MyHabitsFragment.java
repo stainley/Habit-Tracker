@@ -142,7 +142,7 @@ public class MyHabitsFragment extends Fragment {
     }
 
     @NonNull
-    private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<ca.lambton.habittracker.category.model.Category> categories) {
+    private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<Category> categories) {
         return position -> {
 
             NavDirections navDirections = MyHabitsFragmentDirections.actionNavMyHabitsToCategoryHabitPredefinedFragment().setCategory(categories.get(position));

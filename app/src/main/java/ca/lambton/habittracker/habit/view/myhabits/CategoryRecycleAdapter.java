@@ -82,7 +82,6 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
                 .load(imageResourceId)
                 .fit()
                 .transform(getRoundedTransformation())
-                .placeholder(R.drawable.placeholder_image)
                 .error(R.drawable.placeholder_image)
                 .into(categoryImageView);
     }
