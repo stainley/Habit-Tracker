@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.search.SearchView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -150,9 +152,15 @@ public class CommunityFragment extends Fragment {
                 popupMenu.setOnMenuItemClickListener(item -> {
 
                     if (item.getItemId() == R.id.delete_post) {
-                        postViewModel.deletePost(this.posts.get(position));
-                        this.posts.remove(position);
-                        communityAdapter.notifyDataSetChanged();
+                        Snackbar.make(v, "Would you like to delete this post?", Toast.LENGTH_SHORT)
+                                .setAnchorView(binding.btnCompose)
+                                .setAction("Confirm", v1 -> {
+                                    postViewModel.deletePost(this.posts.get(position));
+                                    this.posts.remove(position);
+                                    communityAdapter.notifyDataSetChanged();
+                                })
+                                .show();
+
                         return true;
                     }
                     return false;

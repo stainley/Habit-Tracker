@@ -382,25 +382,32 @@
 
                 <LinearLayout
                     android:layout_width="200dp"
-                    android:layout_height="120dp"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="200dp"
                         android:layout_height="50dp"
-                        android:text="Get Reminder"
-                        android:textAlignment="center"
-                        android:textSize="23sp"
+                        android:gravity="center"
+                        android:text="@string/get_reminder"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/selectTimeBtn"
-                        android:layout_width="200dp"
-                        android:layout_height="70dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:backgroundTint="@color/white"
                         android:text="Select the time"
-                        android:textAlignment="center"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/neutral_black"
+                        android:visibility="gone"
+                        app:backgroundTint="@android:color/transparent"
+                        app:cornerRadius="100dp"
+                        app:rippleColor="@color/card_background_light_color"
+                        app:strokeColor="@color/md_theme_light_primary"
+                        app:strokeWidth="1dp"
+                        tools:visibility="visible" />
 
                 </LinearLayout>
 
