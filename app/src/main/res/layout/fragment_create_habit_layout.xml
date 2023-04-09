@@ -5,7 +5,7 @@
     android:id="@+id/fragment_new_habit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.newhabit.CreateHabitFragment">
+    tools:context=".habit.view.newhabit.CreateHabitFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

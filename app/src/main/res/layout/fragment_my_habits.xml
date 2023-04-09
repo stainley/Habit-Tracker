@@ -5,7 +5,7 @@
     android:id="@+id/fragment_my_habits"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.myhabits.MyHabitsFragment">
+    tools:context=".habit.view.myhabits.MyHabitsFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/searchAppBar"

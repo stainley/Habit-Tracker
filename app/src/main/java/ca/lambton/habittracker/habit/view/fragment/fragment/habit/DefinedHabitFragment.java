@@ -20,6 +20,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.firebase.perf.FirebasePerformance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
@@ -27,16 +28,17 @@ import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentDefinedHabitsBinding;
+import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.view.fragment.fragment.habit.description.HabitCategoryDescriptionFragment;
 
 public class DefinedHabitFragment extends Fragment {
     private static final String TAG = DefinedHabitFragment.class.getName();
     private final List<HabitCard> habitCards = new ArrayList<>();
     private final List<Category> categories = new ArrayList<>();
-    FragmentDefinedHabitsBinding binding;
+    private FragmentDefinedHabitsBinding binding;
     private ViewPager2 habitsPager;
-    CategoryViewModel categoryViewModel;
-    PredifinedHabitAdapter predifinedHabitAdapter;
+    protected CategoryViewModel categoryViewModel;
+    private PredifinedHabitAdapter predifinedHabitAdapter;
 
 
     @Override
@@ -69,30 +71,36 @@ public class DefinedHabitFragment extends Fragment {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
 
-            // triggered when you select a new page
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                FirebasePerformance firebasePerformance = FirebasePerformance.getInstance();
-                firebasePerformance.setPerformanceCollectionEnabled(true);
-
-                firebasePerformance.newTrace("Category Carrousel: start");
-
-                Log.i(TAG, "onPageSelected: " + position);
-                HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
-                FragmentManager parentFragmentManager = getParentFragmentManager();
-                parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).addToBackStack(null).commit();
-
-                firebasePerformance.newTrace("Category Carrousel: end");
-
+                onPageSelect(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
                 Log.i(TAG, "onPageScrollStateChanged: " + state);
+
             }
         });
+
+
+    }
+
+    private void onPageSelect(int position) {
+        FirebasePerformance firebasePerformance = FirebasePerformance.getInstance();
+        firebasePerformance.setPerformanceCollectionEnabled(true);
+
+        firebasePerformance.newTrace("Category Carrousel: start");
+
+        Log.i(TAG, "onPageSelected: " + position);
+
+        HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
+        FragmentManager parentFragmentManager = getParentFragmentManager();
+        parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).addToBackStack(null).commit();
+
+        firebasePerformance.newTrace("Category Carrousel: end");
     }
 
     @Nullable
@@ -107,6 +115,23 @@ public class DefinedHabitFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if (getArguments() != null) {
+            int position = getArguments().getInt("categoryPosition");
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                onPageSelect(position);
+                //HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
+                //FragmentManager parentFragmentManager = getParentFragmentManager();
+                //parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).addToBackStack(null).commit();
+
+            }).start();
+
+        }
 
     }
 
@@ -130,7 +155,7 @@ public class DefinedHabitFragment extends Fragment {
 
         private final int horizontalMarginInPx;
 
-        public HorizontalMarginItemDecoration(Context context, @DimenRes int horizontalMarginInDp) {
+        public HorizontalMarginItemDecoration(@NonNull Context context, @DimenRes int horizontalMarginInDp) {
             horizontalMarginInPx = (int) context.getResources().getDimension(horizontalMarginInDp);
         }
 

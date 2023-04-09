@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -104,18 +102,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
     }
 
     private void setDoubleTapListener(View view, TextView textView, int position) {
-        final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+        GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public boolean onDoubleTap(@NonNull MotionEvent e) {
+            public boolean onDoubleTap(MotionEvent e) {
                 communityListener.onMoreOptionCallback(textView, position);
                 return true;
             }
         });
 
-        view.setOnTouchListener((v, event) -> {
-            gestureDetector.onTouchEvent(event);
-            return true;
-        });
+        view.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
     }
 
     @Override
