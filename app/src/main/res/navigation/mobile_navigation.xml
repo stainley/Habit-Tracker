@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_nav_my_habits_to_completeHabitCollectionFragment"
             app:destination="@id/completeHabitCollectionFragment" />
+        <action
+            android:id="@+id/action_nav_my_habits_to_categoryHabitPredefinedFragment"
+            app:destination="@id/categoryHabitPredefinedFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_defined_habit"
@@ -250,5 +253,20 @@
             android:defaultValue="@null"
             app:argType="ca.lambton.habittracker.habit.model.HabitProgress"
             app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryHabitPredefinedFragment"
+        android:name="ca.lambton.habittracker.habit.view.fragment.predefined.CategoryHabitPredefinedFragment"
+        android:label="fragment_category_habit"
+        tools:layout="@layout/fragment_category_habit" >
+        <action
+            android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
+            app:destination="@id/nav_habit_detail"
+            app:popUpTo="@id/nav_defined_habit" />
+        <argument
+            android:name="category"
+            app:argType="ca.lambton.habittracker.category.model.Category"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

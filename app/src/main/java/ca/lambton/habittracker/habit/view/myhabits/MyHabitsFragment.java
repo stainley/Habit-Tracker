@@ -37,6 +37,9 @@ import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentMyHabitsBinding;
+import ca.lambton.habittracker.habit.view.fragment.predefined.CategoryHabitPredefinedFragmentArgs;
+import ca.lambton.habittracker.habit.view.fragment.predefined.CategoryHabitPredefinedFragmentDirections;
+import ca.lambton.habittracker.habit.view.myhabits.MyHabitsFragmentDirections;
 
 public class MyHabitsFragment extends Fragment {
     private static final String TAG = MyHabitsFragment.class.getName();
@@ -141,9 +144,9 @@ public class MyHabitsFragment extends Fragment {
     @NonNull
     private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<ca.lambton.habittracker.category.model.Category> categories) {
         return position -> {
-            categories.get(position);
-            /*NavDirections navDirections = MyHabitsFragmentDirections.actionNavMyHabitsToNavDefinedHabit().setCategoryPosition(position);
-            Navigation.findNavController(requireView()).navigate(navDirections);*/
+
+            NavDirections navDirections = MyHabitsFragmentDirections.actionNavMyHabitsToCategoryHabitPredefinedFragment().setCategory(categories.get(position));
+            Navigation.findNavController(requireView()).navigate(navDirections);
         };
     }
 
