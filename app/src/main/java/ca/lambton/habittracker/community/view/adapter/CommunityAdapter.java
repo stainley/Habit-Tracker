@@ -1,6 +1,7 @@
 package ca.lambton.habittracker.community.view.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -50,60 +51,71 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     @Override
     public void onBindViewHolder(@NonNull CommunityViewHolder holder, int position) {
-        holder.authorText.setText(posts.get(position).getUser().getName());
-        holder.postText.setText(posts.get(position).getMessage());
+        Post post = posts.get(position);
+        User user = post.getUser();
 
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-        LocalDateTime dateTime = LocalDateTime.parse(posts.get(position).getCreationDate(), inputFormatter);
+        holder.authorText.setText(user.getName());
+        holder.postText.setText(post.getMessage());
+        holder.likesText.setText(String.valueOf(post.getCount()));
+        holder.dayPostedTxt.setText(getFormattedDateTime(post.getCreationDate()));
 
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = dateTime.format(outputFormatter);
-        holder.dayPostedTxt.setText(formattedDateTime);
+        setProfilePhoto(holder.profilePhoto, user.getPhotoUrl());
+        setPostImage(holder.postImage, post.getPostImage().getPath());
 
-        User user = posts.get(position).getUser();
-        if (user != null) {
-            String photoUrl = user.getPhotoUrl();
-            if (photoUrl != null) {
-                if (!photoUrl.equals("")) {
-                    Picasso.get()
-                            .load(photoUrl)
-                            .fit().into(holder.profilePhoto);
-                }
-            }
+        setMoreOptionClickListener(holder.moreOptionButton, position);
+        setMoreOptionClickListener(holder.postCardView, position);
+
+        setDoubleTapListener(holder.postCardView, holder.likesText, holder.getAdapterPosition());
+    }
+
+    private String getFormattedDateTime(String creationDate) {
+        LocalDateTime dateTime = LocalDateTime.parse(creationDate, DateTimeFormatter.ISO_DATE_TIME);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime.format(formatter);
+    }
+
+    private void setProfilePhoto(ImageView imageView, String photoUrl) {
+        if (TextUtils.isEmpty(photoUrl)) {
+            imageView.setVisibility(View.GONE);
+            return;
         }
 
-        communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
-        communityListener.onMoreOptionCallback(holder.postCardView, position);
+        Picasso.get().load(photoUrl).fit().into(imageView);
+    }
 
-        holder.likesText.setText(String.valueOf(posts.get(position).getCount()));
+    private void setPostImage(ImageView imageView, String path) {
+        if (TextUtils.isEmpty(path)) {
+            imageView.setVisibility(View.GONE);
+            return;
+        }
 
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setClipToOutline(true);
+
+        Picasso.get().load(path)
+                .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
+                .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
+                .error(R.drawable.placeholder_image)
+                .into(imageView);
+    }
+
+    private void setMoreOptionClickListener(View view, int position) {
+        view.setOnClickListener(v -> communityListener.onMoreOptionCallback(view, position));
+    }
+
+    private void setDoubleTapListener(View view, TextView textView, int position) {
         final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(@NonNull MotionEvent e) {
-                communityListener.onMoreOptionCallback(holder.likesText, holder.getAdapterPosition());
+                communityListener.onMoreOptionCallback(textView, position);
                 return true;
             }
         });
 
-        holder.postCardView.setOnTouchListener((v, event) -> {
+        view.setOnTouchListener((v, event) -> {
             gestureDetector.onTouchEvent(event);
             return true;
         });
-
-
-        if (!posts.get(position).getPostImage().getPath().equals("")) {
-            holder.postImage.setVisibility(View.VISIBLE);
-            holder.postImage.setClipToOutline(true);
-
-            Picasso.get().load(posts.get(position).getPostImage().getPath())
-                    .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
-                    .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
-                    //.resize(400,300)
-                    .into(holder.postImage);
-        } else {
-            holder.postImage.setVisibility(View.GONE);
-        }
-
     }
 
     @Override
