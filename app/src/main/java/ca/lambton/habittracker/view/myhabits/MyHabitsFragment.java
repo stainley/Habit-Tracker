@@ -75,11 +75,6 @@ public class MyHabitsFragment extends Fragment {
         categoryListAdapter = new CategoryRecycleAdapter(categories, getOnCallbackCategory(categories));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(categoryListAdapter);
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 
         searchView.getEditText().addTextChangedListener(getTextWatcherSupplier().get());
 
@@ -88,6 +83,13 @@ public class MyHabitsFragment extends Fragment {
             displaySpeechRecognizer();
             return true;
         });
+
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
 
 
         ArrayList<MyHabitsGridButton> myHabitsGridButtonModelArrayList = new ArrayList<>();
@@ -143,6 +145,7 @@ public class MyHabitsFragment extends Fragment {
     private CategoryRecycleAdapter.OnCategoryCallback getOnCallbackCategory(List<ca.lambton.habittracker.category.model.Category> categories) {
         return position -> {
             categories.get(position);
+
         };
     }
 
