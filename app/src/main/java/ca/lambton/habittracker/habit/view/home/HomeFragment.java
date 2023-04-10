@@ -183,7 +183,6 @@ public class HomeFragment extends Fragment {
                     habitProgresses.add(hp);
                 }
 
-
                 System.out.println(startDate);
             }
 

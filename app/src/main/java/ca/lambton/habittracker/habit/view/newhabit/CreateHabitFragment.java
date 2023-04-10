@@ -5,14 +5,11 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,13 +53,10 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -74,12 +68,9 @@ import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.util.Notification;
-import ca.lambton.habittracker.util.NotificationReceiver;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
-import ca.lambton.habittracker.util.Utils;
 
 public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
@@ -136,7 +127,6 @@ public class CreateHabitFragment extends Fragment {
 
                 if (item.getItemId() == R.id.edit_image) {
                     addPhotoFromLibrary();
-                    Toast.makeText(requireContext(), "Implement delete functionality", Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -422,35 +412,52 @@ public class CreateHabitFragment extends Fragment {
      * @param onTaskCompleted callback to return the new URL
      */
     private void updateImageToCloud(OnTaskCompleted onTaskCompleted) {
+
         detailImage.setDrawingCacheEnabled(true);
         detailImage.buildDrawingCache(true);
-
-        CompletableFuture.supplyAsync(() -> {
-            if (detailImage.getDrawable() == null) {
-                return null;
-            }
-
-            Bitmap bitmap = ((BitmapDrawable) detailImage.getDrawable()).getBitmap();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            byte[] data = outputStream.toByteArray();
-
-            StorageReference photosRef = storageRef.child("habit/" + currentUser.getUid() + "/" + UUID.randomUUID());
-            UploadTask uploadTask = photosRef.putBytes(data);
+        new Thread(() -> {
 
             try {
-                Tasks.await(uploadTask);
-                return photosRef.getDownloadUrl();
-            } catch (ExecutionException | InterruptedException e) {
-                return null;
+                Thread.sleep(1000);
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        }).thenAcceptAsync(downloadUrl -> {
-            if (downloadUrl != null) {
-                onTaskCompleted.onImageUploaded(downloadUrl.toString());
-            } else {
-                Log.e(TAG, "Error fetching the photo URL");
+
+            if (detailImage.getDrawable() != null) {
+                Bitmap bitmap = ((BitmapDrawable) detailImage.getDrawable()).getBitmap();
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                byte[] data = outputStream.toByteArray();
+
+                StorageReference photosRef = storageRef.child("habit/" + currentUser.getUid() + "/" + UUID.randomUUID());
+                UploadTask uploadTask = photosRef.putBytes(data);
+
+                uploadTask.addOnFailureListener(exception -> {
+                    // Handle unsuccessful uploads
+                    //Toast.makeText(getActivity(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
+                }).addOnSuccessListener(taskSnapshot -> {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                });
+
+
+                uploadTask.continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        throw Objects.requireNonNull(task.getException());
+                    }
+                    // Continue with the task to get the download URL
+                    return photosRef.getDownloadUrl();
+                }).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Uri photoDownloadUri = task.getResult();
+                        onTaskCompleted.onImageUploaded(photoDownloadUri.toString());
+                    } else {
+                        // Handle failures
+                        Log.e(TAG, "Error fetching the photo URL");
+                    }
+                });
             }
-        }, Runnable::run);
+        }).start();
     }
 
     //new Handler(Looper.getMainLooper())

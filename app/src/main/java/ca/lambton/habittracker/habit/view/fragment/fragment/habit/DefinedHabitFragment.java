@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,27 +91,29 @@ public class DefinedHabitFragment extends Fragment {
         FirebasePerformance firebasePerformance = FirebasePerformance.getInstance();
         firebasePerformance.setPerformanceCollectionEnabled(true);
 
-        firebasePerformance.newTrace("Category Carrousel: start");
+        Trace trace = firebasePerformance.newTrace("CategoryCarousel");
+        trace.start();
 
         Log.i(TAG, "onPageSelected: " + position);
 
         HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
         FragmentManager parentFragmentManager = getParentFragmentManager();
-        parentFragmentManager.beginTransaction().replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment).addToBackStack(null).commit();
+        parentFragmentManager.beginTransaction()
+                .replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment)
+                .addToBackStack(null)
+                .commit();
 
-        firebasePerformance.newTrace("Category Carrousel: end");
+        trace.stop();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
@@ -122,12 +125,9 @@ public class DefinedHabitFragment extends Fragment {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                onPageSelect(position);
-
+                requireActivity().runOnUiThread(() -> onPageSelect(position));
             }).start();
-
         }
-
     }
 
     private void configureAnimationPager() {
