@@ -98,8 +98,8 @@ public class MyHabitsFragment extends Fragment {
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Due for today", R.drawable.ic_due_today));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Ongoing habit", R.drawable.ic_ongoing_habit));
         myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Completed habits", R.drawable.ic_completed_habits));
-        myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Habit history", R.drawable.ic_habit_history));
-        myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Challenges & Leaderboard", R.drawable.ic_challenges_leaderboard));
+        //myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Habit history", R.drawable.ic_habit_history));
+        //myHabitsGridButtonModelArrayList.add(new MyHabitsGridButton("Challenges & Leaderboard", R.drawable.ic_challenges_leaderboard));
         MyHabitsGridButtonAdapter adapter = new MyHabitsGridButtonAdapter(requireContext(), myHabitsGridButtonModelArrayList, getCallbackMyHabitsGridButton(myHabitsGridButtonModelArrayList));
         myHabitsGridButton.setAdapter(adapter);
 
@@ -155,7 +155,7 @@ public class MyHabitsFragment extends Fragment {
         return position -> {
             switch (position) {
                 case 0:
-                    Navigation.findNavController(requireView()).navigate(R.id.newHabitFragment);
+                    Navigation.findNavController(requireView()).navigate(R.id.createHabitFragment);
                     break;
                 case 1:
                     Navigation.findNavController(requireView()).navigate(R.id.nav_due_today);

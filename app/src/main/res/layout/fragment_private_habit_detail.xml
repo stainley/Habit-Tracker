@@ -110,7 +110,7 @@
         <GridView
             android:id="@+id/ongoingHabitDetailGridView"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="234dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
@@ -180,7 +180,7 @@
         <GridView
             android:id="@+id/achievementsGridView"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="290dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
@@ -195,7 +195,7 @@
             android:id="@+id/deleteButtonCard"
             style="@style/MaterialCardView.NoColour"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="60dp"
             android:layout_marginTop="2dp"
             android:clickable="true"
             android:focusable="true"
@@ -223,7 +223,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="90"
                     android:text="@string/deleteHabit"
-                    android:textSize="12sp" />
+                    android:textSize="16sp" />
 
                 <ImageButton
                     android:layout_width="wrap_content"

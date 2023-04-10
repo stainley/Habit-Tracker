@@ -23,6 +23,7 @@
                 android:layout_marginTop="86dp"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/mulish_bold"
+                android:textColor="@color/transparent"
                 android:text="@string/public_habits"
                 android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
