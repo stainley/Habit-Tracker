@@ -23,7 +23,7 @@ public class OngoingHabitsFragment extends Fragment {
 
         binding = FragmentOngoingHabitsBinding.inflate(LayoutInflater.from(requireContext()));
 
-        binding.allHabitsCard.setOnClickListener(this::allHabitsCardClicked);
+        //binding.allHabitsCard.setOnClickListener(this::allHabitsCardClicked);
         binding.privateHabitsCard.setOnClickListener(this::privateHabitsCardClicked);
         //binding.groupHabitsCard.setOnClickListener(this::groupHabitsCardClicked);
         binding.publicHabitCard.setOnClickListener(this::publicChallengesCardClicked);

@@ -9,66 +9,6 @@
     tools:context=".habit.view.ongoingHabits.OngoingHabitsFragment">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/allHabitsCard"
-        style="@style/MaterialCardView.NoColour"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="18dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="3dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/image_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:background="@android:color/transparent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_all_habits" />
-
-
-            <TextView
-                android:id="@+id/all_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
-                android:fontFamily="@font/mulish_semi_bold"
-                android:text="All Habits"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/image_all"
-                app:layout_constraintStart_toEndOf="@id/image_all"
-                app:layout_constraintTop_toTopOf="@id/image_all" />
-
-            <ImageButton
-                android:id="@+id/image_row_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="@android:color/transparent"
-                app:layout_constraintBottom_toBottomOf="@id/image_all"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.95"
-                app:layout_constraintStart_toEndOf="@id/all_label"
-                app:layout_constraintTop_toTopOf="@id/image_all"
-                app:srcCompat="@drawable/ic_ongoing_arrow" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
         android:id="@+id/privateHabitsCard"
         style="@style/MaterialCardView.NoColour"
         android:layout_width="match_parent"
@@ -82,7 +22,7 @@
         app:cardUseCompatPadding="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allHabitsCard">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -125,68 +65,6 @@
                 app:srcCompat="@drawable/ic_ongoing_arrow" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
-<!--    <com.google.android.material.card.MaterialCardView-->
-<!--        android:id="@+id/groupHabitsCard"-->
-<!--        style="@style/MaterialCardView.NoColour"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="68dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:foreground="?android:attr/selectableItemBackground"-->
-<!--        app:cardCornerRadius="10dp"-->
-<!--        app:cardElevation="3dp"-->
-<!--        app:cardUseCompatPadding="true"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/privateHabitsCard">-->
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/image_group"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:background="@android:color/transparent"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:srcCompat="@drawable/ic_group_habits" />-->
-
-
-<!--            <TextView-->
-<!--                android:id="@+id/group_label"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentStart="true"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:fontFamily="@font/mulish_semi_bold"-->
-<!--                android:text="Group Habits"-->
-<!--                android:textSize="14sp"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/image_group"-->
-<!--                app:layout_constraintStart_toEndOf="@id/image_group"-->
-<!--                app:layout_constraintTop_toTopOf="@id/image_group" />-->
-
-<!--            <ImageButton-->
-<!--                android:id="@+id/image_row_group"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentEnd="true"-->
-<!--                android:background="@android:color/transparent"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/image_group"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.95"-->
-<!--                app:layout_constraintStart_toEndOf="@id/group_label"-->
-<!--                app:layout_constraintTop_toTopOf="@id/image_group"-->
-<!--                app:srcCompat="@drawable/ic_ongoing_arrow" />-->
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--    </com.google.android.material.card.MaterialCardView>-->
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/public_habit_card"
