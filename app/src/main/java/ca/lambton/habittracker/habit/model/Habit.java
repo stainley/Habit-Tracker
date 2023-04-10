@@ -47,6 +47,15 @@ public class Habit implements Serializable {
     @ColumnInfo(name = "END_DATE")
     private long endDate;
 
+    @ColumnInfo(name = "TIMER")
+    private String timer;
+
+    @ColumnInfo(name = "SCORE")
+    private int score = 0;
+
+    @ColumnInfo(name = "STATUS_ALARM")
+    private boolean alarmStarted = false;
+
     public Habit() {
     }
 
@@ -171,6 +180,30 @@ public class Habit implements Serializable {
         this.endDate = endDate;
     }
 
+    public String getTimer() {
+        return timer;
+    }
+
+    public void setTimer(String timer) {
+        this.timer = timer;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public boolean isAlarmStarted() {
+        return alarmStarted;
+    }
+
+    public void setAlarmStarted(boolean alarmStarted) {
+        this.alarmStarted = alarmStarted;
+    }
+
     @Override
     public String toString() {
         return "Habit{" +
@@ -189,6 +222,8 @@ public class Habit implements Serializable {
                 ", habitType='" + habitType + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", timer='" + timer + '\'' +
+                ", score=" + score +
                 '}';
     }
 }

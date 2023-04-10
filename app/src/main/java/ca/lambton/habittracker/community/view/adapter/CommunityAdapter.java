@@ -1,23 +1,31 @@
 package ca.lambton.habittracker.community.view.adapter;
 
+import static android.view.ViewGroup.LayoutParams.*;
+
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.FileDescriptor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,7 +39,6 @@ import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 
 public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.CommunityViewHolder> {
     private final List<Post> posts;
-
     private final OnCommunityListener communityListener;
     private Context context;
 
@@ -51,46 +58,74 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
 
     @Override
     public void onBindViewHolder(@NonNull CommunityViewHolder holder, int position) {
-        holder.authorText.setText(posts.get(position).getUser().getName());
-        holder.postText.setText(posts.get(position).getMessage());
+        Post post = posts.get(position);
+        User user = post.getUser();
 
+        holder.authorText.setText(user.getName());
+        holder.postText.setText(post.getMessage());
+        holder.likesText.setText(String.valueOf(post.getCount()));
+        holder.dayPostedTxt.setText(getFormattedDateTime(post.getCreationDate()));
 
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-        LocalDateTime dateTime = LocalDateTime.parse(posts.get(position).getCreationDate(), inputFormatter);
+        setProfilePhoto(holder.profilePhoto, user.getPhotoUrl());
+        setPostImage(holder.postImage, post.getPostImage().getPath());
 
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = dateTime.format(outputFormatter);
-        holder.dayPostedTxt.setText(formattedDateTime);
-
-        User user = posts.get(position).getUser();
-        if (user != null) {
-            String photoUrl = user.getPhotoUrl();
-            if (photoUrl != null) {
-                if (!photoUrl.equals("")) {
-                    Picasso.get()
-                            .load(photoUrl)
-                            .fit().into(holder.profilePhoto);
-                }
-            }
-        }
 
         communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
-        communityListener.onMoreOptionCallback(holder.postCardView, position);
 
+        setMoreOptionClickListener(holder.postCardView, position);
 
-        if (!posts.get(position).getPostImage().getPath().equals("")) {
-            holder.postImage.setVisibility(View.VISIBLE);
-            holder.postImage.setClipToOutline(true);
-            //holder.postPictureFrame.setClipToOutline(true);
-            Picasso.get().load(posts.get(position).getPostImage().getPath())
-                    .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
-                    .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
-                    //.resize(400,300)
-                    .into(holder.postImage);
-        } else {
-            holder.postImage.setVisibility(View.GONE);
+        setDoubleTapListener(holder.postCardView, holder.likesText, holder.getAdapterPosition());
+    }
+
+    private String getFormattedDateTime(String creationDate) {
+        LocalDateTime dateTime = LocalDateTime.parse(creationDate, DateTimeFormatter.ISO_DATE_TIME);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime.format(formatter);
+    }
+
+    private void setProfilePhoto(ImageView imageView, String photoUrl) {
+        if (TextUtils.isEmpty(photoUrl)) {
+            imageView.setVisibility(View.GONE);
+            return;
         }
 
+        Picasso.get().load(photoUrl).fit().into(imageView);
+    }
+
+    private void setPostImage(ImageView imageView, String path) {
+        if (TextUtils.isEmpty(path)) {
+            imageView.setVisibility(View.GONE);
+            return;
+        }
+
+        imageView.setVisibility(View.VISIBLE);
+        imageView.setClipToOutline(true);
+
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+
+        Picasso.get().load(path)
+                .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
+                .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
+                .error(R.drawable.placeholder_image)
+                .into(imageView);
+
+    }
+
+    private void setMoreOptionClickListener(@NonNull View view, int position) {
+        view.setOnClickListener(v -> communityListener.onMoreOptionCallback(view, position));
+    }
+
+    private void setDoubleTapListener(@NonNull View view, TextView textView, int position) {
+        GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                communityListener.onMoreOptionCallback(textView, position);
+                return true;
+            }
+        });
+
+        view.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
     }
 
     @Override
@@ -108,6 +143,7 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         private final ImageButton moreOptionButton;
         private final ImageView postImage;
         private final CardView postCardView;
+        private final TextView likesText;
 
         public CommunityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,8 +155,12 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             moreOptionButton = itemView.findViewById(R.id.more_options_button);
 
             postImage = itemView.findViewById(R.id.post_picture);
-            postCardView = postImage.findViewById(R.id.post_card);
+            postCardView = itemView.findViewById(R.id.post_card);
+            likesText = itemView.findViewById(R.id.tvLike);
+
         }
+
+
     }
 
     public interface OnCommunityListener {

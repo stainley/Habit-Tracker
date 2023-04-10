@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:paddingLeft="18dp"
     android:paddingRight="18dp"
-    tools:context=".view.ongoingHabits.OngoingHabitsFragment">
+    tools:context=".habit.view.ongoingHabits.OngoingHabitsFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/allHabitsCard"
         style="@style/MaterialCardView.NoColour"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="80dp"
         android:layout_marginTop="18dp"
         android:clickable="true"
         android:focusable="true"
@@ -72,7 +72,7 @@
         android:id="@+id/privateHabitsCard"
         style="@style/MaterialCardView.NoColour"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="80dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
@@ -192,7 +192,7 @@
         android:id="@+id/public_habit_card"
         style="@style/MaterialCardView.NoColour"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="80dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"

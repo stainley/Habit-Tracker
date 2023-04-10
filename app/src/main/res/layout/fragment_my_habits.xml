@@ -5,7 +5,7 @@
     android:id="@+id/fragment_my_habits"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.myhabits.MyHabitsFragment">
+    tools:context=".habit.view.myhabits.MyHabitsFragment">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/searchAppBar"
@@ -35,7 +35,7 @@
             android:gravity="center"
             android:horizontalSpacing="12dp"
             android:listSelector="@android:color/transparent"
-            android:numColumns="3"
+            android:numColumns="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchCategoryBar"
             tools:listitem="@layout/card_item_my_habbits_buttons" />

@@ -26,10 +26,17 @@ public class CollectionCardCategoryFragment extends Fragment {
 
     FragmentCardStackCollectionBinding binding;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = FragmentCardStackCollectionBinding.inflate(LayoutInflater.from(requireContext()));
+
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentCardStackCollectionBinding.inflate(inflater);
         RecyclerView cardStackCollectionRv = binding.cardStackCollectionRv;
 
 

@@ -80,4 +80,5 @@
     <string name="habit_title">Habit Title</string>
     <string name="find_habit">Find habit</string>
     <string name="calendar_view">Calendar view</string>
+    <string name="get_reminder">Get Reminder</string>
 </resources>

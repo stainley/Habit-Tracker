@@ -34,9 +34,9 @@ import java.util.Map;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.habit.model.User;
+import ca.lambton.habittracker.habit.view.login.LoginFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.view.login.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private HabitViewModel habitViewModel;
     private ArrayList<String> permissionsList;
     private NavController navController;
-    private final String[] permissionsStr = {Manifest.permission.CAMERA};
+    private final String[] permissionsStr = {Manifest.permission.CAMERA, Manifest.permission.POST_NOTIFICATIONS};
 
     ActivityResultLauncher<String[]> permissionsLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<>() {
         @Override
@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
         askForPermissions(permissionsList);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_settings,
+                R.id.nav_home,
+                R.id.nav_settings,
                 R.id.nav_my_habits,
                 R.id.menu_logout,
                 R.id.nav_community
-        ).setOpenableLayout(drawerLayout)
-         .build();
+        ).setOpenableLayout(drawerLayout).build();
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
 
@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
     @Nullable
     @Override
     public View onCreateView(@Nullable View parent, @NonNull String name, @NonNull Context context, @NonNull AttributeSet attrs) {
-
 
         return super.onCreateView(parent, name, context, attrs);
     }
