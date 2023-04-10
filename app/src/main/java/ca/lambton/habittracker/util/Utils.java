@@ -1,10 +1,10 @@
 package ca.lambton.habittracker.util;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -26,6 +26,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,7 +37,38 @@ import ca.lambton.habittracker.habit.model.Progress;
 
 public class Utils {
 
-    public static void shareScreenShot(Activity activity) {
+    public static void scheduleNotifications(@NonNull Context context, @NonNull List<Notification> notifications) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        for (Notification notification : notifications) {
+            Intent intent = new Intent(context, NotificationReceiver.class);
+            intent.putExtra("message", notification.getMessage());
+            intent.putExtra("notification_id", notification.getId());
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notification.getId(), intent, PendingIntent.FLAG_MUTABLE);
+
+            long start = notification.getStartNotification().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long end = notification.getEndNotification().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long interval = 2 * 60 * 1000; // in milliseconds
+
+            // Schedule the notification alarm to repeat at the specified interval
+            //alarmManager.cancel(pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, start, interval, pendingIntent);
+
+            // Schedule the end-of-notification alarm
+            Intent endIntent = new Intent(context, NotificationReceiver.class);
+            endIntent.putExtra("message", notification.getMessage());
+            endIntent.putExtra("notification_id", notification.getId());
+            PendingIntent endPendingIntent = PendingIntent.getBroadcast(context, notification.getId(), endIntent, PendingIntent.FLAG_MUTABLE);
+
+            //alarmManager.cancel(endPendingIntent);
+            //alarmManager.set(AlarmManager.RTC_WAKEUP, end, endPendingIntent);
+
+            System.out.println("Notification scheduled");
+        }
+    }
+
+    public static void shareScreenShot(@NonNull Activity activity) {
         // Take a screenshot of the current screen
         View rootView = activity.getWindow().getDecorView().getRootView();
         rootView.setDrawingCacheEnabled(true);
@@ -69,14 +101,9 @@ public class Utils {
      */
     public static int computeProgress(@NonNull HabitProgress habitProgress) {
         double frequency = habitProgress.getHabit().getFrequency();
-        Map<String, Integer> progressMap = habitProgress.getProgressList()
-                .stream()
-                .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
+        Map<String, Integer> progressMap = habitProgress.getProgressList().stream().collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
 
-        double sumOfPercentages = progressMap.values().stream()
-                .mapToDouble(sum -> (sum / frequency) * 100)
-                .average()
-                .orElse(0);
+        double sumOfPercentages = progressMap.values().stream().mapToDouble(sum -> (sum / frequency) * 100).average().orElse(0);
 
         return (int) Math.round(sumOfPercentages);
     }
@@ -92,13 +119,11 @@ public class Utils {
 
         Habit habit = habitProgress.getHabit();
 
-        habitProgress.getProgressList().stream()
-                .filter(progressObj -> progressObj.getDate() != null)
-                .forEach(obj -> {
-                    String date = obj.getDate();
-                    countsByDate.putIfAbsent(date, 0);
-                    countsByDate.computeIfPresent(date, (d, count) -> count + 1);
-                });
+        habitProgress.getProgressList().stream().filter(progressObj -> progressObj.getDate() != null).forEach(obj -> {
+            String date = obj.getDate();
+            countsByDate.putIfAbsent(date, 0);
+            countsByDate.computeIfPresent(date, (d, count) -> count + 1);
+        });
 
         // Iterate over the dates in order and print the counts
         LocalDate startDate = countsByDate.keySet().stream().map(LocalDate::parse).min(LocalDate::compareTo).orElse(null);
@@ -142,13 +167,11 @@ public class Utils {
 
         Habit habit = habitProgress.getHabit();
 
-        habitProgress.getProgressList().stream()
-                .filter(progressObj -> progressObj.getDate() != null)
-                .forEach(obj -> {
-                    String date = obj.getDate();
-                    countsByDate.putIfAbsent(date, 0);
-                    countsByDate.computeIfPresent(date, (d, count) -> count + 1);
-                });
+        habitProgress.getProgressList().stream().filter(progressObj -> progressObj.getDate() != null).forEach(obj -> {
+            String date = obj.getDate();
+            countsByDate.putIfAbsent(date, 0);
+            countsByDate.computeIfPresent(date, (d, count) -> count + 1);
+        });
 
         // Iterate over the dates in order and print the counts
         LocalDate startDate = countsByDate.keySet().stream().map(LocalDate::parse).min(LocalDate::compareTo).orElse(null);

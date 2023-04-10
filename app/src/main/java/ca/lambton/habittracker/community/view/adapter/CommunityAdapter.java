@@ -1,22 +1,31 @@
 package ca.lambton.habittracker.community.view.adapter;
 
+import static android.view.ViewGroup.LayoutParams.*;
+
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.FileDescriptor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -60,7 +69,9 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         setProfilePhoto(holder.profilePhoto, user.getPhotoUrl());
         setPostImage(holder.postImage, post.getPostImage().getPath());
 
-        setMoreOptionClickListener(holder.moreOptionButton, position);
+
+        communityListener.onMoreOptionCallback(holder.moreOptionButton, position);
+
         setMoreOptionClickListener(holder.postCardView, position);
 
         setDoubleTapListener(holder.postCardView, holder.likesText, holder.getAdapterPosition());
@@ -90,18 +101,22 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         imageView.setVisibility(View.VISIBLE);
         imageView.setClipToOutline(true);
 
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+
         Picasso.get().load(path)
                 .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
                 .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
                 .error(R.drawable.placeholder_image)
                 .into(imageView);
+
     }
 
-    private void setMoreOptionClickListener(View view, int position) {
+    private void setMoreOptionClickListener(@NonNull View view, int position) {
         view.setOnClickListener(v -> communityListener.onMoreOptionCallback(view, position));
     }
 
-    private void setDoubleTapListener(View view, TextView textView, int position) {
+    private void setDoubleTapListener(@NonNull View view, TextView textView, int position) {
         GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onDoubleTap(MotionEvent e) {
@@ -142,7 +157,10 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
             postImage = itemView.findViewById(R.id.post_picture);
             postCardView = itemView.findViewById(R.id.post_card);
             likesText = itemView.findViewById(R.id.tvLike);
+
         }
+
+
     }
 
     public interface OnCommunityListener {

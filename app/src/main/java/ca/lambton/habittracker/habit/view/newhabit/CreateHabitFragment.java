@@ -31,16 +31,19 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,12 +56,17 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
@@ -66,10 +74,12 @@ import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.util.AlarmReceiver;
+import ca.lambton.habittracker.util.Notification;
+import ca.lambton.habittracker.util.NotificationReceiver;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
+import ca.lambton.habittracker.util.Utils;
 
 public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
@@ -92,6 +102,8 @@ public class CreateHabitFragment extends Fragment {
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     private Calendar calendar;
+    private MaterialSwitch reminderSwitch;
+    private Calendar scheduleTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,6 +121,7 @@ public class CreateHabitFragment extends Fragment {
         binding.overflowMenu.setOnClickListener(replaceImage());
 
         binding.selectTimeBtn.setOnClickListener(this::showTimePicker);
+        reminderSwitch = binding.reminderSwitch;
 
         notificationChannel();
     }
@@ -281,7 +294,23 @@ public class CreateHabitFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void habitTypeSelection(View view) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        reminderSwitch.setOnClickListener(this::activateReminder);
+    }
+
+    private void activateReminder(View view) {
+        if (reminderSwitch.isChecked()) {
+            binding.selectTimeBtn.setVisibility(View.VISIBLE);
+        } else {
+            binding.selectTimeBtn.setVisibility(View.GONE);
+        }
+    }
+
+
+    private void habitTypeSelection(@NonNull View view) {
 
         ColorStateList selectedTextColorBlack = ColorStateList.valueOf(getResources().getColor(R.color.black, getResources().newTheme()));
         ColorStateList selectedTextColorWhite = ColorStateList.valueOf(getResources().getColor(R.color.white, getResources().newTheme()));
@@ -310,6 +339,11 @@ public class CreateHabitFragment extends Fragment {
         }
     }
 
+    /**
+     * Create an habit
+     *
+     * @param view Button view
+     */
     private void createHabit(View view) {
         if (validateEmptyField()) return;
 
@@ -357,6 +391,14 @@ public class CreateHabitFragment extends Fragment {
                 newHabit.setImagePath("default_image");
             }
         }
+
+        if (reminderSwitch.isChecked()) {
+            //setAlarm();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a", Locale.getDefault());
+            newHabit.setTimer(sdf.format(calendar.getTime()));
+        }
+
         habitViewModel.saveHabit(newHabit);
 
         if (newHabit.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.toString())) {
@@ -370,62 +412,48 @@ public class CreateHabitFragment extends Fragment {
         }
 
 
-        if (binding.reminderSwitch.isChecked()) {
-            setAlarm();
-        }
         Toast.makeText(requireContext(), "New habit registered", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(view).popBackStack(R.id.createHabitFragment, true);
     }
 
+    /**
+     * Upload image to the cloud and wait for the URL
+     *
+     * @param onTaskCompleted callback to return the new URL
+     */
     private void updateImageToCloud(OnTaskCompleted onTaskCompleted) {
-
         detailImage.setDrawingCacheEnabled(true);
         detailImage.buildDrawingCache(true);
-        new Thread(() -> {
+
+        CompletableFuture.supplyAsync(() -> {
+            if (detailImage.getDrawable() == null) {
+                return null;
+            }
+
+            Bitmap bitmap = ((BitmapDrawable) detailImage.getDrawable()).getBitmap();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            byte[] data = outputStream.toByteArray();
+
+            StorageReference photosRef = storageRef.child("habit/" + currentUser.getUid() + "/" + UUID.randomUUID());
+            UploadTask uploadTask = photosRef.putBytes(data);
 
             try {
-                Thread.sleep(1000);
-
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Tasks.await(uploadTask);
+                return photosRef.getDownloadUrl();
+            } catch (ExecutionException | InterruptedException e) {
+                return null;
             }
-
-            if (detailImage.getDrawable() != null) {
-                Bitmap bitmap = ((BitmapDrawable) detailImage.getDrawable()).getBitmap();
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                byte[] data = outputStream.toByteArray();
-
-                StorageReference photosRef = storageRef.child("habit/" + currentUser.getUid() + "/" + UUID.randomUUID());
-                UploadTask uploadTask = photosRef.putBytes(data);
-
-                uploadTask.addOnFailureListener(exception -> {
-                    // Handle unsuccessful uploads
-                    //Toast.makeText(getActivity(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
-                }).addOnSuccessListener(taskSnapshot -> {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                });
-
-
-                uploadTask.continueWithTask(task -> {
-                    if (!task.isSuccessful()) {
-                        throw Objects.requireNonNull(task.getException());
-                    }
-                    // Continue with the task to get the download URL
-                    return photosRef.getDownloadUrl();
-                }).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Uri photoDownloadUri = task.getResult();
-                        onTaskCompleted.onImageUploaded(photoDownloadUri.toString());
-                    } else {
-                        // Handle failures
-                        Log.e(TAG, "Error fetching the photo URL");
-                    }
-                });
+        }).thenAcceptAsync(downloadUrl -> {
+            if (downloadUrl != null) {
+                onTaskCompleted.onImageUploaded(downloadUrl.toString());
+            } else {
+                Log.e(TAG, "Error fetching the photo URL");
             }
-        }).start();
+        }, Runnable::run);
     }
 
+    //new Handler(Looper.getMainLooper())
     private boolean validateEmptyField() {
         boolean emptyField = false;
 
@@ -444,7 +472,7 @@ public class CreateHabitFragment extends Fragment {
             emptyField = true;
         }
 
-        if (binding.editTextStartDate.getText().toString().equals("")) {
+        if (binding.editTextStartDate.getText() != null && binding.editTextStartDate.getText().toString().equals("")) {
             binding.editTextStartDate.setError("This field is required");
             emptyField = true;
         }
@@ -455,25 +483,6 @@ public class CreateHabitFragment extends Fragment {
         }
 
         return emptyField;
-    }
-
-    private void setAlarm() {
-
-        calendar = Calendar.getInstance();
-
-        alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(requireContext(), AlarmReceiver.class);
-
-        pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-        /*alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);*/
-
-        Toast.makeText(requireContext(), "Alarm set Successfully", Toast.LENGTH_SHORT).show();
     }
 
     private void showTimePicker(View view) {
@@ -506,22 +515,19 @@ public class CreateHabitFragment extends Fragment {
             calendar.set(Calendar.MINUTE, selectReminderTime.getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-
         });
     }
 
     private void notificationChannel() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Habitude Reminder";
-            String description = "Please complete your Habit";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);
-            channel.setDescription(description);
+        CharSequence name = "Habitude Reminder";
+        String description = "Please complete your Habit";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);
+        channel.setDescription(description);
 
-            NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
 
