@@ -82,7 +82,7 @@ public class HabitDetailFragment extends Fragment {
                     // set the id to 0 to generate a new Habit ID
                     habit.setId(0);
 
-                    habit.setHabitType(HabitType.PERSONAL.name());
+                    habit.setHabitType(!habit.getHabitType().equals("") ? habit.getHabitType() : HabitType.PERSONAL.name());
 
                     Calendar calendar = Calendar.getInstance(Locale.CANADA);
 

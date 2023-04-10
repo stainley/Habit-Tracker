@@ -1,6 +1,7 @@
 package ca.lambton.habittracker.habit.view.today;
 
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment
 import ca.lambton.habittracker.databinding.FragmentTodayDueProgressBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
+import ca.lambton.habittracker.habit.view.complete.CollectScoreFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
@@ -213,7 +215,8 @@ public class DueTodayProgressFragment extends Fragment {
 
                 if (showCollectScore) {
                     NavDirections navDirections = DueTodayFragmentDirections.actionCompleteHabitFragmentToCollectScoreFragment().setHabitProgress(habitProgresses.get(habitPosition));
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                    //Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                    
                 }
             }
 
