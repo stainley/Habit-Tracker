@@ -3,7 +3,6 @@ package ca.lambton.habittracker;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
@@ -15,7 +14,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -38,7 +36,7 @@ import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.habit.model.User;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.view.login.LoginFragment;
+import ca.lambton.habittracker.habit.view.login.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 

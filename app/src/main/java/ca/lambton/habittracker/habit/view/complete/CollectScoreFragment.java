@@ -16,7 +16,6 @@ import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Utils;
-import ca.lambton.habittracker.view.ongoingHabits.OngoingHabitDetailGridInfo;
 
 public class CollectScoreFragment extends Fragment {
 

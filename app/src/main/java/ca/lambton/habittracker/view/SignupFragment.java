@@ -33,8 +33,8 @@ import java.util.Objects;
 import ca.lambton.habittracker.MainActivity;
 import ca.lambton.habittracker.databinding.FragmentSignupBinding;
 import ca.lambton.habittracker.habit.model.User;
-import ca.lambton.habittracker.view.login.FirebaseUtils;
-import ca.lambton.habittracker.view.login.LoginFragment;
+import ca.lambton.habittracker.habit.view.login.FirebaseUtils;
+import ca.lambton.habittracker.habit.view.login.LoginFragment;
 
 public class SignupFragment extends FragmentActivity {
 

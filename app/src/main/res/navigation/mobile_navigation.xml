@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="ca.lambton.habittracker.view.home.HomeFragment"
+        android:name="ca.lambton.habittracker.habit.view.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
@@ -41,7 +41,7 @@
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/nav_my_habits"
-        android:name="ca.lambton.habittracker.view.myhabits.MyHabitsFragment"
+        android:name="ca.lambton.habittracker.habit.view.myhabits.MyHabitsFragment"
         android:label="My Habits"
         tools:layout="@layout/fragment_my_habits">
         <action
@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_nav_my_habits_to_completeHabitCollectionFragment"
             app:destination="@id/completeHabitCollectionFragment" />
+        <action
+            android:id="@+id/action_nav_my_habits_to_categoryHabitPredefinedFragment"
+            app:destination="@id/categoryHabitPredefinedFragment" />
     </fragment>
     <fragment
         android:id="@+id/nav_defined_habit"
@@ -66,6 +69,10 @@
             android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
             app:destination="@id/nav_habit_detail"
             app:popUpTo="@id/nav_defined_habit" />
+        <argument
+            android:name="categoryPosition"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/nav_habit_detail"
@@ -84,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/newHabitFragment"
-        android:name="ca.lambton.habittracker.view.newhabit.NewHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.newhabit.NewHabitFragment"
         android:label="Enter Habit"
         tools:layout="@layout/fragment_new_habit">
         <action
@@ -102,13 +109,13 @@
         tools:layout="@layout/fragment_first_habit" />
     <fragment
         android:id="@+id/createHabitFragment"
-        android:name="ca.lambton.habittracker.view.newhabit.CreateHabitFragment"
+        android:name="ca.lambton.habittracker.habit.view.newhabit.CreateHabitFragment"
         android:label="Create Habit"
         tools:layout="@layout/fragment_create_habit_layout" />
 
     <fragment
         android:id="@+id/nav_due_today"
-        android:name="ca.lambton.habittracker.view.today.DueTodayFragment"
+        android:name="ca.lambton.habittracker.habit.view.today.DueTodayFragment"
         android:label="Due for today"
         tools:layout="@layout/fragment_due_for_day_screen" >
         <action
@@ -118,7 +125,7 @@
 
     <fragment
         android:id="@+id/ongoingHabitFragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.OngoingHabitsFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.OngoingHabitsFragment"
         android:label="Ongoing Habits"
         tools:layout="@layout/fragment_ongoing_habits">
         <action
@@ -137,7 +144,7 @@
 
     <fragment
         android:id="@+id/allHabitsFragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.AllHabitsFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.AllHabitsFragment"
         android:label="Ongoing - All Habits"
         tools:layout="@layout/fragment_all_habits">
 
@@ -148,7 +155,7 @@
 
     <fragment
         android:id="@+id/privateHabitsFragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitsFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.PrivateHabitsFragment"
         android:label="Ongoing - Private Habits"
         tools:layout="@layout/fragment_private_habits">
         <action
@@ -157,7 +164,7 @@
     </fragment>
     <fragment
         android:id="@+id/groupHabitsFragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitsFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.GroupHabitsFragment"
         android:label="Ongoing - Group Habits"
         tools:layout="@layout/fragment_group_habits">
         <action
@@ -166,7 +173,7 @@
     </fragment>
     <fragment
         android:id="@+id/publicChallengesFragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.PublicChallengesFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.PublicChallengesFragment"
         android:label="Ongoing -  Public Challenges"
         tools:layout="@layout/fragment_public_challenges">
         <action
@@ -175,7 +182,7 @@
     </fragment>
     <fragment
         android:id="@+id/private_habit_detail_fragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.PrivateHabitDetailFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.PrivateHabitDetailFragment"
         android:label="Private Habit Detail"
         tools:layout="@layout/fragment_private_habit_detail">
         <argument
@@ -194,14 +201,14 @@
     </fragment>
     <fragment
         android:id="@+id/groupHabitDetailFragment"
-        android:name="ca.lambton.habittracker.view.ongoingHabits.GroupHabitDetailFragment"
+        android:name="ca.lambton.habittracker.habit.view.ongoingHabits.GroupHabitDetailFragment"
         android:label="Group Habit Detail"
         tools:layout="@layout/fragment_public_challenges" />
 
 
     <activity
         android:id="@+id/loginFragment"
-        android:name="ca.lambton.habittracker.view.login.LoginFragment"
+        android:name="ca.lambton.habittracker.habit.view.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login" />
 
@@ -212,7 +219,7 @@
         tools:layout="@layout/fragment_signup" />
     <fragment
         android:id="@+id/profile_fragment"
-        android:name="ca.lambton.habittracker.view.profile.ProfileFragment"
+        android:name="ca.lambton.habittracker.habit.view.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
@@ -245,6 +252,21 @@
             android:name="habitProgress"
             android:defaultValue="@null"
             app:argType="ca.lambton.habittracker.habit.model.HabitProgress"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryHabitPredefinedFragment"
+        android:name="ca.lambton.habittracker.habit.view.fragment.predefined.CategoryHabitPredefinedFragment"
+        android:label="Category"
+        tools:layout="@layout/fragment_category_habit">
+        <action
+            android:id="@+id/action_nav_defined_habit_to_nav_habit_detail"
+            app:destination="@id/nav_habit_detail"
+            app:popUpTo="@id/nav_defined_habit" />
+        <argument
+            android:name="category"
+            android:defaultValue="@null"
+            app:argType="ca.lambton.habittracker.category.model.Category"
             app:nullable="true" />
     </fragment>
 </navigation>

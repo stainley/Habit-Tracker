@@ -5,7 +5,7 @@
     android:id="@+id/fragment_new_habit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.newhabit.NewHabitFragment">
+    tools:context=".habit.view.newhabit.NewHabitFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/newHabitCardView"
