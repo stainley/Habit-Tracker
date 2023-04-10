@@ -73,27 +73,29 @@ public class HabitCategoryDescriptionFragment extends Fragment {
         if (getArguments() != null) {
             Category category = (Category) getArguments().getSerializable("category");
 
-            habitFoodTitleText.setText(category != null ? category.getName() : "");
-            habitDurationHabitText.setText(String.valueOf(category.getDuration()));
-            habitTimeDurationText.setText(String.valueOf(category.getInterval()));
-            habitFrequencyTex.setText(category.getFrequencyUnit());
+            if (category != null) {
+                habitFoodTitleText.setText(category.getName());
+                habitDurationHabitText.setText(String.valueOf(category.getDuration()));
+                habitTimeDurationText.setText(String.valueOf(category.getInterval()));
+                habitFrequencyTex.setText(category.getFrequencyUnit());
 
-            HabitViewModel habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
-            habitViewModel.getAllHabitByCategory(category.getId()).observe(requireActivity(), habits -> {
-                if (habits.size() > 0) {
-                    List<String> habitsTitle = habits.stream()
-                            .filter(Habit::isPredefined)
-                            .map(Habit::getName)
-                            .collect(Collectors.toList());
+                HabitViewModel habitViewModel = new ViewModelProvider(requireActivity(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+                habitViewModel.getAllHabitByCategory(category.getId()).observe(requireActivity(), habits -> {
+                    if (habits.size() > 0) {
+                        List<String> habitsTitle = habits.stream()
+                                .filter(Habit::isPredefined)
+                                .map(Habit::getName)
+                                .collect(Collectors.toList());
 
-                    this.categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
+                        this.categoryButtonRVAdapter = new CategoryButtonRVAdapter(habitsTitle, (view1, position) -> view1.setOnClickListener(v -> {
 
-                        NavDirections navDirections = DefinedHabitFragmentDirections.actionNavDefinedHabitToNavHabitDetail().setHabit(habits.get(position));
-                        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
-                    }));
-                    collectionCustomHabitRv.setAdapter(categoryButtonRVAdapter);
-                }
-            });
+                            NavDirections navDirections = DefinedHabitFragmentDirections.actionNavDefinedHabitToNavHabitDetail().setHabit(habits.get(position));
+                            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                        }));
+                        collectionCustomHabitRv.setAdapter(categoryButtonRVAdapter);
+                    }
+                });
+            }
         }
 
         return binding.getRoot();
