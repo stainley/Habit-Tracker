@@ -76,10 +76,14 @@ public class CollectScoreFragment extends Fragment {
                     score = 200;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 200 points.");
-                } else  {
+                } else if (percentage == 100) {
                     score = 300;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 300 points.");
+                }
+                else {
+                    binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
+                    binding.youEarnedTextView.setText("You earned 30 points.");
                 }
             }
         }
