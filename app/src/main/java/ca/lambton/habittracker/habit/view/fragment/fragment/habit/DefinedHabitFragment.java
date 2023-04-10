@@ -80,8 +80,6 @@ public class DefinedHabitFragment extends Fragment {
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
-                Log.i(TAG, "onPageScrollStateChanged: " + state);
-
             }
         });
 

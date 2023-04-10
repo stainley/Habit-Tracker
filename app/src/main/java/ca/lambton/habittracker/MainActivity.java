@@ -34,9 +34,9 @@ import java.util.Map;
 
 import ca.lambton.habittracker.databinding.ActivityMainBinding;
 import ca.lambton.habittracker.habit.model.User;
+import ca.lambton.habittracker.habit.view.login.LoginFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
-import ca.lambton.habittracker.habit.view.login.LoginFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         askForPermissions(permissionsList);
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_settings,
+                R.id.nav_home,
+                R.id.nav_settings,
                 R.id.nav_my_habits,
                 R.id.menu_logout,
                 R.id.nav_community
@@ -196,5 +197,6 @@ public class MainActivity extends AppCompatActivity {
             permissionsLauncher.launch(newPermissionStr);
         }
     }
+
 
 }

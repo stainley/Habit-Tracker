@@ -1,5 +1,8 @@
 package ca.lambton.habittracker.habit.view.home;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +17,31 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentHomeBinding;
+import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
+import ca.lambton.habittracker.util.Notification;
 import ca.lambton.habittracker.util.Utils;
 import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
 import ca.lambton.habittracker.habit.view.progress.DailyProgressFragment;
@@ -53,6 +69,7 @@ public class HomeFragment extends Fragment {
         mUser = FirebaseAuth.getInstance().getCurrentUser();
 
         habitViewModel = new ViewModelProvider(requireActivity()).get(HabitViewModel.class);
+        notificationChannel();
 
     }
 
@@ -94,7 +111,55 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         todayCalendarProgress();
+        calendarNotifications();
     }
+
+    public void calendarNotifications() {
+        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), habits -> {
+
+            List<Notification> notifications = new ArrayList<>();
+
+            List<Habit> habitWithTimer = habits.stream().filter(user -> user.getUserId().equals(mUser.getUid())).filter(timer -> timer.getTimer() != null).filter(alarmStatus -> !alarmStatus.isAlarmStarted()).collect(Collectors.toList());
+
+            habitWithTimer.forEach(habit -> {
+                Notification notification = new Notification();
+                notification.setId((int) habit.getId());
+                notification.setMessage(habit.getName());
+
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTimeInMillis(habit.getStartDate());
+
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTimeInMillis(habit.getEndDate());
+
+                try {
+                    DateFormat format = new SimpleDateFormat("HH:mm a", Locale.getDefault());
+                    Date time = format.parse(habit.getTimer());
+                    Calendar calendarTime = Calendar.getInstance();
+                    assert time != null;
+                    calendarTime.setTime(time);
+
+                    LocalDateTime startNotification = LocalDateTime.of(calendarStart.get(Calendar.YEAR), calendarStart.get(Calendar.MONTH), calendarStart.get(Calendar.DAY_OF_MONTH), calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE));
+                    LocalDateTime endNotification = LocalDateTime.of(calendarEnd.get(Calendar.YEAR), calendarEnd.get(Calendar.MONTH), calendarEnd.get(Calendar.DAY_OF_MONTH), calendarTime.get(Calendar.HOUR_OF_DAY), calendarTime.get(Calendar.MINUTE));
+
+                    notification.setStartNotification(startNotification);
+                    notification.setEndNotification(endNotification);
+
+                    notifications.add(notification);
+                    habit.setAlarmStarted(true);
+                    habitViewModel.updateHabit(habit);
+
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+
+            });
+            if (notifications.size() > 0)
+                Utils.scheduleNotifications(requireContext(), notifications);
+
+        });
+    }
+
 
     public void todayCalendarProgress() {
 
@@ -104,8 +169,7 @@ public class HomeFragment extends Fragment {
             AtomicInteger index = new AtomicInteger();
             habitProgresses.clear();
 
-            List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
-                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
+            List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
 
             for (HabitProgress hp : myHabitProgressFiltered) {
 
@@ -154,6 +218,18 @@ public class HomeFragment extends Fragment {
             Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
             supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
         });
+    }
+
+    private void notificationChannel() {
+
+        CharSequence name = "Habitude Reminder";
+        String description = "Please complete your Habit";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
 }

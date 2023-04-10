@@ -14,8 +14,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -58,15 +56,17 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
@@ -74,10 +74,12 @@ import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentCreateHabitLayoutBinding;
 import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
-import ca.lambton.habittracker.util.AlarmReceiver;
+import ca.lambton.habittracker.util.Notification;
+import ca.lambton.habittracker.util.NotificationReceiver;
 import ca.lambton.habittracker.util.Duration;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.HabitType;
+import ca.lambton.habittracker.util.Utils;
 
 public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
@@ -101,6 +103,7 @@ public class CreateHabitFragment extends Fragment {
     private PendingIntent pendingIntent;
     private Calendar calendar;
     private MaterialSwitch reminderSwitch;
+    private Calendar scheduleTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -307,7 +310,7 @@ public class CreateHabitFragment extends Fragment {
     }
 
 
-    private void habitTypeSelection(View view) {
+    private void habitTypeSelection(@NonNull View view) {
 
         ColorStateList selectedTextColorBlack = ColorStateList.valueOf(getResources().getColor(R.color.black, getResources().newTheme()));
         ColorStateList selectedTextColorWhite = ColorStateList.valueOf(getResources().getColor(R.color.white, getResources().newTheme()));
@@ -336,6 +339,11 @@ public class CreateHabitFragment extends Fragment {
         }
     }
 
+    /**
+     * Create an habit
+     *
+     * @param view Button view
+     */
     private void createHabit(View view) {
         if (validateEmptyField()) return;
 
@@ -383,6 +391,14 @@ public class CreateHabitFragment extends Fragment {
                 newHabit.setImagePath("default_image");
             }
         }
+
+        if (reminderSwitch.isChecked()) {
+            //setAlarm();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a", Locale.getDefault());
+            newHabit.setTimer(sdf.format(calendar.getTime()));
+        }
+
         habitViewModel.saveHabit(newHabit);
 
         if (newHabit.getHabitType().equalsIgnoreCase(HabitType.PUBLIC.toString())) {
@@ -396,13 +412,15 @@ public class CreateHabitFragment extends Fragment {
         }
 
 
-        if (reminderSwitch.isChecked()) {
-            setAlarm();
-        }
         Toast.makeText(requireContext(), "New habit registered", Toast.LENGTH_SHORT).show();
         Navigation.findNavController(view).popBackStack(R.id.createHabitFragment, true);
     }
 
+    /**
+     * Upload image to the cloud and wait for the URL
+     *
+     * @param onTaskCompleted callback to return the new URL
+     */
     private void updateImageToCloud(OnTaskCompleted onTaskCompleted) {
         detailImage.setDrawingCacheEnabled(true);
         detailImage.buildDrawingCache(true);
@@ -467,48 +485,6 @@ public class CreateHabitFragment extends Fragment {
         return emptyField;
     }
 
-    private void setAlarm() {
-
-        calendar = Calendar.getInstance();
-
-        alarmManager = (AlarmManager) requireActivity().getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(requireContext(), AlarmReceiver.class);
-
-        pendingIntent = PendingIntent.getBroadcast(requireContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-        /*alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);*/
-
-        Toast.makeText(requireContext(), "Alarm set Successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    public void scheduleNotification(Context context, String message, int year, int month, int dayOfMonth, int hourOfDay, int minute) {
-        // Create a notification intent
-        Intent notificationIntent = new Intent(context, AlarmReceiver.class);
-        notificationIntent.putExtra("message", message);
-
-        // Create a pending intent
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Get the current time and the specified time
-        Calendar currentTime = Calendar.getInstance();
-        Calendar scheduledTime = Calendar.getInstance();
-        scheduledTime.set(year, month, dayOfMonth, hourOfDay, minute, 0);
-
-        // Check if the scheduled time has already passed
-        if (scheduledTime.getTimeInMillis() <= currentTime.getTimeInMillis()) {
-            scheduledTime.setTimeInMillis(scheduledTime.getTimeInMillis() + 24 * 60 * 60 * 1000);
-        }
-
-        // Set the alarm using the AlarmManager
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, scheduledTime.getTimeInMillis(), pendingIntent);
-    }
-
     private void showTimePicker(View view) {
 
         MaterialTimePicker selectReminderTime = new MaterialTimePicker.Builder()
@@ -539,22 +515,19 @@ public class CreateHabitFragment extends Fragment {
             calendar.set(Calendar.MINUTE, selectReminderTime.getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
-
         });
     }
 
     private void notificationChannel() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Habitude Reminder";
-            String description = "Please complete your Habit";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);
-            channel.setDescription(description);
+        CharSequence name = "Habitude Reminder";
+        String description = "Please complete your Habit";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);
+        channel.setDescription(description);
 
-            NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+        NotificationManager notificationManager = requireActivity().getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
 
