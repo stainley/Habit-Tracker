@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,13 +28,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
 import ca.lambton.habittracker.databinding.FragmentTodayDueProgressBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
-import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
 
 public class DueTodayProgressFragment extends Fragment {
 
@@ -46,6 +48,10 @@ public class DueTodayProgressFragment extends Fragment {
     private float totalFrequencies;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
     private FirebaseUser mUser;
+
+    boolean showCollectScore = false;
+
+    int habitPosition = 0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,6 +93,7 @@ public class DueTodayProgressFragment extends Fragment {
                 progress.setUpdatedDate(new Date().getTime());
                 progress.setDate(LocalDate.now().toString());
                 progress.setTime(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).toString());
+                habitPosition = position;
 
                 LocalDate today = LocalDate.now();
 
@@ -100,6 +107,10 @@ public class DueTodayProgressFragment extends Fragment {
 
                         if (totalCompletedToday < habitProgress.getHabit().getFrequency()) {
                             habitViewModel.increase(progress);
+
+                            if (habitProgress.getHabit().getFrequency() == (totalCompletedToday + 1)) {
+                                showCollectScore = true;
+                            }
                             break;
                         }
                     }
@@ -107,6 +118,10 @@ public class DueTodayProgressFragment extends Fragment {
 
                 if (habitProgress.getProgressList().size() == 0) {
                     habitViewModel.increase(progress);
+
+                    if (habitProgress.getHabit().getFrequency() == 1) {
+                        showCollectScore = true;
+                    }
                 }
 
             }
@@ -195,6 +210,11 @@ public class DueTodayProgressFragment extends Fragment {
             Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) result);
             if (!fragmentManager.isDestroyed()) {
                 fragmentManager.beginTransaction().replace(R.id.due_today_calendar, fragmentProgressCalendar).commit();
+
+                if (showCollectScore) {
+                    NavDirections navDirections = DueTodayFragmentDirections.actionCompleteHabitFragmentToCollectScoreFragment().setHabitProgress(habitProgresses.get(habitPosition));
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                }
             }
 
             progressButtonAdapter.notifyItemRangeChanged(0, myHabitProgressFiltered.size());

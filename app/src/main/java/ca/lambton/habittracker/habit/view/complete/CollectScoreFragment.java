@@ -97,7 +97,7 @@ public class CollectScoreFragment extends Fragment {
     }
 
     private void collectScore(View view) {
-        habitProgress.getHabit().setScore(score);
+        habitProgress.getHabit().setScore(habitProgress.getHabit().getScore() + score);
         habitViewModel.updateHabit(habitProgress.getHabit());
     }
 }
