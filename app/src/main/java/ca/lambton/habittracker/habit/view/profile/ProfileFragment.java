@@ -157,7 +157,6 @@ public class ProfileFragment extends Fragment {
 
                             uploadTask.addOnFailureListener(exception -> {
                                 // Handle unsuccessful uploads
-                                Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
                             }).addOnSuccessListener(taskSnapshot -> {
                                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                             });
@@ -179,7 +178,6 @@ public class ProfileFragment extends Fragment {
                                     currentUser.updateProfile(profileChangeNameRequest).addOnCompleteListener(taskProfile -> {
                                         if (task.isSuccessful()) {
                                             binding.nameProfile.setText(currentUser.getDisplayName());
-                                            Toast.makeText(requireContext(), "Display name profile updated.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } else {
