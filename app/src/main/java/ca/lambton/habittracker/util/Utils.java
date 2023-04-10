@@ -49,7 +49,7 @@ public class Utils {
 
             long start = notification.getStartNotification().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long end = notification.getEndNotification().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            long interval = 2 * 60 * 1000; // in milliseconds
+            long interval = 8 * 60 * 1000; // in milliseconds
 
             // Schedule the notification alarm to repeat at the specified interval
             //alarmManager.cancel(pendingIntent);

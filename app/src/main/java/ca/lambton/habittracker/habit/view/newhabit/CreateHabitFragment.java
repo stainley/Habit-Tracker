@@ -384,9 +384,12 @@ public class CreateHabitFragment extends Fragment {
 
         if (reminderSwitch.isChecked()) {
             //setAlarm();
+            if (calendar == null)
+                return;
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a", Locale.getDefault());
             newHabit.setTimer(sdf.format(calendar.getTime()));
+
         }
 
         habitViewModel.saveHabit(newHabit);
