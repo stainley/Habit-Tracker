@@ -1,18 +1,13 @@
 package ca.lambton.habittracker.habit.view.complete;
 
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.databinding.FragmentCollectScoreBinding;
@@ -36,7 +31,6 @@ public class CollectScoreFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         binding = FragmentCollectScoreBinding.inflate(LayoutInflater.from(requireContext()));
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
         habitProgress = CollectScoreFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
@@ -50,7 +44,8 @@ public class CollectScoreFragment extends Fragment {
                 score = 30;
                 binding.onCompletionTextView.setText("On completing the first day of your habit.");
                 binding.youEarnedTextView.setText("You earned 30 points.");
-            } else {
+            }
+            else {
                 if (habitProgress.getHabit().getFrequencyUnit().equals("DAILY")) {
                     totalTimesToComplete = habitProgress.getHabit().getFrequency() * (int) Utils.getTotalDays(habitProgress.getHabit());
                 } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
@@ -63,7 +58,7 @@ public class CollectScoreFragment extends Fragment {
                     }
                 }
 
-                int percentage = (totalProgress.get() * 100) / totalTimesToComplete;
+                int percentage = (totalProgress.get() * 100 ) / totalTimesToComplete ;
 
                 if (percentage >= 15 && percentage < 25) {
                     score = 50;
@@ -81,16 +76,21 @@ public class CollectScoreFragment extends Fragment {
                     score = 200;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 200 points.");
-                } else {
+                } else if (percentage == 100) {
                     score = 300;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 300 points.");
+                }
+                else {
+                    binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
+                    binding.youEarnedTextView.setText("You earned 30 points.");
                 }
             }
         }
 
         binding.collectButton.setOnClickListener(this::collectScore);
 
+        super.onCreate(savedInstanceState);
 
     }
 
