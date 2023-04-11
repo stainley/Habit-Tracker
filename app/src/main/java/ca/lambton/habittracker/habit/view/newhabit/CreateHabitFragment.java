@@ -95,6 +95,8 @@ public class CreateHabitFragment extends Fragment {
     private Calendar calendar;
     private MaterialSwitch reminderSwitch;
     private Calendar scheduleTime;
+    private MaterialSwitch durationSwitch;
+    private EditText durationText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,10 +114,14 @@ public class CreateHabitFragment extends Fragment {
         binding.overflowMenu.setOnClickListener(replaceImage());
 
         binding.selectTimeBtn.setOnClickListener(this::showTimePicker);
-        reminderSwitch = binding.reminderSwitch;
+        durationText = binding.durationText;
 
+        reminderSwitch = binding.reminderSwitch;
+        this.durationSwitch = binding.durationSwitch;
+        durationSwitch.setOnClickListener(this::activateDuration);
         notificationChannel();
     }
+
 
     @NonNull
     private View.OnClickListener replaceImage() {
@@ -329,6 +335,19 @@ public class CreateHabitFragment extends Fragment {
         }
     }
 
+    private void activateDuration(View view) {
+        if (durationSwitch.isChecked()) {
+            durationText.setEnabled(true);
+            durationText.setError("This field is required");
+
+        } else {
+            durationText.setEnabled(false);
+            durationText.setText("");
+            durationText.setError(null);
+        }
+    }
+
+
     /**
      * Create an habit
      *
@@ -342,10 +361,18 @@ public class CreateHabitFragment extends Fragment {
         newHabit.setUserId(mUser != null ? mUser.getUid() : "");
         newHabit.setName(binding.titleHabit.getText().toString());
         newHabit.setDescription(binding.description.getText() != null ? binding.description.getText().toString() : "");
-        int duration = binding.durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
+        newHabit.setCreationDate(new Date().getTime());
+
+        if (durationSwitch.isChecked()) {
+            durationText.setError("This field is required");
+            return;
+        }
+
+
+        int duration = durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
         newHabit.setDuration(duration);
         newHabit.setDurationUnit(durationUnit.name());
-        newHabit.setCreationDate(new Date().getTime());
+
         int frequency = binding.frequencyText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.frequencyText.getText().toString());
         newHabit.setFrequency(frequency);
         newHabit.setFrequencyUnit(frequencyUnit.name());
