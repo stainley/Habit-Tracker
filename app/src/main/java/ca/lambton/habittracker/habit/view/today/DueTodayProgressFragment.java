@@ -168,7 +168,8 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
                 habitLeaderBoard.forEach((userId, total) -> {
                     Leaderboard leaderboard = new Leaderboard();
                     leaderboard.setScore(total);
-                    leaderboard.setImageUrl(mUser.getPhotoUrl() != null ? mUser.getPhotoUrl().toString() : "");
+                    leaderboard.setName(mUser.getDisplayName());
+                    leaderboard.setImageUrl(mUser.getPhotoUrl() != null || !mUser.getPhotoUrl().toString().equals("") ? mUser.getPhotoUrl().toString() : "");
                     leaderboard.setAccountId(mUser.getUid());
 
                     habitViewModel.updateLeaderBoard(leaderboard);

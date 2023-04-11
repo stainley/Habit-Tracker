@@ -94,20 +94,19 @@ public class LeaderboardFragment extends Fragment {
 
             List<Leaderboard> leaderboardOrdered = leaderboards.stream().sorted(Comparator.comparing(Leaderboard::getScore).reversed()).collect(Collectors.toList());
 
-            leaderboardOrdered.forEach(leaderboard -> {
-            });
+
             leaderboardList.addAll(leaderboardOrdered);
             System.out.println(leaderboards.size());
 
             if (leaderboardList.size() == 1) {
-                nameFirstPlace.setText(leaderboardList.get(0).getName());
+                nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
                 if (!leaderboardList.get(0).getImageUrl().equals("")) {
                     Picasso.get().load(leaderboards.get(0).getImageUrl()).fit().into(photoFirstPlace);
                 }
 
             } else if (leaderboardList.size() == 2) {
-                nameFirstPlace.setText(leaderboardList.get(0).getName());
-                nameSecondPlace.setText(leaderboardList.get(1).getName());
+                nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
+                nameSecondPlace.setText(leaderboardOrdered.get(1).getName());
                 if (!leaderboardList.get(0).getImageUrl().equals("")) {
                     Picasso.get().load(leaderboards.get(0).getImageUrl()).fit().into(photoFirstPlace);
                 }
@@ -116,21 +115,21 @@ public class LeaderboardFragment extends Fragment {
                 if (!leaderboardList.get(1).getImageUrl().equals("")) {
                     Picasso.get().load(leaderboards.get(1).getImageUrl()).fit().into(photoSecondPlace);
                 }
-            } else if (leaderboardList.size() == 3) {
-                nameFirstPlace.setText(leaderboardList.get(0).getName());
-                nameSecondPlace.setText(leaderboardList.get(1).getName());
-                nameThirdPlace.setText(leaderboardList.get(2).getName());
+            } else if (leaderboardList.size() >= 3) {
+                nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
+                nameSecondPlace.setText(leaderboardOrdered.get(1).getName());
+                nameThirdPlace.setText(leaderboardOrdered.get(2).getName());
 
 
                 if (!leaderboardList.get(0).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboards.get(0).getImageUrl()).fit().into(photoFirstPlace);
+                    Picasso.get().load(leaderboardOrdered.get(0).getImageUrl()).fit().into(photoFirstPlace);
                 }
 
                 if (!leaderboardList.get(1).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboards.get(1).getImageUrl()).fit().into(photoSecondPlace);
+                    Picasso.get().load(leaderboardOrdered.get(1).getImageUrl()).fit().into(photoSecondPlace);
                 }
                 if (!leaderboardList.get(2).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboards.get(2).getImageUrl()).fit().into(photoThirdPlace);
+                    Picasso.get().load(leaderboardOrdered.get(2).getImageUrl()).fit().into(photoThirdPlace);
                 }
 
             }
