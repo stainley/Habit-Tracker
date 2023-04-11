@@ -72,7 +72,7 @@ public class GroupHabitsFragment extends Fragment {
             }
 
             @Override
-            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
+            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroup) {
 
             }
         };

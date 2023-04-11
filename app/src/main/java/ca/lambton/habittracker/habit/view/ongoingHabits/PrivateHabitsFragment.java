@@ -76,7 +76,7 @@ public class PrivateHabitsFragment extends Fragment {
             }
 
             @Override
-            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position) {
+            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroup) {
                 AtomicInteger totalProgress = new AtomicInteger();
                 habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
                     List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
