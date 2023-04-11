@@ -14,10 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -287,6 +289,29 @@ public class CreateHabitFragment extends Fragment {
         publicHabitType = binding.publicHabitType;
         publicHabitType.setOnClickListener(this::habitTypeSelection);
 
+        Button dropdownButton = binding.dropdownButton;
+        PopupMenu popupMenu = new PopupMenu(getActivity(), dropdownButton);
+        popupMenu.getMenu().add("15 Minutes");
+        popupMenu.getMenu().add("30 Minutes");
+        popupMenu.getMenu().add("60 Minutes");
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getTitle().toString()) {
+                case "15 Minutes":
+                    break;
+                case "30 Minutes":
+                    break;
+                case "60 Minutes":
+                    break;
+            }
+
+            dropdownButton.setText(item.getTitle());
+            return true;
+        });
+
+        dropdownButton.setOnClickListener(v -> popupMenu.show());
+
+
         return binding.getRoot();
     }
 
@@ -300,8 +325,10 @@ public class CreateHabitFragment extends Fragment {
     private void activateReminder(View view) {
         if (reminderSwitch.isChecked()) {
             binding.selectTimeBtn.setVisibility(View.VISIBLE);
+            binding.reminderFrequencyDropdown.setVisibility(View.VISIBLE);
         } else {
             binding.selectTimeBtn.setVisibility(View.GONE);
+            binding.reminderFrequencyDropdown.setVisibility(View.GONE);
         }
     }
 
