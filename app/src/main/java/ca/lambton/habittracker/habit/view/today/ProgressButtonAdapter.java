@@ -7,6 +7,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
@@ -65,6 +67,11 @@ public class ProgressButtonAdapter extends RecyclerView.Adapter<ProgressButtonAd
                     progressNumeric[0] = counter;
 
                     holder.progressIndicator.setProgress((int) result, false);
+                    if ((int) result == 100) {
+                        //NavDirections navDirections = DueTodayFragmentDirections.actionCompleteHabitFragmentToCollectScoreFragment().setHabitProgress(habitProgresses.get(position));
+                        //Navigation.findNavController(holder.itemView).navigate(navDirections);
+                    }
+
                 }
             });
 

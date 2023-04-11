@@ -1,7 +1,6 @@
 package ca.lambton.habittracker.habit.view.today;
 
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,27 +32,25 @@ import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment
 import ca.lambton.habittracker.databinding.FragmentTodayDueProgressBinding;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
-import ca.lambton.habittracker.habit.view.complete.CollectScoreFragment;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
 
-public class DueTodayProgressFragment extends Fragment {
+public class DueTodayProgressFragment extends Fragment implements OnProgressCallback {
 
     private HabitViewModel habitViewModel;
     FragmentTodayDueProgressBinding binding;
     RecyclerView progressButtonsRecycleView;
     private ProgressButtonAdapter progressButtonAdapter;
     private FragmentManager fragmentManager;
-
     private float todayProgress = 0;
     private float totalFrequencies;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
     private FirebaseUser mUser;
 
     boolean showCollectScore = false;
-
     int habitPosition = 0;
+    OnProgressCallback onProgressCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +67,7 @@ public class DueTodayProgressFragment extends Fragment {
 
         progressButtonsRecycleView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         progressButtonsRecycleView.setAdapter(progressButtonAdapter);
+        onProgressCallback = this;
     }
 
     @Nullable
@@ -112,6 +110,7 @@ public class DueTodayProgressFragment extends Fragment {
 
                             if (habitProgress.getHabit().getFrequency() == (totalCompletedToday + 1)) {
                                 showCollectScore = true;
+                                onProgressCallback.onProgressCompleted(view);
                             }
                             break;
                         }
@@ -153,12 +152,11 @@ public class DueTodayProgressFragment extends Fragment {
         });
 
         progressButtonsRecycleView.setAdapter(progressButtonAdapter);
+
         return binding.getRoot();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void updateCalendar() {
         LocalDate todayDate = LocalDate.now();
 
         habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
@@ -203,25 +201,35 @@ public class DueTodayProgressFragment extends Fragment {
                         todayProgress += habitProgress.getProgressList().stream().filter(progress -> progress.getDate().equals(todayDate.toString())).map(Progress::getCounter).mapToInt(Integer::intValue).sum();
                     }
                 }
-
                 index.set(index.get() + 1);
 
             });
 
             float result = (todayProgress / totalFrequencies) * 100;
             Fragment fragmentProgressCalendar = ProgressCalendarFragment.newInstance((int) result);
-            if (!fragmentManager.isDestroyed()) {
-                fragmentManager.beginTransaction().replace(R.id.due_today_calendar, fragmentProgressCalendar).commit();
 
-                if (showCollectScore) {
-                    NavDirections navDirections = DueTodayFragmentDirections.actionCompleteHabitFragmentToCollectScoreFragment().setHabitProgress(habitProgresses.get(habitPosition));
-                    //Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
-                    
-                }
+            if (fragmentManager != null) {
+                fragmentManager.beginTransaction().replace(R.id.due_today_calendar, fragmentProgressCalendar).commitAllowingStateLoss();
             }
 
             progressButtonAdapter.notifyItemRangeChanged(0, myHabitProgressFiltered.size());
         });
-
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        updateCalendar();
+    }
+
+    @Override
+    public void onProgressCompleted(View view) {
+        NavDirections navDirections = ca.lambton.habittracker.habit.view.today.DueTodayFragmentDirections.actionCompleteHabitFragmentToCollectScoreFragment().setHabitProgress(habitProgresses.get(habitPosition));
+        Navigation.findNavController(view).navigate(navDirections);
+    }
+}
+
+interface OnProgressCallback {
+    void onProgressCompleted(View view);
 }
