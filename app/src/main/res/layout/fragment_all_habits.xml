@@ -67,7 +67,7 @@
              />
 
         <TextView
-            android:id="@+id/groupHabitsLabel"
+            android:id="@+id/publicHabitsLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toBottomOf="@+id/privateOngoingHabitsList" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/groupOngoingHabitsList"
+            android:id="@+id/publicOngoingHabitsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -87,6 +87,6 @@
             android:padding="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/groupHabitsLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/publicHabitsLabel" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

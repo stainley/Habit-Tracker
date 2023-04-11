@@ -155,6 +155,10 @@
         <action
             android:id="@+id/action_allHabitsFragment_to_private_habit_detail_fragment"
             app:destination="@id/private_habit_detail_fragment" />
+
+        <action
+            android:id="@+id/action_publicChallengesFragment_to_nav_habit_detail"
+            app:destination="@id/nav_habit_detail" />
     </fragment>
 
     <fragment
