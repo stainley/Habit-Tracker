@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -24,15 +25,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.common.fragment.calendar.ProgressCalendarFragment;
 import ca.lambton.habittracker.databinding.FragmentTodayDueProgressBinding;
+import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.leaderboard.model.Leaderboard;
 import ca.lambton.habittracker.util.Frequency;
 import ca.lambton.habittracker.util.Utils;
 
@@ -152,6 +156,25 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
         });
 
         progressButtonsRecycleView.setAdapter(progressButtonAdapter);
+
+        habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), habit -> {
+            // Summarize habit
+            Map<String, Integer> habitLeaderBoard = habit.stream()
+                    .filter(user -> user.getUserId().equals(mUser.getUid()))
+                    .collect(Collectors.groupingBy(Habit::getUserId, Collectors.summingInt(Habit::getScore)));
+
+
+            if (habitLeaderBoard.containsKey(mUser.getUid())) {
+                habitLeaderBoard.forEach((userId, total) -> {
+                    Leaderboard leaderboard = new Leaderboard();
+                    leaderboard.setScore(total);
+                    leaderboard.setImageUrl(mUser.getPhotoUrl() != null ? mUser.getPhotoUrl().toString() : "");
+                    leaderboard.setAccountId(mUser.getUid());
+
+                    habitViewModel.updateLeaderBoard(leaderboard);
+                });
+            }
+        });
 
         return binding.getRoot();
     }

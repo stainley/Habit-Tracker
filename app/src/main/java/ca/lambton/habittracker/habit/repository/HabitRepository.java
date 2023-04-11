@@ -3,10 +3,14 @@ package ca.lambton.habittracker.habit.repository;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -14,10 +18,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ca.lambton.habittracker.common.db.AppDatabase;
+import ca.lambton.habittracker.community.model.Like;
 import ca.lambton.habittracker.habit.dao.HabitDao;
 import ca.lambton.habittracker.habit.dao.ProgressDao;
 import ca.lambton.habittracker.habit.dao.UserDao;
@@ -25,6 +32,7 @@ import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.model.User;
+import ca.lambton.habittracker.leaderboard.model.Leaderboard;
 
 public class HabitRepository {
 
@@ -32,6 +40,7 @@ public class HabitRepository {
 
     private final HabitDao habitDao;
     private final ProgressDao progressDao;
+    private final FirebaseUser mUser;
     private final UserDao userDao;
     private final FirebaseFirestore dbFirebase;
 
@@ -42,6 +51,7 @@ public class HabitRepository {
         userDao = db.userDao();
 
         dbFirebase = FirebaseFirestore.getInstance();
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     public LiveData<List<Habit>> getAllHabitByCategory(long category) {
@@ -82,7 +92,97 @@ public class HabitRepository {
 
     public void update(Habit habit) {
         AppDatabase.databaseWriterExecutor.execute(() -> habitDao.update(habit));
+        // TODO: Save into the cloud
+
+        saveLeaderboardToCloud(habit);
     }
+
+    public LiveData<Integer> fetchSummarizeScoreByUser(String userId) {
+        return this.habitDao.fetchScoreByUser(userId);
+    }
+
+    public LiveData<List<Leaderboard>> fetchAllLeaderboardInfo() {
+        MutableLiveData<List<Leaderboard>> listMutableLiveData = new MutableLiveData<>();
+
+        CollectionReference collectionRef = dbFirebase
+                .collection("leaderboard");
+
+        List<Leaderboard> leaderboards = new ArrayList<>();
+        collectionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (!querySnapshot.isEmpty()) {
+                    List<DocumentSnapshot> documents = querySnapshot.getDocuments();
+                    documents.forEach(documentSnapshot -> {
+                        Leaderboard leaderboardResult = (Leaderboard) documentSnapshot.get("record", Leaderboard.class);
+                        leaderboards.add(leaderboardResult);
+                    });
+
+                    listMutableLiveData.postValue(leaderboards);
+                }
+            }
+        });
+        return listMutableLiveData;
+    }
+
+
+    public void updateLeaderboard(@NonNull Leaderboard leaderboard) {
+        // Create a reference to the collection
+
+        CollectionReference collectionRef = dbFirebase
+                .collection("leaderboard");
+
+
+        Query query = collectionRef
+                .where(Filter.and
+                        (Filter.equalTo("record.accountId", leaderboard.getAccountId())));
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (!querySnapshot.isEmpty()) {
+                    // Document already exists
+                    System.out.println("DOCUMENT EXITS");
+
+                    dbFirebase.runTransaction(transaction -> {
+                        DocumentSnapshot snapshot = transaction.get(querySnapshot.getDocuments().get(0).getReference());
+                        transaction.update(snapshot.getReference(), "record.score", leaderboard.getScore());
+
+                        return null;
+                    }).addOnSuccessListener(result -> {
+                        // Update the UI to reflect the user's like status
+
+
+                    }).addOnFailureListener(e -> {
+                        // Handle the error
+                    });
+
+                } else {
+
+                    System.out.println("Inner result: " + leaderboard);
+
+                    // Document does not exist, so insert it
+                    Map<String, Leaderboard> leaderboardMap = new HashMap<>();
+                    leaderboardMap.put("record", leaderboard);
+
+                    collectionRef
+                            .add(leaderboardMap)
+                            .addOnSuccessListener(documentReference -> Log.i(TAG, "Document added with ID: " + documentReference.getId()))
+                            .addOnFailureListener(failure -> Log.e(TAG, "Error adding document"));
+                }
+            } else {
+                // Handle errors
+                Log.e(TAG, "An error had occurred");
+            }
+        });
+
+    }
+
+    public void saveLeaderboardToCloud(Habit habit) {
+
+
+    }
+
 
     public void delete(Habit habit) {
         AppDatabase.databaseWriterExecutor.execute(() -> habitDao.delete(habit));
@@ -204,4 +304,5 @@ public class HabitRepository {
 
         return habitListMutableData;
     }
+
 }

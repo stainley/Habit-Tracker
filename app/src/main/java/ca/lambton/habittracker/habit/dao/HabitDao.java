@@ -1,5 +1,6 @@
 package ca.lambton.habittracker.habit.dao;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -59,7 +60,7 @@ public abstract class HabitDao {
     public abstract LiveData<List<Habit>> fetchAllMyHabits(long userID);
 
     @Transaction
-    public void insertProgressHabit(Habit habit, List<Progress> progressList) {
+    public void insertProgressHabit(Habit habit, @NonNull List<Progress> progressList) {
         long habitId = insertHabit(habit);
 
         progressList.forEach(progress -> {
@@ -69,4 +70,6 @@ public abstract class HabitDao {
         insertProgress(progressList);
     }
 
+    @Query("SELECT SUM(HAB.SCORE) FROM HABIT_TBL HAB WHERE HAB.USER_ID = :userId")
+    public abstract LiveData<Integer> fetchScoreByUser(String userId);
 }

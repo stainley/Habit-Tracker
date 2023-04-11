@@ -15,6 +15,7 @@ import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.model.User;
 import ca.lambton.habittracker.habit.repository.HabitRepository;
+import ca.lambton.habittracker.leaderboard.model.Leaderboard;
 
 public class HabitViewModel extends ViewModel {
 
@@ -116,5 +117,17 @@ public class HabitViewModel extends ViewModel {
 
     public LiveData<List<Habit>> getAllHabitCloud() {
         return this.repository.getAllHabitCloud();
+    }
+
+    public LiveData<Integer> fetchSummarizeScoreByUser(String userId) {
+        return repository.fetchSummarizeScoreByUser(userId);
+    }
+
+    public void updateLeaderBoard(Leaderboard leaderboard) {
+        this.repository.updateLeaderboard(leaderboard);
+    }
+
+    public LiveData<List<Leaderboard>> fetchAllLeaderboardInfo() {
+        return this.repository.fetchAllLeaderboardInfo();
     }
 }
