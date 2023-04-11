@@ -68,6 +68,14 @@ public class Utils {
         }
     }
 
+    public static String formatNumberToK(int num) {
+        if (num >= 1000) {
+            return String.format(Locale.getDefault(), "%.1fk", num / 1000.0);
+        } else  {
+            return Integer.toString(num);
+        }
+    }
+
     public static void shareScreenShot(@NonNull Activity activity) {
         // Take a screenshot of the current screen
         View rootView = activity.getWindow().getDecorView().getRootView();

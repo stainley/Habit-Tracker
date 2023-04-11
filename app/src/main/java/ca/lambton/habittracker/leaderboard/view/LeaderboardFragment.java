@@ -54,12 +54,10 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
-        leaderboardList.add(new Leaderboard("Arya Stark", 5000, ""));
-        leaderboardList.add(new Leaderboard("John Smith", 2000, ""));
-        leaderboardList.add(new Leaderboard("Sasha Stark", 8000, ""));
-
-
+        leaderboardList.add(new Leaderboard("Arya Stark", 5450, ""));
+        leaderboardList.add(new Leaderboard("John Smith", 276, ""));
+        leaderboardList.add(new Leaderboard("Sasha Stark", 8460, ""));
+        
         List<Leaderboard> leaderBoardOrdered = leaderboardList.stream()
                 .sorted(Comparator.comparing(Leaderboard::getScore).reversed())
                 .collect(Collectors.toList());

@@ -14,6 +14,7 @@ import java.util.List;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.leaderboard.model.Leaderboard;
+import ca.lambton.habittracker.util.Utils;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.LeaderboardViewHolder> {
@@ -35,7 +36,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public void onBindViewHolder(@NonNull LeaderboardViewHolder holder, int position) {
         holder.positionText.setText(String.valueOf(position + 1));
         holder.nameTex.setText(leaderboardList.get(position).getName());
-        holder.scoreText.setText(String.valueOf(leaderboardList.get(position).getScore()));
+        String scoresInK = Utils.formatNumberToK(leaderboardList.get(position).getScore());
+        holder.scoreText.setText(scoresInK);
 
         if (leaderboardList.get(position).getImageUrl() != null && !leaderboardList.get(position).getImageUrl().equals("")) {
             Picasso.get().load(leaderboardList.get(position).getImageUrl())
