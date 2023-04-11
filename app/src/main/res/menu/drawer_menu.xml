@@ -28,11 +28,10 @@
                 android:icon="@drawable/ic_community"
                 android:title="Community" />
 
-            <!--<item
-                android:id="@+id/nav_report"
-                android:icon="@drawable/ic_report"
-                android:title="Report" />
--->
+            <item
+                android:id="@+id/nav_leaderboard"
+                android:icon="@drawable/ic_challenges_leaderboard"
+                android:title="Leaderboard" />
 
         </menu>
     </item>

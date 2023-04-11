@@ -87,7 +87,8 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_settings,
                 R.id.nav_my_habits,
                 R.id.menu_logout,
-                R.id.nav_community
+                R.id.nav_community,
+                R.id.nav_leaderboard
         ).setOpenableLayout(drawerLayout).build();
 
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(getApplication())).get(HabitViewModel.class);
