@@ -33,6 +33,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull LeaderboardViewHolder holder, int position) {
+        holder.positionText.setText(String.valueOf(position + 1));
         holder.nameTex.setText(leaderboardList.get(position).getName());
         holder.scoreText.setText(String.valueOf(leaderboardList.get(position).getScore()));
 
@@ -53,6 +54,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         private final CircleImageView photoView;
         private final TextView nameTex;
         private final TextView scoreText;
+        private final TextView positionText;
 
 
         public LeaderboardViewHolder(@NonNull View itemView) {
@@ -60,6 +62,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             photoView = itemView.findViewById(R.id.profile_picture);
             nameTex = itemView.findViewById(R.id.name_label);
             scoreText = itemView.findViewById(R.id.score_label);
+            positionText = itemView.findViewById(R.id.row_position);
         }
     }
 

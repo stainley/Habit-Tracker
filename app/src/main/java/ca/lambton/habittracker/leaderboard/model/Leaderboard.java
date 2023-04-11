@@ -1,8 +1,9 @@
 package ca.lambton.habittracker.leaderboard.model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
-public class Leaderboard implements Serializable {
+public class Leaderboard implements Serializable, Comparator<Leaderboard> {
 
     private String name;
     private int score;
@@ -45,5 +46,15 @@ public class Leaderboard implements Serializable {
                 ", score=" + score +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compare(Leaderboard leaderboardOne, Leaderboard leaderboardTwo) {
+        return Integer.compare(leaderboardTwo.getScore(), leaderboardOne.getScore());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return false;
     }
 }
