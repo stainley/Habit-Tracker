@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 public class Leaderboard implements Serializable, Comparator<Leaderboard> {
-
+    private String accountId;
     private String name;
     private int score;
     private String imageUrl;
@@ -13,6 +13,14 @@ public class Leaderboard implements Serializable, Comparator<Leaderboard> {
         this.name = name;
         this.score = score;
         this.imageUrl = imageUrl;
+    }
+
+    public Leaderboard() {
+    }
+
+    public Leaderboard(String accountId, String name, int score, String imageUrl) {
+        this(name, score, imageUrl);
+        this.accountId = accountId;
     }
 
     public String getName() {
@@ -37,6 +45,14 @@ public class Leaderboard implements Serializable, Comparator<Leaderboard> {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     @Override

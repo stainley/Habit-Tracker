@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -20,9 +21,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.LeaderboardViewHolder> {
 
     private final List<Leaderboard> leaderboardList;
+    private final OnCurrentUserPositionListener positionListener;
 
-    public LeaderboardAdapter(List<Leaderboard> leaderboardList) {
+    public LeaderboardAdapter(List<Leaderboard> leaderboardList, OnCurrentUserPositionListener positionListener) {
         this.leaderboardList = leaderboardList;
+        this.positionListener = positionListener;
     }
 
     @NonNull
@@ -44,6 +47,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                     .fit()
                     .into(holder.photoView);
         }
+
+        positionListener.onUserPosition(holder.cardView, position);
     }
 
     @Override
@@ -52,11 +57,11 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     }
 
     static class LeaderboardViewHolder extends RecyclerView.ViewHolder {
-
         private final CircleImageView photoView;
         private final TextView nameTex;
         private final TextView scoreText;
         private final TextView positionText;
+        private CardView cardView;
 
 
         public LeaderboardViewHolder(@NonNull View itemView) {
@@ -65,7 +70,11 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
             nameTex = itemView.findViewById(R.id.name_label);
             scoreText = itemView.findViewById(R.id.score_label);
             positionText = itemView.findViewById(R.id.row_position);
+            cardView = itemView.findViewById(R.id.card_leaderboard);
         }
     }
 
+    public interface OnCurrentUserPositionListener {
+        void onUserPosition(CardView cardView, int position);
+    }
 }
