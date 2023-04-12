@@ -1,5 +1,7 @@
 package ca.lambton.habittracker.habit.view.today;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +54,11 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
     private FirebaseUser mUser;
     int habitPosition = 0;
-    OnProgressCallback onProgressCallback;
+    private OnProgressCallback onProgressCallback;
+    private static final String KEY_HABIT_ID = "habit_id";
+    private static final String KEY_COLLECTED = "collected";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_UPDATED = "updated";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,15 +109,31 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
 
                     if (today.isEqual(LocalDate.parse(progress1.getDate())) || today.isAfter(LocalDate.parse(progress1.getDate()))) {
 
-                        int totalCompletedToday = habitProgress.getProgressList().stream()
-                                .filter(pro -> pro.getDate().equalsIgnoreCase(today.toString()))
-                                .mapToInt(Progress::getCounter).sum();
+                        int totalCompletedToday = habitProgress.getProgressList().stream().filter(pro -> pro.getDate().equalsIgnoreCase(today.toString())).mapToInt(Progress::getCounter).sum();
 
                         if (totalCompletedToday < habitProgress.getHabit().getFrequency()) {
                             habitViewModel.increase(progress);
 
                             if (habitProgress.getHabit().getFrequency() == (totalCompletedToday + 1)) {
-                                onProgressCallback.onProgressCompleted(view);
+                                // TODO: don't call collect if the user collected
+
+                                SharedPreferences spCollectedPoints = requireActivity().getSharedPreferences("achievements_" + habitId, Context.MODE_PRIVATE);
+                                long habitIdCollected = spCollectedPoints.getLong(KEY_HABIT_ID, 0);
+                                String dateCollected = spCollectedPoints.getString(KEY_UPDATED, LocalDate.now().toString());
+                                boolean pointsCollected = spCollectedPoints.getBoolean(KEY_COLLECTED, false);
+
+                                if (pointsCollected && habitIdCollected == habitId && LocalDate.now().toString().equalsIgnoreCase(dateCollected)) {
+                                    // do nothing
+                                } else {
+                                    SharedPreferences.Editor editor = spCollectedPoints.edit();
+                                    editor.putLong(KEY_HABIT_ID, habitId);
+                                    editor.putBoolean(KEY_COLLECTED, true);
+                                    editor.putString(KEY_USER_ID, habitProgress.getHabit().getUserId());
+                                    editor.putString(KEY_UPDATED, dateCollected);
+                                    editor.apply();
+                                    onProgressCallback.onProgressCompleted(view);
+                                }
+
                             }
                             break;
                         }
@@ -137,15 +159,10 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
                 if (progressList.size() > 0) {
                     LocalDate today = LocalDate.now();
 
-                    List<Long> idToRemove = progressList.stream()
-                            .filter(old -> LocalDate.parse(old.getDate()).isEqual(today) || LocalDate.parse(old.getDate()).isAfter(today))
-                            .map(Progress::getProgressId)
-                            .collect(Collectors.toList());
+                    List<Long> idToRemove = progressList.stream().filter(old -> LocalDate.parse(old.getDate()).isEqual(today) || LocalDate.parse(old.getDate()).isAfter(today)).map(Progress::getProgressId).collect(Collectors.toList());
 
                     if (idToRemove.size() > 0) {
-                        long progressId = idToRemove.stream()
-                                .reduce((first, second) -> second)
-                                .get();
+                        long progressId = idToRemove.stream().reduce((first, second) -> second).get();
                         habitViewModel.decrease(progressId);
                     }
                 }
@@ -156,9 +173,7 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
 
         habitViewModel.getAllHabit().observe(getViewLifecycleOwner(), habit -> {
             // Summarize habit
-            Map<String, Integer> habitLeaderBoard = habit.stream()
-                    .filter(user -> user.getUserId().equals(mUser.getUid()))
-                    .collect(Collectors.groupingBy(Habit::getUserId, Collectors.summingInt(Habit::getScore)));
+            Map<String, Integer> habitLeaderBoard = habit.stream().filter(user -> user.getUserId().equals(mUser.getUid())).collect(Collectors.groupingBy(Habit::getUserId, Collectors.summingInt(Habit::getScore)));
 
 
             if (habitLeaderBoard.containsKey(mUser.getUid())) {
