@@ -85,6 +85,7 @@ public class CollectScoreFragment extends Fragment {
                     binding.youEarnedTextView.setText("You earned 300 points.");
                 }
                 else {
+                    score = 30;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 30 points.");
                 }
