@@ -51,8 +51,6 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
     private float totalFrequencies;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
     private FirebaseUser mUser;
-
-    boolean showCollectScore = false;
     int habitPosition = 0;
     OnProgressCallback onProgressCallback;
 
@@ -113,7 +111,6 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
                             habitViewModel.increase(progress);
 
                             if (habitProgress.getHabit().getFrequency() == (totalCompletedToday + 1)) {
-                                showCollectScore = true;
                                 onProgressCallback.onProgressCompleted(view);
                             }
                             break;
@@ -125,7 +122,7 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
                     habitViewModel.increase(progress);
 
                     if (habitProgress.getHabit().getFrequency() == 1) {
-                        showCollectScore = true;
+                        onProgressCallback.onProgressCompleted(view);
                     }
                 }
 
