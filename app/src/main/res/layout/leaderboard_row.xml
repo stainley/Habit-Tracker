@@ -5,7 +5,7 @@
     android:id="@+id/card_leaderboard"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:layout_margin="8dp"
+    android:layout_margin="16dp"
     android:layout_marginStart="8dp"
     android:padding="8dp"
     app:cardCornerRadius="16dp"
@@ -19,8 +19,8 @@
             android:id="@+id/row_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="8dp"
             android:fontFamily="@font/mulish_bold"
             android:textColor="@color/md_theme_light_surfaceTint"
             android:textSize="32sp"
@@ -32,11 +32,11 @@
 
         <ImageView
             android:id="@+id/vertical"
-            android:layout_width="2dp"
+            android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:src="@drawable/line_leader"
             app:layout_constraintBottom_toBottomOf="@id/row_position"
+            app:layout_constraintEnd_toStartOf="@id/profile_picture"
             app:layout_constraintStart_toEndOf="@id/row_position"
             app:layout_constraintTop_toTopOf="@id/row_position" />
 
@@ -55,11 +55,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:ems="7"
+            android:maxLines="1"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/profile_picture"
             app:layout_constraintStart_toEndOf="@id/profile_picture"
             app:layout_constraintTop_toTopOf="@id/profile_picture"
-            tools:text="Arya Stark" />
+            tools:text="I want to see how long is this test" />
 
         <TextView
             android:id="@+id/score_label"
