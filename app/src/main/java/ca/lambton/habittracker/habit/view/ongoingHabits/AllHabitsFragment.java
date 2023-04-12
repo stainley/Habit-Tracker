@@ -75,8 +75,7 @@ public class AllHabitsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        this.habitProgresses.clear();
-        this.publicHabitProgresses.clear();
+        clearAdapters();
 
         habitViewModel.getAllProgress().observe(this, habitProgressResult -> {
             List<HabitProgress> resultData = habitProgressResult.stream()
@@ -89,7 +88,7 @@ public class AllHabitsFragment extends Fragment {
                     })
                     .collect(Collectors.toList());
             habitProgresses.addAll(resultData);
-            privateOngoingHabitListAdapter.notifyDataSetChanged();
+
 
             List<HabitProgress> resultDataPublic = habitProgressResult.stream()
                     .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()) &&
@@ -102,7 +101,8 @@ public class AllHabitsFragment extends Fragment {
                     .collect(Collectors.toList());
 
             publicHabitProgresses.addAll(resultDataPublic);
-            publicOngoingHabitListAdapter.notifyDataSetChanged();
+            //publicOngoingHabitListAdapter.notifyDataSetChanged();
+            privateOngoingHabitListAdapter.notifyDataSetChanged();
         });
     }
 
@@ -151,5 +151,13 @@ public class AllHabitsFragment extends Fragment {
                 });
             }
         };
+    }
+
+    private void clearAdapters() {
+        habitProgresses.clear();
+        privateOngoingHabitListAdapter.notifyDataSetChanged();
+
+        publicHabitProgresses.clear();
+        publicOngoingHabitListAdapter.notifyDataSetChanged();
     }
 }

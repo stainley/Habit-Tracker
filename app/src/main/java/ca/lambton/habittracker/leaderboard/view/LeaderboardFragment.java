@@ -72,13 +72,12 @@ public class LeaderboardFragment extends Fragment {
         leaderboardAdapter = new LeaderboardAdapter(leaderboardList, (cardView, position) -> {
             if (leaderboardList.get(position).getAccountId().equals(mUser.getUid())) {
                 cardView.setCardBackgroundColor(requireActivity().getColor(R.color.yellow));
-                cardView.setScaleY(1.2f);
-                cardView.setScaleX(1.05f);
+                cardView.setScaleY(1.15f);
+                cardView.setScaleX(1.03f);
             } else {
                 cardView.setScaleY(1.0f);
                 cardView.setScaleX(1.0f);
             }
-            //leaderboardAdapter.notifyItemChanged(position);
         });
         leaderboardRecycleView.setAdapter(leaderboardAdapter);
 
@@ -100,9 +99,7 @@ public class LeaderboardFragment extends Fragment {
 
             List<Leaderboard> leaderboardOrdered = leaderboards.stream().sorted(Comparator.comparing(Leaderboard::getScore).reversed()).collect(Collectors.toList());
 
-
             leaderboardList.addAll(leaderboardOrdered);
-            System.out.println(leaderboards.size());
 
             if (leaderboardList.size() == 1) {
                 nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
