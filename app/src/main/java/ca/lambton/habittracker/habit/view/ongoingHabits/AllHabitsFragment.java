@@ -20,7 +20,10 @@ import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -80,6 +83,11 @@ public class AllHabitsFragment extends Fragment {
             List<HabitProgress> resultData = habitProgressResult.stream()
                     .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()) &&
                             progress.getHabit().getHabitType().equals("PERSONAL"))
+                    .filter(date -> {
+                        Calendar todayCalendar = Calendar.getInstance();
+                        Date endDate = new Date(date.getHabit().getEndDate());
+                        return endDate.after(todayCalendar.getTime());
+                    })
                     .collect(Collectors.toList());
             habitProgresses.addAll(resultData);
             privateOngoingHabitListAdapter.notifyDataSetChanged();
@@ -87,6 +95,11 @@ public class AllHabitsFragment extends Fragment {
             List<HabitProgress> resultDataPublic = habitProgressResult.stream()
                     .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()) &&
                             progress.getHabit().getHabitType().equals("PUBLIC"))
+                    .filter(date -> {
+                        Calendar todayCalendar = Calendar.getInstance();
+                        Date endDate = new Date(date.getHabit().getEndDate());
+                        return endDate.after(todayCalendar.getTime());
+                    })
                     .collect(Collectors.toList());
             publicHabitProgresses.addAll(resultDataPublic);
             publicOngoingHabitListAdapter.notifyDataSetChanged();
@@ -110,14 +123,24 @@ public class AllHabitsFragment extends Fragment {
             public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroup) {
                 AtomicInteger totalProgress = new AtomicInteger();
                 String habitType = isGroup ? "PUBLIC" : "PERSONAL";
-
+                // TODO: load habit not expired
                 habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
                     List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
                             .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()) && dbUser.getHabit().getHabitType().equals(habitType))
+                            .filter(date -> {
+                                Calendar todayCalendar = Calendar.getInstance();
+                                Date endDate = new Date(date.getHabit().getEndDate());
+                                return endDate.after(todayCalendar.getTime());
+                            })
                             .collect(Collectors.toList());
 
                     for (HabitProgress hp : myHabitProgressFiltered) {
-                        totalProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId()).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                        totalProgress.addAndGet(hp.getProgressList()
+                                .stream()
+                                .filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId())
+                                .map(Progress::getCounter)
+                                .mapToInt(Integer::intValue)
+                                .sum());
 
                         if (totalProgress.get() == 0) {
                             habitPercentageNumText.setText("0%");
