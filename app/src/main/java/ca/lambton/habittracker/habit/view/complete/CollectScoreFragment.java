@@ -61,7 +61,7 @@ public class CollectScoreFragment extends Fragment {
                     }
                 }
 
-                int percentage = (totalProgress.get() * 100) / totalTimesToComplete;
+                int percentage = (totalProgress.get() * 100) / ((totalTimesToComplete == 0) ? 1 : totalTimesToComplete);
 
                 if (percentage >= 15 && percentage < 25) {
                     score = 50;
@@ -85,9 +85,15 @@ public class CollectScoreFragment extends Fragment {
                     binding.youEarnedTextView.setText("You earned 300 points.");
                 }
                 else {
-                    score = 30;
+                    if (totalTimesToComplete == 0) {
+                        percentage = 100;
+                        score = 300;
+                    }
+                    else {
+                        score = 30;
+                    }
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
-                    binding.youEarnedTextView.setText("You earned 30 points.");
+                    binding.youEarnedTextView.setText("You earned "+ score + " points.");
                 }
             }
         }

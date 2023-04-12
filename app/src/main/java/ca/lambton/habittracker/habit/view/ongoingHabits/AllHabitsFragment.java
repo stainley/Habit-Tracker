@@ -122,8 +122,8 @@ public class AllHabitsFragment extends Fragment {
                         if (totalProgress.get() == 0) {
                             habitPercentageNumText.setText("0%");
                         } else {
-                            habitPercentageNumText.setText((totalProgress.get() * 100 / totalTimesToComplete) + "%");
-                            habitProgressbar.setProgress(totalProgress.get() * 100 / totalTimesToComplete);
+                            habitPercentageNumText.setText((totalProgress.get() * 100 / ((totalTimesToComplete == 0) ? 1 : totalTimesToComplete)) + "%");
+                            habitProgressbar.setProgress(totalProgress.get() * 100 / ((totalTimesToComplete == 0) ? 1 : totalTimesToComplete));
                         }
                     }
                 });
