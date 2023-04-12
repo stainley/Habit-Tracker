@@ -72,6 +72,11 @@ public class LeaderboardFragment extends Fragment {
         leaderboardAdapter = new LeaderboardAdapter(leaderboardList, (cardView, position) -> {
             if (leaderboardList.get(position).getAccountId().equals(mUser.getUid())) {
                 cardView.setCardBackgroundColor(requireActivity().getColor(R.color.yellow));
+                cardView.setScaleY(1.15f);
+                cardView.setScaleX(1.03f);
+            } else {
+                cardView.setScaleY(1.0f);
+                cardView.setScaleX(1.0f);
             }
         });
         leaderboardRecycleView.setAdapter(leaderboardAdapter);
@@ -94,26 +99,33 @@ public class LeaderboardFragment extends Fragment {
 
             List<Leaderboard> leaderboardOrdered = leaderboards.stream().sorted(Comparator.comparing(Leaderboard::getScore).reversed()).collect(Collectors.toList());
 
-
             leaderboardList.addAll(leaderboardOrdered);
-            System.out.println(leaderboards.size());
 
             if (leaderboardList.size() == 1) {
                 nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
                 if (!leaderboardList.get(0).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboards.get(0).getImageUrl()).fit().into(photoFirstPlace);
+                    Picasso.get().load(leaderboards.get(0).getImageUrl())
+                            .placeholder(R.drawable.ic_profile_custom)
+                            .fit()
+                            .into(photoFirstPlace);
                 }
 
             } else if (leaderboardList.size() == 2) {
                 nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
                 nameSecondPlace.setText(leaderboardOrdered.get(1).getName());
                 if (!leaderboardList.get(0).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboards.get(0).getImageUrl()).fit().into(photoFirstPlace);
+                    Picasso.get().load(leaderboards.get(0).getImageUrl())
+                            .placeholder(R.drawable.ic_profile_custom)
+                            .fit()
+                            .into(photoFirstPlace);
                 }
 
 
                 if (!leaderboardList.get(1).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboards.get(1).getImageUrl()).fit().into(photoSecondPlace);
+                    Picasso.get().load(leaderboards.get(1).getImageUrl())
+                            .placeholder(R.drawable.ic_profile_custom)
+                            .fit()
+                            .into(photoSecondPlace);
                 }
             } else if (leaderboardList.size() >= 3) {
                 nameFirstPlace.setText(leaderboardOrdered.get(0).getName());
@@ -122,14 +134,24 @@ public class LeaderboardFragment extends Fragment {
 
 
                 if (!leaderboardList.get(0).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboardOrdered.get(0).getImageUrl()).fit().into(photoFirstPlace);
+                    Picasso.get()
+                            .load(leaderboardOrdered.get(0).getImageUrl())
+                            .placeholder(R.drawable.ic_profile_custom)
+                            .fit()
+                            .into(photoFirstPlace);
                 }
 
                 if (!leaderboardList.get(1).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboardOrdered.get(1).getImageUrl()).fit().into(photoSecondPlace);
+                    Picasso.get().load(leaderboardOrdered.get(1).getImageUrl())
+                            .placeholder(R.drawable.ic_profile_custom)
+                            .fit()
+                            .into(photoSecondPlace);
                 }
                 if (!leaderboardList.get(2).getImageUrl().equals("")) {
-                    Picasso.get().load(leaderboardOrdered.get(2).getImageUrl()).fit().into(photoThirdPlace);
+                    Picasso.get().load(leaderboardOrdered.get(2).getImageUrl())
+                            .placeholder(R.drawable.ic_profile_custom)
+                            .fit()
+                            .into(photoThirdPlace);
                 }
 
             }

@@ -28,6 +28,17 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/celebration" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mulish_bold"
+                android:text="2nd"
+                android:textColor="@color/yellow"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/photo_second_place"
+                app:layout_constraintEnd_toEndOf="@id/photo_second_place"
+                app:layout_constraintStart_toStartOf="@id/photo_second_place" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/photo_second_place"
                 android:layout_width="80dp"
@@ -77,6 +88,17 @@
                 app:layout_constraintStart_toStartOf="@id/photo_first_place"
                 app:layout_constraintTop_toBottomOf="@id/photo_first_place"
                 tools:text="Arya Stark" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mulish_bold"
+                android:text="3rd"
+                android:textColor="@color/yellow"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@id/photo_third_place"
+                app:layout_constraintEnd_toEndOf="@id/photo_third_place"
+                app:layout_constraintStart_toStartOf="@id/photo_third_place" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/photo_third_place"

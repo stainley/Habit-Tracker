@@ -78,12 +78,12 @@ public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
     private HabitViewModel habitViewModel;
     private CategoryViewModel categoryViewModel;
-    FragmentCreateHabitLayoutBinding binding;
+    private FragmentCreateHabitLayoutBinding binding;
     private Duration durationUnit = Duration.MINUTES;
     private HabitType habitType = HabitType.PERSONAL;
     private Frequency frequencyUnit = Frequency.DAILY;
-    long categoryId = -1;
-    String[] categories = new String[0];
+    private long categoryId = -1;
+    private String[] categories = new String[0];
     ArrayAdapter<String> categoryDropDownAdapter;
     private MaterialButton personalHabitType;
     private MaterialButton publicHabitType;
@@ -296,7 +296,7 @@ public class CreateHabitFragment extends Fragment {
         popupMenu.getMenu().add("60 Minutes");
 
         popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getTitle().toString()) {
+            switch (Objects.requireNonNull(item.getTitle()).toString()) {
                 case "15 Minutes":
                     break;
                 case "30 Minutes":
@@ -390,7 +390,7 @@ public class CreateHabitFragment extends Fragment {
         newHabit.setDescription(binding.description.getText() != null ? binding.description.getText().toString() : "");
         newHabit.setCreationDate(new Date().getTime());
 
-        if (durationSwitch.isChecked()) {
+        if (durationSwitch.isChecked() && durationText.getText().toString().equals("")) {
             durationText.setError("This field is required");
             return;
         }

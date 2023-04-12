@@ -22,15 +22,19 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentPrivateHabitsBinding;
+import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
+import ca.lambton.habittracker.util.HabitType;
 
 public class PrivateHabitsFragment extends Fragment {
 
@@ -81,11 +85,18 @@ public class PrivateHabitsFragment extends Fragment {
                 habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
                     List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
                             .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()))
+                            .filter(date -> {
+                                Calendar todayCalendar = Calendar.getInstance();
+                                Date endDate = new Date(date.getHabit().getEndDate());
+                                return endDate.after(todayCalendar.getTime());
+                            })
                             .collect(Collectors.toList());
 
                     for (HabitProgress hp : myHabitProgressFiltered) {
                         //FIXME: error when deleting record java.lang.IndexOutOfBoundsException: Index: 3, Size: 0
-                        totalProgress.addAndGet(hp.getProgressList().stream().filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId()).map(Progress::getCounter).mapToInt(Integer::intValue).sum());
+                        totalProgress.addAndGet(hp.getProgressList().stream()
+                                .filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId())
+                                .map(Progress::getCounter).mapToInt(Integer::intValue).sum());
 
                         if (totalProgress.get() == 0) {
                             habitPercentageNumText.setText("0%");
@@ -110,8 +121,8 @@ public class PrivateHabitsFragment extends Fragment {
 
             List<HabitProgress> resultData = habitProgressResult.stream()
                     .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()))
+                    .filter(typeHabit -> typeHabit.getHabit().getHabitType().equalsIgnoreCase(HabitType.PERSONAL.name()))
                     .filter(date -> {
-
                         LocalDate endDate = Instant.ofEpochMilli(date.getHabit().getEndDate()).atZone(ZoneId.systemDefault()).toLocalDate();
                         return today.isBefore(endDate);
                     })
