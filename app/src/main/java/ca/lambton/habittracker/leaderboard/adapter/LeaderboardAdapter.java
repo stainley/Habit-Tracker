@@ -44,6 +44,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
         if (leaderboardList.get(position).getImageUrl() != null && !leaderboardList.get(position).getImageUrl().equals("")) {
             Picasso.get().load(leaderboardList.get(position).getImageUrl())
+                    .placeholder(R.drawable.ic_profile_custom)
                     .fit()
                     .into(holder.photoView);
         }
@@ -61,7 +62,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         private final TextView nameTex;
         private final TextView scoreText;
         private final TextView positionText;
-        private CardView cardView;
+        private final CardView cardView;
 
 
         public LeaderboardViewHolder(@NonNull View itemView) {
