@@ -90,7 +90,7 @@ public class AllHabitsFragment extends Fragment {
                     })
                     .collect(Collectors.toList());
             habitProgresses.addAll(resultData);
-            privateOngoingHabitListAdapter.notifyDataSetChanged();
+
 
             List<HabitProgress> resultDataPublic = habitProgressResult.stream()
                     .filter(progress -> progress.getHabit().getUserId().equals(mUser.getUid()) &&
@@ -102,9 +102,71 @@ public class AllHabitsFragment extends Fragment {
                     })
                     .collect(Collectors.toList());
             publicHabitProgresses.addAll(resultDataPublic);
+
+            privateOngoingHabitListAdapter.notifyDataSetChanged();
             publicOngoingHabitListAdapter.notifyDataSetChanged();
         });
     }
+
+    private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<HabitProgress> habits, Boolean isGroup) {
+        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
+            @Override
+            public void onRowClicked(int position, boolean isGroupClicked) {
+                if (isGroupClicked) {
+                    NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(publicHabitProgresses.get(position).getHabit());
+                    Navigation.findNavController(requireView()).navigate(navDirections);
+                } else {
+                    NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabitProgress(habitProgresses.get(position));
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
+                }
+            }
+
+            @Override
+            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroupProgressList) {
+                String habitType = isGroupProgressList ? "PUBLIC" : "PERSONAL";
+                AtomicInteger totalProgress = new AtomicInteger(0); // Reset totalProgress to 0 for each call
+
+                habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
+                    List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
+                            .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()) && dbUser.getHabit().getHabitType().equals(habitType))
+                            .filter(date -> {
+                                Calendar todayCalendar = Calendar.getInstance();
+                                Date endDate = new Date(date.getHabit().getEndDate());
+                                return endDate.after(todayCalendar.getTime());
+                            })
+                            .collect(Collectors.toList());
+
+                    myHabitProgressFiltered.forEach(hp -> {
+                        if (hp.getProgressList().size() > 0) {
+                            int progressSum = hp.getProgressList()
+                                    .stream()
+                                    .filter(progress -> {
+                                        if (habits.size() > 0) {
+                                            long habitId = habits.get(position).getHabit().getId();
+                                            return progress.getHabitId() == habitId;
+                                        }
+                                        return false;
+                                    })
+                                    .map(Progress::getCounter)
+                                    .mapToInt(Integer::intValue)
+                                    .sum();
+
+                            totalProgress.addAndGet(progressSum);
+                        }
+                    });
+
+                    if (totalProgress.get() == 0) {
+                        habitPercentageNumText.setText("0%");
+                    } else {
+                        habitPercentageNumText.setText((totalProgress.get() * 100 / totalTimesToComplete) + "%");
+                        habitProgressbar.setProgress(totalProgress.get() * 100 / totalTimesToComplete);
+                    }
+                });
+            }
+        };
+    }
+
+/*
 
     private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<HabitProgress> habits, Boolean isGroup) {
         return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
@@ -123,8 +185,9 @@ public class AllHabitsFragment extends Fragment {
             public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroup) {
                 AtomicInteger totalProgress = new AtomicInteger();
                 String habitType = isGroup ? "PUBLIC" : "PERSONAL";
-                // TODO: load habit not expired
+
                 habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
+
                     List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
                             .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()) && dbUser.getHabit().getHabitType().equals(habitType))
                             .filter(date -> {
@@ -134,23 +197,36 @@ public class AllHabitsFragment extends Fragment {
                             })
                             .collect(Collectors.toList());
 
-                    for (HabitProgress hp : myHabitProgressFiltered) {
-                        totalProgress.addAndGet(hp.getProgressList()
-                                .stream()
-                                .filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId())
-                                .map(Progress::getCounter)
-                                .mapToInt(Integer::intValue)
-                                .sum());
 
-                        if (totalProgress.get() == 0) {
-                            habitPercentageNumText.setText("0%");
-                        } else {
-                            habitPercentageNumText.setText((totalProgress.get() * 100 / totalTimesToComplete) + "%");
-                            habitProgressbar.setProgress(totalProgress.get() * 100 / totalTimesToComplete);
+                    if (myHabitProgressFiltered.size() > 0) {
+                        for (HabitProgress hp : myHabitProgressFiltered) {
+                            if (hp.getProgressList().size() > 0) {
+                                totalProgress.addAndGet(hp.getProgressList()
+                                        .stream()
+                                        .filter(progress -> progress.getHabitId() == habitProgresses.get(position).getHabit().getId())
+                                        .map(Progress::getCounter)
+                                        .mapToInt(Integer::intValue)
+                                        .sum());
+
+                                if (totalProgress.get() == 0) {
+                                    habitPercentageNumText.setText("0%");
+                                } else {
+                                    habitPercentageNumText.setText((totalProgress.get() * 100 / totalTimesToComplete) + "%");
+                                    habitProgressbar.setProgress(totalProgress.get() * 100 / totalTimesToComplete);
+                                }
+                            }
                         }
                     }
                 });
             }
         };
+    }
+*/
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.habitProgresses.clear();
+        this.publicHabitProgresses.clear();
     }
 }
