@@ -14,10 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -76,12 +78,12 @@ public class CreateHabitFragment extends Fragment {
     private static final String TAG = CreateHabitFragment.class.getName();
     private HabitViewModel habitViewModel;
     private CategoryViewModel categoryViewModel;
-    FragmentCreateHabitLayoutBinding binding;
+    private FragmentCreateHabitLayoutBinding binding;
     private Duration durationUnit = Duration.MINUTES;
     private HabitType habitType = HabitType.PERSONAL;
     private Frequency frequencyUnit = Frequency.DAILY;
-    long categoryId = -1;
-    String[] categories = new String[0];
+    private long categoryId = -1;
+    private String[] categories = new String[0];
     ArrayAdapter<String> categoryDropDownAdapter;
     private MaterialButton personalHabitType;
     private MaterialButton publicHabitType;
@@ -95,6 +97,8 @@ public class CreateHabitFragment extends Fragment {
     private Calendar calendar;
     private MaterialSwitch reminderSwitch;
     private Calendar scheduleTime;
+    private MaterialSwitch durationSwitch;
+    private EditText durationText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,10 +116,14 @@ public class CreateHabitFragment extends Fragment {
         binding.overflowMenu.setOnClickListener(replaceImage());
 
         binding.selectTimeBtn.setOnClickListener(this::showTimePicker);
-        reminderSwitch = binding.reminderSwitch;
+        durationText = binding.durationText;
 
+        reminderSwitch = binding.reminderSwitch;
+        this.durationSwitch = binding.durationSwitch;
+        durationSwitch.setOnClickListener(this::activateDuration);
         notificationChannel();
     }
+
 
     @NonNull
     private View.OnClickListener replaceImage() {
@@ -281,6 +289,29 @@ public class CreateHabitFragment extends Fragment {
         publicHabitType = binding.publicHabitType;
         publicHabitType.setOnClickListener(this::habitTypeSelection);
 
+        Button dropdownButton = binding.dropdownButton;
+        PopupMenu popupMenu = new PopupMenu(getActivity(), dropdownButton);
+        popupMenu.getMenu().add("15 Minutes");
+        popupMenu.getMenu().add("30 Minutes");
+        popupMenu.getMenu().add("60 Minutes");
+
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (Objects.requireNonNull(item.getTitle()).toString()) {
+                case "15 Minutes":
+                    break;
+                case "30 Minutes":
+                    break;
+                case "60 Minutes":
+                    break;
+            }
+
+            dropdownButton.setText(item.getTitle());
+            return true;
+        });
+
+        dropdownButton.setOnClickListener(v -> popupMenu.show());
+
+
         return binding.getRoot();
     }
 
@@ -294,8 +325,10 @@ public class CreateHabitFragment extends Fragment {
     private void activateReminder(View view) {
         if (reminderSwitch.isChecked()) {
             binding.selectTimeBtn.setVisibility(View.VISIBLE);
+            binding.reminderFrequencyDropdown.setVisibility(View.VISIBLE);
         } else {
             binding.selectTimeBtn.setVisibility(View.GONE);
+            binding.reminderFrequencyDropdown.setVisibility(View.GONE);
         }
     }
 
@@ -329,6 +362,19 @@ public class CreateHabitFragment extends Fragment {
         }
     }
 
+    private void activateDuration(View view) {
+        if (durationSwitch.isChecked()) {
+            durationText.setEnabled(true);
+            durationText.setError("This field is required");
+
+        } else {
+            durationText.setEnabled(false);
+            durationText.setText("");
+            durationText.setError(null);
+        }
+    }
+
+
     /**
      * Create an habit
      *
@@ -342,10 +388,18 @@ public class CreateHabitFragment extends Fragment {
         newHabit.setUserId(mUser != null ? mUser.getUid() : "");
         newHabit.setName(binding.titleHabit.getText().toString());
         newHabit.setDescription(binding.description.getText() != null ? binding.description.getText().toString() : "");
-        int duration = binding.durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
+        newHabit.setCreationDate(new Date().getTime());
+
+        if (durationSwitch.isChecked() && durationText.getText().toString().equals("")) {
+            durationText.setError("This field is required");
+            return;
+        }
+
+
+        int duration = durationText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.durationText.getText().toString());
         newHabit.setDuration(duration);
         newHabit.setDurationUnit(durationUnit.name());
-        newHabit.setCreationDate(new Date().getTime());
+
         int frequency = binding.frequencyText.getText().toString().equals("") ? 0 : Integer.parseInt(binding.frequencyText.getText().toString());
         newHabit.setFrequency(frequency);
         newHabit.setFrequencyUnit(frequencyUnit.name());
@@ -384,9 +438,12 @@ public class CreateHabitFragment extends Fragment {
 
         if (reminderSwitch.isChecked()) {
             //setAlarm();
+            if (calendar == null)
+                return;
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a", Locale.getDefault());
             newHabit.setTimer(sdf.format(calendar.getTime()));
+
         }
 
         habitViewModel.saveHabit(newHabit);

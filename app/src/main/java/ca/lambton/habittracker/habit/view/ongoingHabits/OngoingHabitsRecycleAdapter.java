@@ -65,11 +65,11 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
 
         if (frequencyUnit.equals("DAILY")) {
             totalTimesToComplete = frequencyValue * (int) daysBetween;
-            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position, isGroup);
         } else if (frequencyUnit.equals("WEEKLY")) {
             double totalDays = (daysBetween / 7);
             totalTimesToComplete = frequencyValue * (int) totalDays;
-            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position, isGroup);
         } else {
             double totalDays = (daysBetween / 30);
             if (daysBetween < 30 || daysBetween == 30) {
@@ -78,7 +78,7 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
             else {
                 totalTimesToComplete = frequencyValue * (int) totalDays;
             }
-            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position);
+            onOngoingHabitsCallback.getProgressList(holder.habitPercentageNumText, holder.habitProgressbar, totalTimesToComplete, position, isGroup);
         }
 
         holder.habitNameLabel.setText(habits.get(position).getHabit().getName());
@@ -123,6 +123,6 @@ public class OngoingHabitsRecycleAdapter extends RecyclerView.Adapter<OngoingHab
     public interface OnOngoingHabitsCallback {
         void onRowClicked(int position, boolean isGroup);
 
-        void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position);
+        void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroup);
     }
 }

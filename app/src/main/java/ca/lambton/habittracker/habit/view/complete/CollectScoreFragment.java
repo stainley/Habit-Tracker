@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -19,19 +21,20 @@ import ca.lambton.habittracker.util.Utils;
 
 public class CollectScoreFragment extends Fragment {
 
-    FragmentCollectScoreBinding binding;
+    private FragmentCollectScoreBinding binding;
 
-    HabitViewModel habitViewModel;
+    private HabitViewModel habitViewModel;
 
-    HabitProgress habitProgress;
+    private HabitProgress habitProgress;
 
-    int totalTimesToComplete;
-
-    int score = 0;
+    private int score = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         binding = FragmentCollectScoreBinding.inflate(LayoutInflater.from(requireContext()));
+
         habitViewModel = new ViewModelProvider(this, new HabitViewModelFactory(getActivity().getApplication())).get(HabitViewModel.class);
         habitProgress = CollectScoreFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
 
@@ -44,8 +47,8 @@ public class CollectScoreFragment extends Fragment {
                 score = 30;
                 binding.onCompletionTextView.setText("On completing the first day of your habit.");
                 binding.youEarnedTextView.setText("You earned 30 points.");
-            }
-            else {
+            } else {
+                int totalTimesToComplete;
                 if (habitProgress.getHabit().getFrequencyUnit().equals("DAILY")) {
                     totalTimesToComplete = habitProgress.getHabit().getFrequency() * (int) Utils.getTotalDays(habitProgress.getHabit());
                 } else if (habitProgress.getHabit().getFrequencyUnit().equals("WEEKLY")) {
@@ -58,7 +61,7 @@ public class CollectScoreFragment extends Fragment {
                     }
                 }
 
-                int percentage = (totalProgress.get() * 100 ) / totalTimesToComplete ;
+                int percentage = (totalProgress.get() * 100) / ((totalTimesToComplete == 0) ? 1 : totalTimesToComplete);
 
                 if (percentage >= 15 && percentage < 25) {
                     score = 50;
@@ -76,28 +79,37 @@ public class CollectScoreFragment extends Fragment {
                     score = 200;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 200 points.");
-                } else  {
+                } else if (percentage == 100) {
                     score = 300;
                     binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                     binding.youEarnedTextView.setText("You earned 300 points.");
+                }
+                else {
+                    if (totalTimesToComplete == 0) {
+                        percentage = 100;
+                        score = 300;
+                    }
+                    else {
+                        score = 30;
+                    }
+                    binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
+                    binding.youEarnedTextView.setText("You earned "+ score + " points.");
                 }
             }
         }
 
         binding.collectButton.setOnClickListener(this::collectScore);
-
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return binding.getRoot();
     }
 
     private void collectScore(View view) {
         habitProgress.getHabit().setScore(habitProgress.getHabit().getScore() + score);
         habitViewModel.updateHabit(habitProgress.getHabit());
+
+        Navigation.findNavController(view).popBackStack();
     }
 }

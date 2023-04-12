@@ -77,18 +77,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
-        supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
-
-        Fragment quoteDayFragment = new QuoteFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
-
-        DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
-
-
-        Fragment summarizedProgress = new SummarizedProgressFragment();
-        getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
 
         if (mUser != null) {
@@ -104,6 +92,18 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
+        supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
+
+        Fragment quoteDayFragment = new QuoteFragment();
+        supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
+
+        DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
+        supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
+
+
+        Fragment summarizedProgress = new SummarizedProgressFragment();
+        getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
     }
 

@@ -49,7 +49,7 @@ public class Utils {
 
             long start = notification.getStartNotification().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
             long end = notification.getEndNotification().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            long interval = 2 * 60 * 1000; // in milliseconds
+            long interval = 8 * 60 * 1000; // in milliseconds
 
             // Schedule the notification alarm to repeat at the specified interval
             //alarmManager.cancel(pendingIntent);
@@ -65,6 +65,14 @@ public class Utils {
             //alarmManager.set(AlarmManager.RTC_WAKEUP, end, endPendingIntent);
 
             System.out.println("Notification scheduled");
+        }
+    }
+
+    public static String formatNumberToK(int num) {
+        if (num >= 1000) {
+            return String.format(Locale.getDefault(), "%.1fk", num / 1000.0);
+        } else  {
+            return Integer.toString(num);
         }
     }
 
