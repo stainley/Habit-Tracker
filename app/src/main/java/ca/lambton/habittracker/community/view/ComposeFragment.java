@@ -41,6 +41,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,7 +88,7 @@ public class ComposeFragment extends Fragment {
         postProgress = binding.postProgress;
 
         binding.postButton.setOnClickListener(this::composeNewPost);
-        binding.addImageButton.setOnClickListener(this::addPicture);
+        binding.addImageButton.setOnClickListener(this::showBottomOptions);
 
         editText = binding.postEditText;
         imageView = binding.imageThumbnailImageView;
@@ -373,6 +374,22 @@ public class ComposeFragment extends Fragment {
             return true;
         }
     };
+
+    public void showBottomOptions(View view) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.ModalBottomSheetDialog);
+        View bottomSheetView = LayoutInflater.from(requireContext()).inflate(R.layout.bottom_sheet_option, requireActivity().findViewById(R.id.bottomSheetContainer));
+        bottomSheetView.findViewById(R.id.take_photo_btn).setOnClickListener(view1 -> {
+            //takePhoto();
+            bottomSheetDialog.dismiss();
+        });
+
+        bottomSheetView.findViewById(R.id.upload_image_btn).setOnClickListener(view12 -> {
+            addPhotoFromLibrary();
+            bottomSheetDialog.dismiss();
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
 
 
     public interface OnUploadingImageAction {

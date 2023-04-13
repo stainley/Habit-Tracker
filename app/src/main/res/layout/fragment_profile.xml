@@ -23,23 +23,14 @@
         android:layout_height="48dp"
         android:background="@color/transparent"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_camera"
+        android:src="@drawable/baseline_camera_enhance_24"
         app:layout_constraintBottom_toBottomOf="@id/profile_image"
         app:layout_constraintEnd_toEndOf="@id/profile_image"
+        app:layout_constraintHorizontal_bias="0.90"
         app:layout_constraintStart_toStartOf="@id/profile_image"
-        app:layout_constraintTop_toBottomOf="@id/profile_image" />
-
-    <ImageButton
-        android:id="@+id/change_image_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:background="@color/transparent"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_image_search"
-        app:layout_constraintBottom_toBottomOf="@id/camera_image_button"
-        app:layout_constraintStart_toEndOf="@id/camera_image_button"
-        app:layout_constraintTop_toTopOf="@id/camera_image_button" />
+        app:layout_constraintTop_toBottomOf="@id/profile_image"
+        app:layout_constraintTop_toTopOf="@id/profile_image"
+        app:layout_constraintVertical_bias="0.98" />
 
 
     <ImageView

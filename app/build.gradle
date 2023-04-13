@@ -40,6 +40,11 @@ android {
         targetCompatibility JavaVersion.VERSION_11
 
     }
+    android {
+        defaultConfig {
+            resConfigs "en", "US"
+        }
+    }
 }
 
 dependencies {

@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -115,7 +115,6 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
                             habitViewModel.increase(progress);
 
                             if (habitProgress.getHabit().getFrequency() == (totalCompletedToday + 1)) {
-                                // TODO: don't call collect if the user collected
 
                                 SharedPreferences spCollectedPoints = requireActivity().getSharedPreferences("achievements_" + habitId, Context.MODE_PRIVATE);
                                 long habitIdCollected = spCollectedPoints.getLong(KEY_HABIT_ID, 0);
@@ -124,6 +123,7 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
 
                                 if (pointsCollected && habitIdCollected == habitId && LocalDate.now().toString().equalsIgnoreCase(dateCollected)) {
                                     // do nothing
+                                    Toast.makeText(requireContext(), "Points already collected.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     SharedPreferences.Editor editor = spCollectedPoints.edit();
                                     editor.putLong(KEY_HABIT_ID, habitId);
@@ -176,17 +176,22 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
             Map<String, Integer> habitLeaderBoard = habit.stream().filter(user -> user.getUserId().equals(mUser.getUid())).collect(Collectors.groupingBy(Habit::getUserId, Collectors.summingInt(Habit::getScore)));
 
 
-            if (habitLeaderBoard.containsKey(mUser.getUid())) {
-                habitLeaderBoard.forEach((userId, total) -> {
-                    Leaderboard leaderboard = new Leaderboard();
-                    leaderboard.setScore(total);
-                    leaderboard.setName(mUser.getDisplayName());
-                    leaderboard.setImageUrl(mUser.getPhotoUrl() != null || !mUser.getPhotoUrl().toString().equals("") ? mUser.getPhotoUrl().toString() : "");
-                    leaderboard.setAccountId(mUser.getUid());
+            if (!mUser.getDisplayName().equalsIgnoreCase("") && mUser.getPhotoUrl() != null) {
+                if (habitLeaderBoard.containsKey(mUser.getUid())) {
+                    habitLeaderBoard.forEach((userId, total) -> {
+                        Leaderboard leaderboard = new Leaderboard();
+                        leaderboard.setScore(total);
+                        leaderboard.setName(mUser.getDisplayName());
+                        leaderboard.setImageUrl(mUser.getPhotoUrl() != null && !mUser.getPhotoUrl().toString().equals("") ? mUser.getPhotoUrl().toString() : "");
+                        leaderboard.setAccountId(mUser.getUid());
 
-                    habitViewModel.updateLeaderBoard(leaderboard);
-                });
+                        habitViewModel.updateLeaderBoard(leaderboard);
+                    });
+                }
+            } else {
+                Toast.makeText(requireContext(), "Please update you profile name and photo", Toast.LENGTH_LONG).show();
             }
+
         });
 
         return binding.getRoot();

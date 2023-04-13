@@ -30,6 +30,7 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
 
         <item name="android:fontFamily">@font/mulish_regular</item>
+        <item name="bottomSheetDialogTheme">@style/ModalBottomSheetDialog</item>
     </style>
 
     <style name="CustomTextAppearance" parent="TextAppearance.AppCompat.Medium">
@@ -61,6 +62,8 @@
         <item name="cornerSizeBottomLeft">18%</item>
         <item name="cornerSizeBottomRight">18%</item>
     </style>
+
+
 
     <style name="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="materialThemeOverlay">
@@ -99,4 +102,13 @@
 
         <item name="android:fontFamily">@font/mulish_regular</item>
     </style>
+
+    <style name="ModalBottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <!-- Apply attributes here -->
+    </style>
+
+    <style name="ModalBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheet</item>
+    </style>
+
 </resources>
