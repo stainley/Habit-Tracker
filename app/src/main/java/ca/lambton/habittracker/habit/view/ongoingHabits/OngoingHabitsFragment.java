@@ -7,15 +7,26 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.lambton.habittracker.R;
+import ca.lambton.habittracker.category.model.Category;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
+import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentOngoingHabitsBinding;
 
 public class OngoingHabitsFragment extends Fragment {
 
     private FragmentOngoingHabitsBinding binding;
+    private CategoryViewModel categoryViewModel;
+    private final List<Category> categories = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +39,16 @@ public class OngoingHabitsFragment extends Fragment {
         //binding.groupHabitsCard.setOnClickListener(this::groupHabitsCardClicked);
         binding.publicHabitCard.setOnClickListener(this::publicChallengesCardClicked);
 
+        binding.explorerCategoryButton.setOnClickListener(this::showMoreCategory);
+
+        categoryViewModel = new ViewModelProvider(getViewModelStore(), new CategoryViewModelFactory(requireActivity().getApplication())).get(CategoryViewModel.class);
+
+    }
+
+    private void showMoreCategory(View view) {
+
+        NavDirections navDirections = OngoingHabitsFragmentDirections.actionOngoingHabitFragmentToNavDefinedHabit();
+        Navigation.findNavController(view).navigate(navDirections);
     }
 
     @Override
@@ -53,5 +74,12 @@ public class OngoingHabitsFragment extends Fragment {
         NavDirections navPublicChallenge = OngoingHabitsFragmentDirections.actionOngoingHabitFragmentToPublicChallengesFragment();
 
         Navigation.findNavController(requireView()).navigate(navPublicChallenge);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), this.categories::addAll);
     }
 }

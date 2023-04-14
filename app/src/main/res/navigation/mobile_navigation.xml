@@ -144,6 +144,9 @@
         <action
             android:id="@+id/action_ongoingHabitFragment_to_publicChallengesFragment"
             app:destination="@id/publicChallengesFragment" />
+        <action
+            android:id="@+id/action_ongoingHabitFragment_to_nav_defined_habit"
+            app:destination="@id/nav_defined_habit" />
     </fragment>
 
     <fragment
