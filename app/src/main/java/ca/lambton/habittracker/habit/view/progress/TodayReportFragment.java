@@ -67,6 +67,14 @@ public class TodayReportFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         todayReportAdapter = new TodayReportAdapter(habitProgressList, (canvasView, position) -> canvasView.setAdapter(new F2CanvasView.Adapter() {
             F2Chart mChart;
 
@@ -89,7 +97,9 @@ public class TodayReportFragment extends Fragment {
 
                 AtomicInteger value = new AtomicInteger();
 
-                Map<String, Integer> groupByDate = habitProgressList.get(position).getProgressList().stream()
+                Map<String, Integer> groupByDate = habitProgressList.get(position)
+                        .getProgressList().stream()
+                        .sorted(Comparator.comparingLong(Progress::getProgressId).reversed())
                         .collect(Collectors.groupingBy(Progress::getDate, Collectors.summingInt(Progress::getCounter)));
 
 
@@ -134,7 +144,6 @@ public class TodayReportFragment extends Fragment {
             }
         }));
 
-        return binding.getRoot();
     }
 
     @Override
@@ -144,7 +153,10 @@ public class TodayReportFragment extends Fragment {
         LocalDate todayDate = LocalDate.now();
         habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses -> {
 
-            List<HabitProgress> habitProgressFiltered = habitProgresses.stream().filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid())).collect(Collectors.toList());
+            List<HabitProgress> habitProgressFiltered = habitProgresses.stream()
+                    .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()))
+
+                    .collect(Collectors.toList());
 
             habitProgressList.clear();
             habitProgressFiltered.forEach(habitProgress -> {

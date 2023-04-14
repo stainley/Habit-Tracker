@@ -3,6 +3,7 @@ package ca.lambton.habittracker.habit.view.fragment.fragment.habit;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,6 @@ import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ca.lambton.habittracker.R;
@@ -29,7 +29,6 @@ import ca.lambton.habittracker.category.model.Category;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModel;
 import ca.lambton.habittracker.category.viewmodel.CategoryViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentDefinedHabitsBinding;
-import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.view.fragment.fragment.habit.description.HabitCategoryDescriptionFragment;
 
 public class DefinedHabitFragment extends Fragment {
@@ -40,6 +39,18 @@ public class DefinedHabitFragment extends Fragment {
     private ViewPager2 habitsPager;
     protected CategoryViewModel categoryViewModel;
     private PredifinedHabitAdapter predifinedHabitAdapter;
+
+    private final Handler handler = new Handler();
+
+    private final Runnable runnable = () -> {
+        if (getArguments() != null) {
+            int position = getArguments().getInt("categoryPosition");
+
+            handler.post(() -> {
+                onPageSelect(position);
+            });
+        }
+    };
 
 
     @Override
@@ -96,38 +107,39 @@ public class DefinedHabitFragment extends Fragment {
 
         Log.i(TAG, "onPageSelected: " + position);
 
-        HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
-        FragmentManager parentFragmentManager = getParentFragmentManager();
-        parentFragmentManager.beginTransaction()
-                .replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment)
-                .addToBackStack(null)
-                .commit();
+        if (categories.size() > 0) {
+            HabitCategoryDescriptionFragment habitCategoryDescriptionFragment = HabitCategoryDescriptionFragment.newInstance(categories.get(position));
+            FragmentManager parentFragmentManager = getChildFragmentManager();
+            parentFragmentManager.beginTransaction()
+                    .replace(R.id.habit_category_desc_fragment, habitCategoryDescriptionFragment)
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss();
+
+        }
 
         trace.stop();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return binding.getRoot();
     }
 
+
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null) {
-            int position = getArguments().getInt("categoryPosition");
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
 
-            new Thread(() -> {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                requireActivity().runOnUiThread(() -> onPageSelect(position));
-            }).start();
-        }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+
     }
 
     private void configureAnimationPager() {

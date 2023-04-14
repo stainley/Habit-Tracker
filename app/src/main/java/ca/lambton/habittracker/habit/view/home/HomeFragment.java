@@ -66,22 +66,22 @@ public class HomeFragment extends Fragment {
         public void run() {
 
             // Perform background operation here
-            Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
-            supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
 
-            Fragment quoteDayFragment = new QuoteFragment();
-            supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
-
-            DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
-            supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
-
-
-            Fragment summarizedProgress = new SummarizedProgressFragment();
-            getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
 
             handler.post(() -> {
                 // Update UI on the main thread here
+                Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
+                supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
 
+                Fragment quoteDayFragment = new QuoteFragment();
+                supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
+
+                DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
+                supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
+
+
+                Fragment summarizedProgress = new SummarizedProgressFragment();
+                getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
             });
         }
     };
