@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey;
 import java.io.Serializable;
 
 @Entity(tableName = "HABIT_TBL", indices = {@Index(name = "IDX_HABIT", value = "HABIT_ID")})
-public class Habit implements Serializable {
+public class Habit implements Serializable{
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "HABIT_ID")

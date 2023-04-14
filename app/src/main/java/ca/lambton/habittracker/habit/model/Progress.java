@@ -1,5 +1,6 @@
 package ca.lambton.habittracker.habit.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -7,6 +8,7 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 @Entity(tableName = "PROGRESS_TBL",
         foreignKeys = @ForeignKey(entity = Habit.class, parentColumns = "HABIT_ID", childColumns = "PARENT_HABIT_ID", onDelete = ForeignKey.CASCADE),
@@ -83,4 +85,5 @@ public class Progress implements Serializable {
     public void setTime(String time) {
         this.time = time;
     }
+
 }

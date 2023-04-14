@@ -70,6 +70,15 @@ public class HabitCategoryDescriptionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
+
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         if (getArguments() != null) {
             Category category = (Category) getArguments().getSerializable("category");
 
@@ -97,7 +106,5 @@ public class HabitCategoryDescriptionFragment extends Fragment {
                 });
             }
         }
-
-        return binding.getRoot();
     }
 }

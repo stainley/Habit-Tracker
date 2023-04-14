@@ -19,9 +19,10 @@ public class DueTodayFragment extends Fragment {
 
     FragmentDueForDayScreenBinding binding;
     private final Handler handler = new Handler();
-    private final Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
+    private final Runnable runnable = () -> {
+
+        handler.post(() -> {
+            // Update main thread if needed
             //DUE TODAY CONTAINER
             Fragment dueTodayProgress = new DueTodayProgressFragment();
             FragmentManager fragmentManager = getChildFragmentManager();
@@ -31,11 +32,7 @@ public class DueTodayFragment extends Fragment {
             Fragment todayGraphReport = new TodayReportFragment();
             fragmentManager.beginTransaction().replace(R.id.graph_report_container, todayGraphReport).commit();
 
-            handler.post(() -> {
-                // Update main thread if needed
-
-            });
-        }
+        });
     };
 
     @Override
