@@ -101,9 +101,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.Comm
         imageView.setVisibility(View.VISIBLE);
         imageView.setClipToOutline(true);
 
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-
         Picasso.get().load(path)
                 .transform(new CropTransformation(0.7f, 0.8f, CropTransformation.GravityHorizontal.CENTER, CropTransformation.GravityVertical.CENTER))
                 .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))

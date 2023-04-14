@@ -31,6 +31,7 @@
         android:gravity="top|start"
         android:hint="@string/what_s_happening"
         android:inputType="textImeMultiLine|textMultiLine|textUri"
+        android:lineSpacingExtra="4dp"
         android:scrollbars="vertical"
         android:textCursorDrawable="@drawable/ic_edit"
         android:textIsSelectable="true"
@@ -70,14 +71,14 @@
     <!-- Image thumbnail -->
     <androidx.cardview.widget.CardView
         android:id="@+id/imageThumbnailCard"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:cardCornerRadius="16dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toTopOf="@id/postButton"
@@ -86,10 +87,11 @@
         <ImageView
             android:id="@+id/imageThumbnailImageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="480dp"
             android:layout_below="@+id/postEditText"
             android:elevation="8dp"
             android:focusable="false"
+            android:maxHeight="450dp"
             android:scaleType="centerCrop"
             android:translationZ="-8dp"
             android:visibility="invisible" />

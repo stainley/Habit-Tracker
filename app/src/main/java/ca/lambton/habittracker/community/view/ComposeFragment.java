@@ -3,6 +3,8 @@ package ca.lambton.habittracker.community.view;
 import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,21 +13,27 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.ActionMode;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,6 +53,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -64,6 +73,7 @@ import ca.lambton.habittracker.community.viewmodel.PostViewModel;
 import ca.lambton.habittracker.community.viewmodel.PostViewModelFactory;
 import ca.lambton.habittracker.databinding.FragmentComposeBinding;
 import ca.lambton.habittracker.habit.model.User;
+import ca.lambton.habittracker.util.Utils;
 
 public class ComposeFragment extends Fragment {
     private static final String TAG = ComposeFragment.class.getName();
@@ -75,9 +85,21 @@ public class ComposeFragment extends Fragment {
     private StorageReference storageRef;
     private ImageView imageView;
     private LinearProgressIndicator postProgress;
-    int progressStatus = 0;
+    private int progressStatus = 0;
+    private Uri tempImageUri = null;
+
     private float startX;
     private float startY;
+    private CardView imageThumbnailCard;
+
+
+    private static final int INVALID_POINTER_ID = -1;
+
+    // Keep track of the two fingers used for the pinch gesture
+    private int mActivePointerId1 = INVALID_POINTER_ID;
+    private int mActivePointerId2 = INVALID_POINTER_ID;
+    // Keep track of the initial distance between the two fingers
+    private float mInitialDistance;
 
 
     @Override
@@ -98,7 +120,9 @@ public class ComposeFragment extends Fragment {
         // Create a Cloud Storage reference from the app
         storageRef = FirebaseStorage.getInstance().getReference();
 
+        imageThumbnailCard = binding.imageThumbnailCard;
     }
+
 
     @Nullable
     @Override
@@ -143,7 +167,6 @@ public class ComposeFragment extends Fragment {
 
             }
         });
-
 
         return binding.getRoot();
     }
@@ -201,7 +224,7 @@ public class ComposeFragment extends Fragment {
         });
     }
 
-    public void insertImageIntoEditText(EditText editText, Uri imageUri) {
+    public void insertImageIntoEditText(@NonNull EditText editText, Uri imageUri) {
         // Get the SpannableStringBuilder from the EditText
 
         binding.imageThumbnailImageView.setVisibility(View.INVISIBLE);
@@ -227,7 +250,7 @@ public class ComposeFragment extends Fragment {
         editText.setText(builder);
     }
 
-    private void uploadImage(ImageView image, OnUploadingImageAction onUploadingImageAction) {
+    private void uploadImage(@NonNull ImageView image, OnUploadingImageAction onUploadingImageAction) {
         Drawable drawable = image.getDrawable();
         if (drawable == null) {
             onUploadingImageAction.onFinished("");
@@ -244,7 +267,7 @@ public class ComposeFragment extends Fragment {
 
         uploadTask.addOnFailureListener(exception -> {
             // Handle unsuccessful uploads
-            Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(requireContext(), "Photo error uploading occurred", Toast.LENGTH_SHORT).show();
         }).addOnSuccessListener(taskSnapshot -> {
             // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
         });
@@ -267,6 +290,7 @@ public class ComposeFragment extends Fragment {
             }
         });
     }
+
 
     @Nullable
     private ImageSpan createImageSpanFromUri(Uri imageUri) {
@@ -292,6 +316,7 @@ public class ComposeFragment extends Fragment {
         return null;
     }
 
+    @NonNull
     private Bitmap loadBitmapFromUri(Uri imageUri) throws IOException {
         try (ParcelFileDescriptor parcelFileDescriptor = requireContext().getContentResolver().openFileDescriptor(imageUri, "r")) {
             if (parcelFileDescriptor == null) {
@@ -312,9 +337,9 @@ public class ComposeFragment extends Fragment {
     }
 
 
-    private void addPicture(View view) {
+/*    private void addPicture(View view) {
         addPhotoFromLibrary();
-    }
+    }*/
 
     public void addPhotoFromLibrary() {
         System.out.println("ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) " + ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA));
@@ -330,13 +355,14 @@ public class ComposeFragment extends Fragment {
         public void onActivityResult(Uri result) {
             try {
                 if (result != null) {
+                    CardView imageThumbnailCard = binding.imageThumbnailCard;
                     String picturePath = "content://media/" + result.getPath();
 
                     ImageView thumbnailOverview = binding.imageThumbnailImageView;
-                    Picasso.get().load(picturePath)
+                    Picasso.get()
+                            .load(picturePath)
                             .into(thumbnailOverview);
                     thumbnailOverview.setVisibility(View.VISIBLE);
-                    CardView imageThumbnailCard = binding.imageThumbnailCard;
 
                     imageThumbnailCard.setOnTouchListener(onTouchListener);
                     imageThumbnailCard.setVisibility(View.VISIBLE);
@@ -348,17 +374,37 @@ public class ComposeFragment extends Fragment {
         }
     });
 
+
+    /**
+     * Touch event
+     */
     private final View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+
+
         @Override
         public boolean onTouch(@NonNull View view, @NonNull MotionEvent event) {
-            switch (event.getAction()) {
+
+            switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     // Save the initial X and Y coordinates
                     startX = view.getX() - event.getRawX();
                     startY = view.getY() - event.getRawY();
+                    // One finger is down, save its ID
+                    mActivePointerId1 = event.getPointerId(0);
                     break;
 
                 case MotionEvent.ACTION_MOVE:
+
+                    if (mActivePointerId1 != INVALID_POINTER_ID && mActivePointerId2 != INVALID_POINTER_ID) {
+                        // Two fingers are down, scale the ImageView based on the distance between them
+                        float distance = getDistance(event, mActivePointerId1, mActivePointerId2);
+                        float scale = distance / mInitialDistance;
+                        //imageView.setScaleX(scale);
+                        //imageView.setScaleY(scale);
+                        imageThumbnailCard.setScaleX(scale);
+                        imageThumbnailCard.setScaleY(scale);
+                    }
+
                     // Calculate the new X and Y coordinates
                     float newX = event.getRawX() + startX;
                     float newY = event.getRawY() + startY;
@@ -366,12 +412,45 @@ public class ComposeFragment extends Fragment {
                     // Set the new position of the CardView
                     view.setX(newX);
                     view.setY(newY);
+
+
+                    break;
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    // A second finger is down, save its ID and the initial distance between the fingers
+                    mActivePointerId2 = event.getPointerId(event.getActionIndex());
+                    mInitialDistance = getDistance(event, mActivePointerId1, mActivePointerId2);
+                    break;
+                case MotionEvent.ACTION_POINTER_UP:
+                    // One of the fingers is lifted, reset its ID and the initial distance
+                    int pointerIndex = event.getActionIndex();
+                    int pointerId = event.getPointerId(pointerIndex);
+                    if (pointerId == mActivePointerId1 || pointerId == mActivePointerId2) {
+                        if (pointerId == mActivePointerId1) {
+                            mActivePointerId1 = mActivePointerId2;
+                        }
+                        mActivePointerId2 = INVALID_POINTER_ID;
+                        mInitialDistance = 0;
+                    }
                     break;
 
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    // All fingers are lifted, reset everything
+                    mActivePointerId1 = INVALID_POINTER_ID;
+                    mActivePointerId2 = INVALID_POINTER_ID;
+                    mInitialDistance = 0;
+                    break;
                 default:
                     return false;
             }
             return true;
+        }
+
+        // Helper method to calculate the distance between two fingers
+        private float getDistance(@NonNull MotionEvent event, int pointerId1, int pointerId2) {
+            float dx = event.getX(pointerId1) - event.getX(pointerId2);
+            float dy = event.getY(pointerId1) - event.getY(pointerId2);
+            return (float) Math.sqrt(dx * dx + dy * dy);
         }
     };
 
@@ -379,7 +458,7 @@ public class ComposeFragment extends Fragment {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.ModalBottomSheetDialog);
         View bottomSheetView = LayoutInflater.from(requireContext()).inflate(R.layout.bottom_sheet_option, requireActivity().findViewById(R.id.bottomSheetContainer));
         bottomSheetView.findViewById(R.id.take_photo_btn).setOnClickListener(view1 -> {
-            //takePhoto();
+            takePhoto();
             bottomSheetDialog.dismiss();
         });
 
@@ -389,6 +468,56 @@ public class ComposeFragment extends Fragment {
         });
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
+    }
+
+    private final ActivityResultLauncher<Uri> selectCameraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
+        if (result) {
+
+            try {
+                CardView imageThumbnailCard = binding.imageThumbnailCard;
+                int deviceOrientation = requireActivity().getWindowManager().getDefaultDisplay().getRotation();
+                int cameraOrientation = Utils.getCameraOrientation(requireActivity());
+
+                String picturePath = "content://media/" + tempImageUri.getPath();
+                SpannableString spannableString = new SpannableString(" ");
+
+                int rotation = (cameraOrientation - deviceOrientation + 360) % 360;
+
+                ImageView thumbnailOverview = binding.imageThumbnailImageView;
+                Bitmap bitmap = loadBitmapFromUri(tempImageUri);
+                Bitmap rotateBitmap = Utils.rotateBitmap(bitmap, rotation);
+
+                ImageSpan imageSpan = new ImageSpan(requireContext(), rotateBitmap, ImageSpan.ALIGN_BASELINE);//createImageSpanFromUri(tempImageUri);
+
+                spannableString.setSpan(imageSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                if (imageSpan != null) {
+                    Drawable image = imageSpan.getDrawable();
+                    imageView.setImageDrawable(image);
+                }
+
+                thumbnailOverview.setVisibility(View.VISIBLE);
+
+                imageThumbnailCard.setOnTouchListener(onTouchListener);
+                imageThumbnailCard.setVisibility(View.VISIBLE);
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    });
+
+    public void takePhoto() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+
+            ContentResolver cr = requireContext().getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+            tempImageUri = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            selectCameraLauncher.launch(tempImageUri);
+        }
     }
 
 

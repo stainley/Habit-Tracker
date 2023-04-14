@@ -7,7 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.hardware.Camera;
 import android.net.Uri;
+import android.view.Surface;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -71,9 +74,47 @@ public class Utils {
     public static String formatNumberToK(int num) {
         if (num >= 1000) {
             return String.format(Locale.getDefault(), "%.1fk", num / 1000.0);
-        } else  {
+        } else {
             return Integer.toString(num);
         }
+    }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int rotation) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    public static int getCameraOrientation(Activity activity) {
+        Camera.CameraInfo info = new Camera.CameraInfo();
+        Camera.getCameraInfo(0, info);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int degrees = 0;
+
+        switch (rotation) {
+            case Surface.ROTATION_0:
+                degrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                degrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                degrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                degrees = 270;
+                break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;
+        } else {
+            result = (info.orientation - degrees + 360) % 360;
+        }
+
+        return result;
     }
 
     public static void shareScreenShot(@NonNull Activity activity) {

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -176,7 +177,7 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
             Map<String, Integer> habitLeaderBoard = habit.stream().filter(user -> user.getUserId().equals(mUser.getUid())).collect(Collectors.groupingBy(Habit::getUserId, Collectors.summingInt(Habit::getScore)));
 
 
-            if (!mUser.getDisplayName().equalsIgnoreCase("") && mUser.getPhotoUrl() != null) {
+            if (!Objects.requireNonNull(mUser.getDisplayName()).equalsIgnoreCase("") && mUser.getPhotoUrl() != null) {
                 if (habitLeaderBoard.containsKey(mUser.getUid())) {
                     habitLeaderBoard.forEach((userId, total) -> {
                         Leaderboard leaderboard = new Leaderboard();
