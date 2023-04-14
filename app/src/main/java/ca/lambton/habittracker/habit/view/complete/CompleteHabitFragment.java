@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.view.GraphData;
 import ca.lambton.habittracker.habit.view.fragment.complete.CompleteStreakFragment;
+import ca.lambton.habittracker.habit.view.ongoingHabits.AchievementGridAdapter;
+import ca.lambton.habittracker.habit.view.ongoingHabits.AchievementInfo;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModelFactory;
 import ca.lambton.habittracker.util.Utils;
@@ -52,6 +55,8 @@ public class CompleteHabitFragment extends Fragment {
     private final HashSet<Date> progressDate = new HashSet<>();
     private final ArrayList<String> progressValue = new ArrayList<>();
 
+    private GridView achievementGridInfo;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         binding = FragmentCompleteHabitBinding.inflate(LayoutInflater.from(requireContext()));
@@ -60,6 +65,8 @@ public class CompleteHabitFragment extends Fragment {
 
         habitProgress = CompleteHabitFragmentArgs.fromBundle(requireArguments()).getHabitProgress();
         habitViewModel = new ViewModelProvider(getViewModelStore(), new HabitViewModelFactory(requireActivity().getApplication())).get(HabitViewModel.class);
+
+        achievementGridInfo = binding.achievementsGridView;
 
         super.onCreate(savedInstanceState);
     }
@@ -77,9 +84,19 @@ public class CompleteHabitFragment extends Fragment {
         Fragment completeStreakFragment = new CompleteStreakFragment().newInstance(habitProgress);
         parentFragmentManager.beginTransaction().replace(R.id.complete_information_detailed, completeStreakFragment).commit();
 
+        int score = habitProgress.getHabit().getScore();
 
-        binding.deleteHabitCard.setOnClickListener(this::deleteHabit);
+        ArrayList<AchievementInfo> achievementModelArrayList = new ArrayList<>();
+        achievementModelArrayList.add(new AchievementInfo("Complete the First\n" + "Day of Your Habit", "30", (score < 30) ? R.drawable.ic_achievement_score : R.drawable.ic_achievement_score_enable, (score < 30) ? R.drawable.ic_achievement_star_disable : R.drawable.ic_achievement_star_enable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 15% of \n" + "your Habit Duration", "50", (score < 50) ? R.drawable.ic_achievement_score : R.drawable.ic_achievement_score_enable, (score < 50) ? R.drawable.ic_achievement_star_disable : R.drawable.ic_achievement_star_enable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 25% of\n" + " your Habit Duration", "100", (score < 100) ? R.drawable.ic_achievement_score : R.drawable.ic_achievement_score_enable, (score < 100) ? R.drawable.ic_achievement_star_disable : R.drawable.ic_achievement_star_enable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 50% of\n" + " your Habit Duration", "150", (score < 150) ? R.drawable.ic_achievement_score : R.drawable.ic_achievement_score_enable, (score < 150) ? R.drawable.ic_achievement_star_disable : R.drawable.ic_achievement_star_enable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 75% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", "200", (score < 200) ? R.drawable.ic_achievement_score : R.drawable.ic_achievement_score_enable, (score < 200) ? R.drawable.ic_achievement_star_disable : R.drawable.ic_achievement_star_enable));
+        achievementModelArrayList.add(new AchievementInfo("Complete 100% of\n" + " your Habit Duration\n" + "+\n" + "Coupon", "300", (score < 300) ? R.drawable.ic_achievement_score : R.drawable.ic_achievement_score_enable, (score < 300) ? R.drawable.ic_achievement_star_disable : R.drawable.ic_achievement_star_enable));
+        AchievementGridAdapter achievementAdapter = new AchievementGridAdapter(requireContext(), achievementModelArrayList);
+        achievementGridInfo.setAdapter(achievementAdapter);
 
+        binding.deleteButtonCard.setOnClickListener(this::deleteHabit);
 
         return binding.getRoot();
     }

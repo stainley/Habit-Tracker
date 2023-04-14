@@ -31,6 +31,7 @@
         android:gravity="top|start"
         android:hint="@string/what_s_happening"
         android:inputType="textImeMultiLine|textMultiLine|textUri"
+        android:lineSpacingExtra="4dp"
         android:scrollbars="vertical"
         android:textCursorDrawable="@drawable/ic_edit"
         android:textIsSelectable="true"
@@ -70,29 +71,51 @@
     <!-- Image thumbnail -->
     <androidx.cardview.widget.CardView
         android:id="@+id/imageThumbnailCard"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:clickable="true"
         android:elevation="8dp"
         android:focusable="true"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:cardCornerRadius="16dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toTopOf="@id/postButton"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/imageThumbnailImageView"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/postEditText"
-            android:elevation="8dp"
-            android:focusable="false"
-            android:scaleType="centerCrop"
-            android:translationZ="-8dp"
-            android:visibility="invisible" />
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageThumbnailImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:focusable="false"
+                android:maxHeight="450dp"
+                android:scaleType="centerCrop"
+                android:translationZ="-8dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/delete_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/transparent"
+                android:src="@drawable/baseline_delete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.cardview.widget.CardView>
 
 
@@ -120,7 +143,7 @@
         android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
-        android:src="@drawable/add_image"
+        android:src="@drawable/ic_media"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/postButton"
         app:layout_constraintEnd_toEndOf="parent"

@@ -194,7 +194,7 @@ public class PrivateHabitDetailFragment extends Fragment {
         if (totalProgress.get() == 0) {
             binding.habitPercentageNumText.setText("0%");
         } else {
-            int percentage = totalProgress.get() * 100 / count;
+            int percentage = totalProgress.get() * 100 / ((count == 0) ? 1 : count);
             binding.habitPercentageNumText.setText(percentage + "%");
             binding.habitProgressbar.setProgress(percentage);
             binding.congratulationText.setVisibility(View.VISIBLE);

@@ -1,6 +1,7 @@
 package ca.lambton.habittracker.habit.view.today;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,22 @@ import ca.lambton.habittracker.habit.view.progress.TodayReportFragment;
 public class DueTodayFragment extends Fragment {
 
     FragmentDueForDayScreenBinding binding;
+    private final Handler handler = new Handler();
+    private final Runnable runnable = () -> {
+
+        handler.post(() -> {
+            // Update main thread if needed
+            //DUE TODAY CONTAINER
+            Fragment dueTodayProgress = new DueTodayProgressFragment();
+            FragmentManager fragmentManager = getChildFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.progress_button_container, dueTodayProgress).commit();
+
+            //GRAPH CONTAINER
+            Fragment todayGraphReport = new TodayReportFragment();
+            fragmentManager.beginTransaction().replace(R.id.graph_report_container, todayGraphReport).commit();
+
+        });
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,17 +47,14 @@ public class DueTodayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        //DUE TODAY CONTAINER
-        Fragment dueTodayProgress = new DueTodayProgressFragment();
-        FragmentManager fragmentManager = getChildFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.progress_button_container, dueTodayProgress).commit();
-
-        //GRAPH CONTAINER
-        Fragment todayGraphReport = new TodayReportFragment();
-        fragmentManager.beginTransaction().replace(R.id.graph_report_container, todayGraphReport).commit();
-
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        Thread startProcess = new Thread(runnable);
+        startProcess.start();
+    }
 }

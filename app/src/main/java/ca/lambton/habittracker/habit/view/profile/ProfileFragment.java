@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
 
+import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentProfileBinding;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -207,8 +209,7 @@ public class ProfileFragment extends Fragment {
 
         binding.editNameButton.setOnClickListener(this::editProfileName);
 
-        binding.changeImageButton.setOnClickListener(this::changeProfilePicture);
-        binding.cameraImageButton.setOnClickListener(this::takePhotoProfile);
+        binding.cameraImageButton.setOnClickListener(this::showBottomOptions);
         // Create a Cloud Storage reference from the app
         storageRef = FirebaseStorage.getInstance().getReference();
 
@@ -250,7 +251,6 @@ public class ProfileFragment extends Fragment {
         newEditText.setHint("Name");
         newEditText.setPadding(75, newEditText.getPaddingTop(), newEditText.getPaddingRight(), newEditText.getPaddingBottom());
 
-
         new MaterialAlertDialogBuilder(requireContext()).setView(newEditText).setMessage("Enter your name").setNeutralButton("Cancel", (dialog, which) -> {
         }).setNegativeButton("Save", (dialog, which) -> {
 
@@ -274,14 +274,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void changeProfilePicture(View view) {
-        addPhotoFromLibrary();
-    }
-
-    private void takePhotoProfile(View view) {
-        takePhoto();
-    }
-
     public void addPhotoFromLibrary() {
         System.out.println("ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) " + ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA));
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -300,5 +292,21 @@ public class ProfileFragment extends Fragment {
             tempImageUri = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             selectCameraLauncher.launch(tempImageUri);
         }
+    }
+
+    public void showBottomOptions(View view) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.ModalBottomSheetDialog);
+        View bottomSheetView = LayoutInflater.from(requireContext()).inflate(R.layout.bottom_sheet_option, requireActivity().findViewById(R.id.bottomSheetContainer));
+        bottomSheetView.findViewById(R.id.take_photo_btn).setOnClickListener(view1 -> {
+            takePhoto();
+            bottomSheetDialog.dismiss();
+        });
+
+        bottomSheetView.findViewById(R.id.upload_image_btn).setOnClickListener(view12 -> {
+            addPhotoFromLibrary();
+            bottomSheetDialog.dismiss();
+        });
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
     }
 }

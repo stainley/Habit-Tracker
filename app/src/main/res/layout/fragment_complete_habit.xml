@@ -154,26 +154,23 @@
         <GridView
             android:id="@+id/achievementsGridView"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="290dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:gravity="center"
             android:horizontalSpacing="24dp"
             android:listSelector="@android:color/transparent"
-            android:numColumns="2"
+            android:numColumns="3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/achievementsLabel"
-            tools:listitem="@layout/card_habit" />
+            app:layout_constraintTop_toBottomOf="@+id/achievementsLabel" />
 
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/delete_habit_card"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/deleteButtonCard"
             style="@style/MaterialCardView.NoColour"
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="60dp"
             android:layout_marginTop="2dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
@@ -181,7 +178,8 @@
             app:cardElevation="3dp"
             app:cardUseCompatPadding="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/achievementsGridView">
+            app:layout_constraintTop_toBottomOf="@+id/achievementsGridView"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -191,7 +189,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="@color/yellow"
+                android:background="@color/yellow">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,7 +200,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="90"
                     android:text="@string/deleteHabit"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -211,7 +211,8 @@
                     app:srcCompat="@drawable/ic_delete_habit" />
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

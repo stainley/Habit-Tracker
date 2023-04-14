@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,33 @@ public class HomeFragment extends Fragment {
     private float todayProgress = 0;
     private float totalFrequencies;
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
+    private final Handler handler = new Handler();
+
+    private final Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            // Perform background operation here
+
+
+            handler.post(() -> {
+                // Update UI on the main thread here
+                Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
+                supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
+
+                Fragment quoteDayFragment = new QuoteFragment();
+                supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
+
+                DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
+                supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
+
+
+                Fragment summarizedProgress = new SummarizedProgressFragment();
+                getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
+            });
+        }
+    };
+
 
 
     @Override
@@ -78,7 +106,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-
         if (mUser != null) {
             String uName = mUser.getDisplayName() != null ? mUser.getDisplayName() : "";
             String userDisplay = getResources().getString(R.string.hello) + " " + uName;
@@ -92,18 +119,8 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Fragment calendarFragment = ProgressCalendarFragment.newInstance((int) finalResult);
-        supportFragmentManager.beginTransaction().replace(R.id.home_calendar_view, calendarFragment).commit();
-
-        Fragment quoteDayFragment = new QuoteFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.quoteDayFragmentView, quoteDayFragment).commit();
-
-        DailyProgressFragment dailyProgressFragment = new DailyProgressFragment();
-        supportFragmentManager.beginTransaction().replace(R.id.daily_habit_progress, dailyProgressFragment).commit();
-
-
-        Fragment summarizedProgress = new SummarizedProgressFragment();
-        getParentFragmentManager().beginTransaction().replace(R.id.summarizedProgressView, summarizedProgress).commit();
+        Thread thread = new Thread(myRunnable);
+        thread.start();
 
     }
 
@@ -221,7 +238,7 @@ public class HomeFragment extends Fragment {
 
     private void notificationChannel() {
 
-        CharSequence name = "Habitude Reminder";
+        CharSequence name = "Abit Reminder";
         String description = "Please complete your Habit";
         int importance = NotificationManager.IMPORTANCE_HIGH;
         NotificationChannel channel = new NotificationChannel("ReminderChannel", name, importance);

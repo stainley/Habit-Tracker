@@ -15,7 +15,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_picture"
@@ -77,9 +77,9 @@
         <ImageView
             android:id="@+id/post_picture"
             android:layout_width="0dp"
+            android:maxHeight="500dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/post_picture"
-            android:maxWidth="300dp"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/btnLike"
             app:layout_constraintEnd_toEndOf="@id/more_options_button"

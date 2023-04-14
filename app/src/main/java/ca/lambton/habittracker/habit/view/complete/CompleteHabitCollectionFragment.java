@@ -62,7 +62,11 @@ public class CompleteHabitCollectionFragment extends Fragment {
         return (circleImageView, completeHabitCard, position) -> {
             String imagePath = habitProgresses.get(position).getHabit().getImagePath();
             if (imagePath.equals("") || imagePath.equals("default_image")) {
-                Picasso.get().load(R.drawable.default_image).fit().into(circleImageView);
+                Picasso.get()
+                        .load(R.drawable.default_image)
+                        .transform(new RoundedCornersTransformation(24, 24, RoundedCornersTransformation.CornerType.ALL))
+                        .fit()
+                        .into(circleImageView);
             } else {
                 //TODO: change this implementation don't obtain the image by name on drawable
                 int imagePredefine = getResources().getIdentifier(imagePath, "drawable", packageName);
