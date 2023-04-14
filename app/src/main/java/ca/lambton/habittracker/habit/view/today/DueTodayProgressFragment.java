@@ -130,7 +130,7 @@ public class DueTodayProgressFragment extends Fragment implements OnProgressCall
                                     editor.putLong(KEY_HABIT_ID, habitId);
                                     editor.putBoolean(KEY_COLLECTED, true);
                                     editor.putString(KEY_USER_ID, habitProgress.getHabit().getUserId());
-                                    editor.putString(KEY_UPDATED, dateCollected);
+                                    editor.putString(KEY_UPDATED, LocalDate.now().toString());
                                     editor.apply();
                                     onProgressCallback.onProgressCompleted(view);
                                 }

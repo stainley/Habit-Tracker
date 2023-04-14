@@ -1,6 +1,8 @@
 package ca.lambton.habittracker.habit.view.complete;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ca.lambton.habittracker.databinding.FragmentCollectScoreBinding;
@@ -59,8 +62,7 @@ public class CollectScoreFragment extends Fragment {
                 score = 300;
                 binding.onCompletionTextView.setText("On completion of 100% of you habit duration");
                 binding.youEarnedTextView.setText("You earned 300 points.");
-            }
-            else {
+            } else {
                 if (habitProgress.getProgressList().size() == habitProgress.getHabit().getFrequency()) {
                     score = 30;
                     binding.onCompletionTextView.setText("On completing the first day of your habit.");
@@ -87,17 +89,15 @@ public class CollectScoreFragment extends Fragment {
                         score = 300;
                         binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
                         binding.youEarnedTextView.setText("You earned 300 points.");
-                    }
-                    else {
+                    } else {
                         if (totalTimesToComplete == 0) {
                             percentage = 100;
                             score = 300;
-                        }
-                        else {
+                        } else {
                             score = 30;
                         }
                         binding.onCompletionTextView.setText("On completion of " + percentage + "% of you habit duration");
-                        binding.youEarnedTextView.setText("You earned "+ score + " points.");
+                        binding.youEarnedTextView.setText("You earned " + score + " points.");
                     }
                 }
             }
@@ -112,9 +112,12 @@ public class CollectScoreFragment extends Fragment {
     }
 
     private void collectScore(View view) {
-        habitProgress.getHabit().setScore(habitProgress.getHabit().getScore() + score);
-        habitViewModel.updateHabit(habitProgress.getHabit());
+        Handler handler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+        handler.post(() -> {
 
-        Navigation.findNavController(view).popBackStack();
+            habitProgress.getHabit().setScore(habitProgress.getHabit().getScore() + score);
+            habitViewModel.updateHabit(habitProgress.getHabit());
+            Navigation.findNavController(view).popBackStack();
+        });
     }
 }
