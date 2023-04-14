@@ -21,6 +21,7 @@ public class CategoryCardStackFragment extends Fragment {
     public CategoryCardStackFragment() {
     }
 
+    @NonNull
     public static CategoryCardStackFragment newInstance(Category category) {
         CategoryCardStackFragment fragment = new CategoryCardStackFragment();
         Bundle args = new Bundle();
@@ -46,11 +47,15 @@ public class CategoryCardStackFragment extends Fragment {
 
             Category category = (Category) getArguments().getSerializable("category");
 
-            int drawable = requireContext().getResources().getIdentifier(category.getImageName(), "drawable", packageName);
+            if (category != null || !category.getImageName().equals("")) {
 
-            Picasso.get()
-                    .load(drawable)
-                    .into(categoryHabitImage);
+                int drawable = requireContext().getResources().getIdentifier(category.getImageName(), "drawable", packageName);
+
+                Picasso.get()
+                        .load(drawable)
+                        .into(categoryHabitImage);
+            }
+
         }
 
 
