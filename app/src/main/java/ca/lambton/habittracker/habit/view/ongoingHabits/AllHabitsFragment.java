@@ -1,7 +1,5 @@
 package ca.lambton.habittracker.habit.view.ongoingHabits;
 
-import static ca.lambton.habittracker.habit.view.ongoingHabits.PublicChallengesFragmentDirections.actionPublicChallengesFragmentToNavHabitDetail;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +27,6 @@ import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentAllHabitsBinding;
-import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -125,8 +122,8 @@ public class AllHabitsFragment extends Fragment {
             }
 
             private void navigateToPublicHabitDetail(int position) {
-                Habit habit = publicHabitProgresses.get(position).getHabit();
-                NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(habit);
+                HabitProgress habitProgress = publicHabitProgresses.get(position);
+                NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabitProgress(habitProgress);
                 Navigation.findNavController(requireView()).navigate(navDirections);
             }
 
@@ -156,7 +153,7 @@ public class AllHabitsFragment extends Fragment {
                 });
             }
 
-            private List<HabitProgress> filterMyHabitProgresses(List<HabitProgress> habitProgresses, String habitType) {
+            private List<HabitProgress> filterMyHabitProgresses(@NonNull List<HabitProgress> habitProgresses, String habitType) {
                 return habitProgresses.stream()
                         .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()) && dbUser.getHabit().getHabitType().equals(habitType))
                         .filter(date -> {
@@ -188,69 +185,6 @@ public class AllHabitsFragment extends Fragment {
         };
     }
 
-    /*private OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback getOnCallbackOngoingHabit(List<HabitProgress> habits, Boolean isGroup) {
-        return new OngoingHabitsRecycleAdapter.OnOngoingHabitsCallback() {
-            @Override
-            public void onRowClicked(int position, boolean isGroup) {
-                if (isGroup) {
-                    NavDirections navDirections = actionPublicChallengesFragmentToNavHabitDetail().setHabit(publicHabitProgresses.get(position).getHabit());
-                    Navigation.findNavController(requireView()).navigate(navDirections);
-                } else {
-                    NavDirections navDirections = AllHabitsFragmentDirections.actionAllHabitsFragmentToPrivateHabitDetailFragment(null).setHabitProgress(habitProgresses.get(position));
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main).navigate(navDirections);
-                }
-            }
-
-            @Override
-            public void getProgressList(TextView habitPercentageNumText, CircularProgressIndicator habitProgressbar, int totalTimesToComplete, int position, boolean isGroup) {
-                AtomicInteger totalProgress = new AtomicInteger();
-                String habitType = isGroup ? "PUBLIC" : "PERSONAL";
-                // TODO: load habit not expired
-                habitViewModel.getAllProgress().observe(requireActivity(), habitProgresses1 -> {
-                    List<HabitProgress> myHabitProgressFiltered = habitProgresses1.stream()
-                            .filter(dbUser -> dbUser.getHabit().getUserId().equals(mUser.getUid()) && dbUser.getHabit().getHabitType().equals(habitType))
-                            .filter(date -> {
-                                Calendar todayCalendar = Calendar.getInstance();
-                                Date endDate = new Date(date.getHabit().getEndDate());
-                                return endDate.after(todayCalendar.getTime());
-                            })
-                            .collect(Collectors.toList());
-
-                    for (HabitProgress hp : myHabitProgressFiltered) {
-
-                        if (habitProgresses.size() > 0) {
-                            totalProgress.addAndGet(hp.getProgressList()
-                                    .stream()
-                                    .filter(progress -> {
-                                        try {
-                                            long id = habitProgresses.get(position).getHabit().getId();
-                                            if (progress.getHabitId() == id) {
-                                                return true;
-                                            }
-                                        } catch (IndexOutOfBoundsException ioe) {
-                                            System.err.println(ioe.getMessage());
-                                            return false;
-                                        }
-
-                                        return false;
-                                    })
-                                    .map(Progress::getCounter)
-                                    .mapToInt(Integer::intValue)
-                                    .sum());
-                            if (totalProgress.get() == 0) {
-                                habitPercentageNumText.setText("0%");
-                            } else {
-                                habitPercentageNumText.setText((totalProgress.get() * 100 / ((totalTimesToComplete == 0) ? 1 : totalTimesToComplete)) + "%");
-                                habitProgressbar.setProgress(totalProgress.get() * 100 / ((totalTimesToComplete == 0) ? 1 : totalTimesToComplete));
-                            }
-                        }
-
-                    }
-                });
-            }
-        };
-    }
-*/
     private void clearAdapters() {
         habitProgresses.clear();
         privateOngoingHabitListAdapter.notifyDataSetChanged();
