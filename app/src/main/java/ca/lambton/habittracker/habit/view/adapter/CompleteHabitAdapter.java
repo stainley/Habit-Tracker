@@ -11,19 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+import java.util.Locale;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.habit.model.HabitProgress;
-import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.util.Utils;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdapter.CompleteHabitViewModel> {
 
@@ -55,6 +51,14 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
         String progressText = progress + "%";
         holder.progressText.setText(progressText);
         holder.circularProgressIndicator.setProgress(progress);
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String endDate = simpleDateFormat.format(new Date(habitProgresses.get(position).getHabit().getEndDate()));
+        String startDate = simpleDateFormat.format(new Date(habitProgresses.get(position).getHabit().getEndDate()));
+
+        holder.startDateText.setText(startDate);
+        holder.endDateText.setText(endDate);
     }
 
     @Override
@@ -69,6 +73,8 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
         private final MaterialCardView completeHabitCard;
         private final CircularProgressIndicator circularProgressIndicator;
         private final TextView progressText;
+        private final TextView startDateText;
+        private final TextView endDateText;
 
         public CompleteHabitViewModel(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +83,8 @@ public class CompleteHabitAdapter extends RecyclerView.Adapter<CompleteHabitAdap
             completeHabitCard = itemView.findViewById(R.id.complete_habit_card);
             circularProgressIndicator = itemView.findViewById(R.id.habit_progressbar);
             progressText = itemView.findViewById(R.id.progress_text);
+            startDateText = itemView.findViewById(R.id.start_date);
+            endDateText = itemView.findViewById(R.id.end_date);
         }
     }
 

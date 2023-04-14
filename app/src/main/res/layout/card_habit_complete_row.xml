@@ -39,29 +39,66 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
-            android:fontFamily="@font/mulish_semi_bold"
+            android:fontFamily="@font/mulish_bold"
             android:maxEms="8"
             android:maxLines="2"
-            android:textSize="15sp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/habit_progressbar"
             app:layout_constraintHorizontal_bias="0.06"
             app:layout_constraintStart_toEndOf="@id/image_habit"
             app:layout_constraintTop_toTopOf="@id/image_habit"
             tools:text="Add Veggie" />
 
+        <ImageView
+            android:id="@+id/start_image"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_time"
+            app:layout_constraintBottom_toTopOf="@id/end_date"
+            app:layout_constraintStart_toStartOf="@id/habitNameLabel"
+            app:layout_constraintTop_toBottomOf="@id/habitNameLabel"
+            app:layout_goneMarginEnd="8dp" />
+
+
         <TextView
-            android:id="@+id/memberCountLabel"
+            android:id="@+id/start_date"
             style="@style/CategoryListCustomTextColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:gravity="start"
-            android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/habitNameLabel"
+            android:textSize="13sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@id/start_image"
+            app:layout_constraintStart_toEndOf="@id/start_image"
             app:layout_constraintTop_toBottomOf="@id/habitNameLabel"
-            tools:text="4 Members" />
+            app:layout_constraintTop_toTopOf="@id/start_image"
+            tools:text="2023-04-13" />
+
+        <ImageView
+            android:id="@+id/end_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_timer_expired"
+            app:layout_constraintBottom_toBottomOf="@id/image_habit"
+            app:layout_constraintStart_toStartOf="@id/start_image"
+            app:layout_constraintTop_toBottomOf="@id/start_image" />
+
+        <TextView
+            android:id="@+id/end_date"
+            style="@style/CategoryListCustomTextColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="13sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="@id/end_image"
+            app:layout_constraintStart_toEndOf="@id/end_image"
+            app:layout_constraintTop_toTopOf="@id/end_image"
+            tools:text="2023-04-13" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/habit_progressbar"
