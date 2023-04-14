@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.android.material.search.SearchView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 import ca.lambton.habittracker.R;
 import ca.lambton.habittracker.databinding.FragmentAllHabitsBinding;
+import ca.lambton.habittracker.habit.model.Habit;
 import ca.lambton.habittracker.habit.model.HabitProgress;
 import ca.lambton.habittracker.habit.model.Progress;
 import ca.lambton.habittracker.habit.viewmodel.HabitViewModel;
@@ -40,11 +42,15 @@ public class AllHabitsFragment extends Fragment {
 
     private OngoingHabitsRecycleAdapter publicOngoingHabitListAdapter;
 
-    HabitViewModel habitViewModel;
+    private HabitViewModel habitViewModel;
 
     private final List<HabitProgress> habitProgresses = new ArrayList<>();
     private final List<HabitProgress> publicHabitProgresses = new ArrayList<>();
     private FirebaseUser mUser;
+
+    private final List<Habit> habitsFiltered = new ArrayList<>();
+    private SearchView searchViewHabit;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,7 @@ public class AllHabitsFragment extends Fragment {
         RecyclerView recyclerView = binding.privateOngoingHabitsList;
         RecyclerView publicRecyclerView = binding.publicOngoingHabitsList;
 
-
+        searchViewHabit = binding.searchView;
         privateOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(habitProgresses, getOnCallbackOngoingHabit(habitProgresses, false), this.getContext(), false);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(privateOngoingHabitListAdapter);
@@ -64,6 +70,7 @@ public class AllHabitsFragment extends Fragment {
         publicOngoingHabitListAdapter = new OngoingHabitsRecycleAdapter(publicHabitProgresses, getOnCallbackOngoingHabit(publicHabitProgresses, true), this.getContext(), true);
         publicRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         publicRecyclerView.setAdapter(publicOngoingHabitListAdapter);
+
     }
 
     @Override
