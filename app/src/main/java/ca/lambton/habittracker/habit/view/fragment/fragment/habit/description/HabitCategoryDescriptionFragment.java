@@ -41,6 +41,7 @@ public class HabitCategoryDescriptionFragment extends Fragment {
     public HabitCategoryDescriptionFragment() {
     }
 
+    @NonNull
     public static HabitCategoryDescriptionFragment newInstance(Category category) {
         HabitCategoryDescriptionFragment fragment = new HabitCategoryDescriptionFragment();
         Bundle args = new Bundle();
