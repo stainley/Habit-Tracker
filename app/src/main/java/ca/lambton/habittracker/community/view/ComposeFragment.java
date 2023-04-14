@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -112,6 +113,8 @@ public class ComposeFragment extends Fragment {
         binding.postButton.setOnClickListener(this::composeNewPost);
         binding.addImageButton.setOnClickListener(this::showBottomOptions);
 
+        binding.deleteImage.setOnClickListener(this::removeImage);
+
         editText = binding.postEditText;
         imageView = binding.imageThumbnailImageView;
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -121,6 +124,11 @@ public class ComposeFragment extends Fragment {
         storageRef = FirebaseStorage.getInstance().getReference();
 
         imageThumbnailCard = binding.imageThumbnailCard;
+    }
+
+    private void removeImage(View view) {
+        imageView.setImageDrawable(null);
+        imageThumbnailCard.setVisibility(View.GONE);
     }
 
 
@@ -337,7 +345,7 @@ public class ComposeFragment extends Fragment {
     }
 
 
-/*    private void addPicture(View view) {
+    /*private void addPicture(View view) {
         addPhotoFromLibrary();
     }*/
 
@@ -379,7 +387,6 @@ public class ComposeFragment extends Fragment {
      * Touch event
      */
     private final View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-
 
         @Override
         public boolean onTouch(@NonNull View view, @NonNull MotionEvent event) {
